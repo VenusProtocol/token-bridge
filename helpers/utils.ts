@@ -1,4 +1,5 @@
 import BigNumber from "bignumber.js";
+import { HardhatRuntimeEnvironment } from "hardhat/types";
 
 BigNumber.config({
   FORMAT: {
@@ -22,3 +23,23 @@ export const scaleDownBy = (amount: string | number, decimals: number) => {
 };
 
 export const AddressOne = "0x0000000000000000000000000000000000000001";
+
+// Function to get argument types from method signature
+export const getArgTypesFromSignature = (methodSignature: string): string[] => {
+  const [, argumentString] = methodSignature.split("(")[1].split(")");
+  return argumentString.split(",").map(arg => arg.trim());
+};
+
+export const toAddress = async (addressOrAlias: string, hre: HardhatRuntimeEnvironment): Promise<string> => {
+  const { getNamedAccounts } = hre;
+  const { deployments } = hre;
+  if (addressOrAlias.startsWith("0x")) {
+    return addressOrAlias;
+  }
+  if (addressOrAlias.startsWith("account:")) {
+    const namedAccounts = await getNamedAccounts();
+    return namedAccounts[addressOrAlias.slice("account:".length)];
+  }
+  const deployment = await deployments.get(addressOrAlias);
+  return deployment.address;
+};

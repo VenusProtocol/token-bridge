@@ -73,6 +73,13 @@ const config: HardhatUserConfig = {
       live: true,
       timeout: 1200000, // 20 minutes
     },
+    sepolia: {
+      url: "https://ethereum-sepolia.blockpi.network/v1/rpc/public",
+      chainId: 11155111,
+      accounts: {
+        mnemonic: process.env.MNEMONIC || "",
+      },
+    },
   },
   gasReporter: {
     enabled: process.env.REPORT_GAS !== undefined,
