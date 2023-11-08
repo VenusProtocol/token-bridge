@@ -22,7 +22,7 @@ contract XVSBridgeAdmin is AccessControlledV8 {
     mapping(bytes4 => string) public functionRegistry;
 
     // Event emitted when function registry updated
-    event FunctionRegistryChanged(string signature, bool isRemoved);
+    event FunctionRegistryChanged(string signature, bool active);
 
     /// @custom:oz-upgrades-unsafe-allow constructor
     constructor(address XVSBridge_) {
@@ -66,21 +66,21 @@ contract XVSBridgeAdmin is AccessControlledV8 {
     }
 
     /**
-     * @notice Function to update the function registry.
-     * @param signatures_ Array of function names string.
-     * @param remove_  Boolean to specify whether to remove the function from registry mapping.
-     * @custom:access Only owner.
+     * @notice A registry of functions that are allowed to be executed from proposals
+     * @param signatures_  Function signature to be added or removed.
+     * @param active_ bool value, should be true to add function.
      */
-    function upsertSignature(string[] calldata signatures_, bool[] calldata remove_) external onlyOwner {
+    function upsertSignature(string[] calldata signatures_, bool[] calldata active_) external onlyOwner {
         uint256 signatureLength = signatures_.length;
-        require(signatureLength == remove_.length, "Input arrays must have the same length");
+        require(signatureLength == active_.length, "Input arrays must have the same length");
         for (uint256 i; i < signatureLength; i++) {
             bytes4 sigHash = bytes4(keccak256(bytes(signatures_[i])));
-            if (remove_[i]) {
-                delete functionRegistry[sigHash];
-                emit FunctionRegistryChanged(signatures_[i], true);
-            } else {
+            bytes memory signature = bytes(functionRegistry[sigHash]);
+            if (active_[i] && signature.length == 0) {
                 functionRegistry[sigHash] = signatures_[i];
+                emit FunctionRegistryChanged(signatures_[i], true);
+            } else if (!active_[i] && signature.length != 0) {
+                delete functionRegistry[sigHash];
                 emit FunctionRegistryChanged(signatures_[i], false);
             }
         }

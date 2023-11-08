@@ -1,5 +1,5 @@
 import { FakeContract, smock } from "@defi-wonderland/smock";
-import { time } from "@nomicfoundation/hardhat-network-helpers";
+import { loadFixture, time } from "@nomicfoundation/hardhat-network-helpers";
 import { expect } from "chai";
 import { ethers, upgrades } from "hardhat";
 import { SignerWithAddress } from "hardhat-deploy-ethers/signers";
@@ -50,8 +50,7 @@ describe("Proxy OFTV2: ", function () {
     accessControlManager: FakeContract<AccessControlManager>,
     oracle: FakeContract<ResilientOracleInterface>,
     defaultAdapterParams: any;
-
-  before(async function () {
+  const bridgeFixture = async () => {
     LZEndpointMock = await ethers.getContractFactory("LZEndpointMock");
     ProxyOFTV2Src = await ethers.getContractFactory("XVSProxyOFTSrc");
     ProxyOFTV2Dest = await ethers.getContractFactory("XVSProxyOFTDest");
@@ -65,9 +64,7 @@ describe("Proxy OFTV2: ", function () {
     oracle = await smock.fake<ResilientOracleInterface>("ResilientOracleInterface");
     oracle.getPrice.returns(convertToUnit(1, 18));
     defaultAdapterParams = ethers.utils.solidityPack(["uint16", "uint256"], [1, 200000]);
-  });
 
-  beforeEach(async function () {
     localEndpoint = await LZEndpointMock.deploy(localChainId);
     remoteEndpoint = await LZEndpointMock.deploy(remoteChainId);
 
@@ -95,7 +92,6 @@ describe("Proxy OFTV2: ", function () {
       initializer: "initialize",
     });
     await bridgeAdminLocal.deployed();
-
     await remoteOFT.transferOwnership(bridgeAdminRemote.address);
     await localOFT.transferOwnership(bridgeAdminLocal.address);
     // internal bookkeeping for endpoints (not part of a real deploy, just for this test)
@@ -137,9 +133,9 @@ describe("Proxy OFTV2: ", function () {
       "setUseCustomAdapterParams(bool)",
       "removeTrustedRemote(uint16)",
     ];
-    const removeArray = new Array(functionregistry.length).fill(false);
-    await bridgeAdminRemote.upsertSignature(functionregistry, removeArray);
-    await bridgeAdminLocal.upsertSignature(functionregistry, removeArray);
+    const activeArray = new Array(functionregistry.length).fill(true);
+    await bridgeAdminRemote.upsertSignature(functionregistry, activeArray);
+    await bridgeAdminLocal.upsertSignature(functionregistry, activeArray);
 
     // Setting local chain
     await bridgeAdminLocal.setTrustedRemoteAddress(remoteChainId, remoteOFT.address);
@@ -215,6 +211,10 @@ describe("Proxy OFTV2: ", function () {
       to: bridgeAdminRemote.address,
       data: data,
     });
+  };
+
+  beforeEach(async function () {
+    await loadFixture(bridgeFixture);
   });
 
   it("send tokens from proxy oft and receive them back", async function () {

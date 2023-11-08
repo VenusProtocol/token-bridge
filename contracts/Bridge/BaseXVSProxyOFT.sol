@@ -93,6 +93,10 @@ abstract contract BaseXVSProxyOFT is Pausable, ExponentialNoError, BaseOFTV2 {
      * @notice Event emitted when trusted remote sets to empty.
      */
     event TrustedRemoteRemoved(uint16 chainId);
+    /**
+     * @notice Event emitted when inner token set successfully.
+     */
+    event InnerTokenAdded(address indexed innerToken);
 
     /**
      * @param tokenAddress_ Address of the inner token.
@@ -122,6 +126,10 @@ abstract contract BaseXVSProxyOFT is Pausable, ExponentialNoError, BaseOFTV2 {
         ld2sdRate = 10 ** (decimals - sharedDecimals_);
 
         ensureNonzeroAddress(oracle_);
+
+        emit InnerTokenAdded(tokenAddress_);
+        emit OracleChanged(address(0), oracle_);
+
         oracle = ResilientOracleInterface(oracle_);
     }
 

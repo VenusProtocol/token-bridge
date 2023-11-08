@@ -104,8 +104,8 @@ describe("Bridge Admin: ", function () {
       "setPayloadSizeLimit(uint16,uint256)",
       "setUseCustomAdapterParams(bool)",
     ];
-    const removeArray = new Array(functionregistry.length).fill(false);
-    await bridgeAdmin.upsertSignature(functionregistry, removeArray);
+    const activeArray = new Array(functionregistry.length).fill(true);
+    await bridgeAdmin.upsertSignature(functionregistry, activeArray);
     await loadFixture(grantPermissionsFixture);
   });
 
@@ -115,7 +115,7 @@ describe("Bridge Admin: ", function () {
     );
   });
 
-  it("Revert if permisssions are not granted to call owner functions of bridge", async function () {
+  it("Revert if permissions are not granted to call owner functions of bridge", async function () {
     let data = remoteOFT.interface.encodeFunctionData("setTrustedRemote", [localChainId, remotePath]);
     await expect(
       acc1.sendTransaction({
@@ -163,7 +163,7 @@ describe("Bridge Admin: ", function () {
     ).to.revertedWithCustomError(bridgeAdmin, "Unauthorized");
   });
 
-  it("Success if permisssions are granted to call owner functions of bridge", async function () {
+  it("Success if permissions are granted to call owner functions of bridge", async function () {
     let data = remoteOFT.interface.encodeFunctionData("setMaxDailyLimit", [localChainId, maxDailyTransactionLimit]);
     await acc2.sendTransaction({
       to: bridgeAdmin.address,
@@ -196,7 +196,7 @@ describe("Bridge Admin: ", function () {
   });
 
   it("Revert if function is removed from function registry", async function () {
-    await bridgeAdmin.upsertSignature(["setMaxDailyReceiveLimit(uint16,uint256)"], [true]);
+    await bridgeAdmin.upsertSignature(["setMaxDailyReceiveLimit(uint16,uint256)"], [false]);
     const data = remoteOFT.interface.encodeFunctionData("setMaxDailyReceiveLimit", [
       localChainId,
       maxDailyTransactionLimit,
