@@ -70,9 +70,8 @@ const executeBridgeCommands = async (target: XVSProxyOFTDest, hre: HardhatRuntim
     const entry = methods[i];
     const { method, args } = entry;
     console.log(method);
-
-    const data = target.interface.encodeFunctionData(method, args);
-    console.log(data);
+    const iface = new ethers.utils.Interface([`function ${method}`]);
+    const data = iface.encodeFunctionData(method, args);
     const tx = await signer.sendTransaction({
       to: target.address,
       data: data,
