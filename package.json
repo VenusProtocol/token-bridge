@@ -1,7 +1,7 @@
 {
   "name": "@venusprotocol/token-bridge",
-  "version": "1.0.0",
-  "description": "",
+  "version": "0.0.1",
+  "description": "Contracts to bridge tokens using LayerZero technology and applying some rules on top of it",
   "files": [
     "artifacts",
     "typechain",
@@ -27,7 +27,7 @@
     "prepare": "husky install"
   },
   "keywords": [],
-  "author": "",
+  "author": "Venus",
   "license": "ISC",
   "engines": {
     "node": ">=18.0.0"
@@ -39,7 +39,6 @@
     "@openzeppelin/hardhat-upgrades": "^1.21.0",
     "@solidity-parser/parser": "^0.13.2",
     "ethers": "^5.7.0",
-    "hardhat-deploy": "^0.11.14",
     "module-alias": "^2.2.2"
   },
   "devDependencies": {
@@ -63,7 +62,7 @@
     "@typescript-eslint/parser": "^5.27.1",
     "@venusprotocol/governance-contracts": "^1.0.0",
     "@venusprotocol/oracle": "1.7.2",
-    "@venusprotocol/solidity-utilities": "1.1.0-dev.1",
+    "@venusprotocol/solidity-utilities": "1.1.0",
     "bignumber.js": "9.0.0",
     "chai": "^4.3.6",
     "dotenv": "^10.0.0",
