@@ -5,7 +5,10 @@
       {
         "preset": "conventionalcommits",
         "releaseRules": [
-          {"breaking": true, "release": "major"},
+          {
+            "breaking": true,
+            "release": "major"
+          },
           {
             "type": "build",
             "release": false
@@ -51,12 +54,6 @@
       "@semantic-release/release-notes-generator",
       {
         "preset": "conventionalcommits"
-      }
-    ],
-    [
-      "@semantic-release/changelog",
-      {
-        "changelogFile": "CHANGELOG.md"
       }
     ],
     [
