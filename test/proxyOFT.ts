@@ -1,7 +1,6 @@
 import { FakeContract, smock } from "@defi-wonderland/smock";
 import { time } from "@nomicfoundation/hardhat-network-helpers";
 import { expect } from "chai";
-import { BigNumber } from "ethers";
 import { ethers, upgrades } from "hardhat";
 import { SignerWithAddress } from "hardhat-deploy-ethers/signers";
 
@@ -45,13 +44,11 @@ describe("Proxy OFTV2: ", function () {
     bridgeAdminLocal: XVSBridgeAdmin,
     remoteToken: XVS,
     localPath: string,
-    alice: SignerWithAddress,
-    bob: SignerWithAddress,
-    deployer: SignerWithAddress,
+    acc2: SignerWithAddress,
+    acc3: SignerWithAddress,
+    acc1: SignerWithAddress,
     accessControlManager: FakeContract<AccessControlManager>,
     oracle: FakeContract<ResilientOracleInterface>,
-    initialAmount: BigNumber,
-    amount: BigNumber,
     defaultAdapterParams: any;
 
   before(async function () {
@@ -62,9 +59,9 @@ describe("Proxy OFTV2: ", function () {
     accessControlManager = await smock.fake<AccessControlManager>("AccessControlManager");
     accessControlManager.isAllowedToCall.returns(true);
     RemoteTokenFactory = await ethers.getContractFactory("XVS");
-    deployer = (await ethers.getSigners())[0];
-    alice = (await ethers.getSigners())[1];
-    bob = (await ethers.getSigners())[2];
+    acc1 = (await ethers.getSigners())[0];
+    acc2 = (await ethers.getSigners())[1];
+    acc3 = (await ethers.getSigners())[2];
     oracle = await smock.fake<ResilientOracleInterface>("ResilientOracleInterface");
     oracle.getPrice.returns(convertToUnit(1, 18));
     defaultAdapterParams = ethers.utils.solidityPack(["uint16", "uint256"], [1, 200000]);
@@ -148,12 +145,12 @@ describe("Proxy OFTV2: ", function () {
     await bridgeAdminLocal.setTrustedRemoteAddress(remoteChainId, remoteOFT.address);
 
     let data = localOFT.interface.encodeFunctionData("setMinDstGas", [remoteChainId, 0, 200000]);
-    await deployer.sendTransaction({
+    await acc1.sendTransaction({
       to: bridgeAdminLocal.address,
       data: data,
     });
     data = localOFT.interface.encodeFunctionData("setMaxDailyLimit", [remoteChainId, maxDailyTransactionLimit]);
-    await deployer.sendTransaction({
+    await acc1.sendTransaction({
       to: bridgeAdminLocal.address,
       data: data,
     });
@@ -162,13 +159,13 @@ describe("Proxy OFTV2: ", function () {
       remoteChainId,
       singleTransactionLimit,
     ]);
-    await deployer.sendTransaction({
+    await acc1.sendTransaction({
       to: bridgeAdminLocal.address,
       data: data,
     });
 
     data = localOFT.interface.encodeFunctionData("setMaxDailyReceiveLimit", [remoteChainId, maxDailyTransactionLimit]);
-    await deployer.sendTransaction({
+    await acc1.sendTransaction({
       to: bridgeAdminLocal.address,
       data: data,
     });
@@ -176,7 +173,7 @@ describe("Proxy OFTV2: ", function () {
       remoteChainId,
       singleTransactionLimit,
     ]);
-    await deployer.sendTransaction({
+    await acc1.sendTransaction({
       to: bridgeAdminLocal.address,
       data: data,
     });
@@ -186,13 +183,13 @@ describe("Proxy OFTV2: ", function () {
     await bridgeAdminRemote.setTrustedRemoteAddress(localChainId, localOFT.address);
 
     data = remoteOFT.interface.encodeFunctionData("setMinDstGas", [localChainId, 0, 200000]);
-    await deployer.sendTransaction({
+    await acc1.sendTransaction({
       to: bridgeAdminRemote.address,
       data: data,
     });
 
     data = remoteOFT.interface.encodeFunctionData("setMaxDailyLimit", [localChainId, maxDailyTransactionLimit]);
-    await deployer.sendTransaction({
+    await acc1.sendTransaction({
       to: bridgeAdminRemote.address,
       data: data,
     });
@@ -200,13 +197,13 @@ describe("Proxy OFTV2: ", function () {
       localChainId,
       singleTransactionLimit,
     ]);
-    await deployer.sendTransaction({
+    await acc1.sendTransaction({
       to: bridgeAdminRemote.address,
       data: data,
     });
 
     data = remoteOFT.interface.encodeFunctionData("setMaxDailyReceiveLimit", [localChainId, maxDailyTransactionLimit]);
-    await deployer.sendTransaction({
+    await acc1.sendTransaction({
       to: bridgeAdminRemote.address,
       data: data,
     });
@@ -214,90 +211,90 @@ describe("Proxy OFTV2: ", function () {
       localChainId,
       singleTransactionLimit,
     ]);
-    await deployer.sendTransaction({
+    await acc1.sendTransaction({
       to: bridgeAdminRemote.address,
       data: data,
     });
   });
 
   it("send tokens from proxy oft and receive them back", async function () {
-    initialAmount = ethers.utils.parseEther("1.0000000001", 18); // 1 ether
-    amount = ethers.utils.parseEther("1", 18);
+    const initialAmount = ethers.utils.parseEther("1.0000000001", 18); // 1 ether
+    const amount = ethers.utils.parseEther("1", 18);
     const dust = ethers.utils.parseEther("0.0000000001");
-    await localToken.connect(alice).faucet(initialAmount);
-    // verify alice has tokens and bob has no tokens on remote chain
-    expect(await localToken.balanceOf(alice.address)).to.be.equal(initialAmount);
-    expect(await remoteToken.balanceOf(bob.address)).to.be.equal(0);
-    // alice sends tokens to bob on remote chain
+    await localToken.connect(acc2).faucet(initialAmount);
+    // verify acc2 has tokens and acc3 has no tokens on remote chain
+    expect(await localToken.balanceOf(acc2.address)).to.be.equal(initialAmount);
+    expect(await remoteToken.balanceOf(acc3.address)).to.be.equal(0);
+    // acc2 sends tokens to acc3 on remote chain
     // approve the proxy to swap your tokens
-    await localToken.connect(alice).approve(localOFT.address, initialAmount);
+    await localToken.connect(acc2).approve(localOFT.address, initialAmount);
     // swaps token to remote chain
-    const bobAddressBytes32 = ethers.utils.defaultAbiCoder.encode(["address"], [bob.address]);
+    const acc3AddressBytes32 = ethers.utils.defaultAbiCoder.encode(["address"], [acc3.address]);
     let nativeFee = (
-      await localOFT.estimateSendFee(remoteChainId, bobAddressBytes32, initialAmount, false, defaultAdapterParams)
+      await localOFT.estimateSendFee(remoteChainId, acc3AddressBytes32, initialAmount, false, defaultAdapterParams)
     ).nativeFee;
 
     await localOFT
-      .connect(alice)
+      .connect(acc2)
       .sendFrom(
-        alice.address,
+        acc2.address,
         remoteChainId,
-        bobAddressBytes32,
+        acc3AddressBytes32,
         initialAmount,
-        [alice.address, ethers.constants.AddressZero, defaultAdapterParams],
+        [acc2.address, ethers.constants.AddressZero, defaultAdapterParams],
         { value: nativeFee },
       );
 
     // tokens are now owned by the proxy contract, because this is the original oft chain
     expect(await localToken.balanceOf(localOFT.address)).to.equal(amount);
     expect(await localOFT.circulatingSupply()).to.equal(amount.div(10 ** (18 - sharedDecimals)));
-    expect(await localToken.balanceOf(alice.address)).to.equal(dust);
+    expect(await localToken.balanceOf(acc2.address)).to.equal(dust);
     // tokens received on the remote chain
     expect(await remoteOFT.circulatingSupply()).to.equal(amount);
-    expect(await remoteToken.balanceOf(bob.address)).to.be.equal(amount);
-    // bob send tokens back to alice from remote chain
-    const aliceAddressBytes32 = ethers.utils.defaultAbiCoder.encode(["address"], [alice.address]);
+    expect(await remoteToken.balanceOf(acc3.address)).to.be.equal(amount);
+    // acc3 send tokens back to acc2 from remote chain
+    const acc2AddressBytes32 = ethers.utils.defaultAbiCoder.encode(["address"], [acc2.address]);
     const halfAmount = amount.div(2);
     nativeFee = (
-      await remoteOFT.estimateSendFee(localChainId, aliceAddressBytes32, halfAmount, false, defaultAdapterParams)
+      await remoteOFT.estimateSendFee(localChainId, acc2AddressBytes32, halfAmount, false, defaultAdapterParams)
     ).nativeFee;
 
     await remoteOFT
-      .connect(bob)
+      .connect(acc3)
       .sendFrom(
-        bob.address,
+        acc3.address,
         localChainId,
-        aliceAddressBytes32,
+        acc2AddressBytes32,
         halfAmount,
-        [bob.address, ethers.constants.AddressZero, defaultAdapterParams],
+        [acc3.address, ethers.constants.AddressZero, defaultAdapterParams],
         { value: nativeFee },
       );
     // half tokens are burned on the remote chain
     expect(await remoteOFT.circulatingSupply()).to.equal(halfAmount);
-    expect(await remoteToken.balanceOf(bob.address)).to.be.equal(halfAmount);
+    expect(await remoteToken.balanceOf(acc3.address)).to.be.equal(halfAmount);
     // tokens received on the local chain and unlocked from the proxy
     expect(await localToken.balanceOf(localOFT.address)).to.be.equal(halfAmount);
-    expect(await localToken.balanceOf(alice.address)).to.be.equal(halfAmount.add(dust));
+    expect(await localToken.balanceOf(acc2.address)).to.be.equal(halfAmount.add(dust));
   });
 
   it("Reverts if single transaction limit exceed", async function () {
-    amount = ethers.utils.parseEther("11", 18);
-    await localToken.connect(alice).faucet(amount);
-    await localToken.connect(alice).approve(localOFT.address, amount);
+    const amount = ethers.utils.parseEther("11", 18);
+    await localToken.connect(acc2).faucet(amount);
+    await localToken.connect(acc2).approve(localOFT.address, amount);
 
-    const bobAddressBytes32 = ethers.utils.defaultAbiCoder.encode(["address"], [bob.address]);
+    const acc3AddressBytes32 = ethers.utils.defaultAbiCoder.encode(["address"], [acc3.address]);
     const nativeFee = (
-      await localOFT.estimateSendFee(remoteChainId, bobAddressBytes32, amount, false, defaultAdapterParams)
+      await localOFT.estimateSendFee(remoteChainId, acc3AddressBytes32, amount, false, defaultAdapterParams)
     ).nativeFee;
     await expect(
       localOFT
-        .connect(alice)
+        .connect(acc2)
         .sendFrom(
-          alice.address,
+          acc2.address,
           remoteChainId,
-          bobAddressBytes32,
+          acc3AddressBytes32,
           amount,
-          [alice.address, ethers.constants.AddressZero, defaultAdapterParams],
+          [acc2.address, ethers.constants.AddressZero, defaultAdapterParams],
           { value: nativeFee },
         ),
     ).to.be.revertedWith("Single Transaction Limit Exceed");
@@ -308,54 +305,54 @@ describe("Proxy OFTV2: ", function () {
       localChainId,
       convertToUnit(5, 18),
     ]);
-    await deployer.sendTransaction({
+    await acc1.sendTransaction({
       to: bridgeAdminRemote.address,
       data: data,
     });
 
-    amount = ethers.utils.parseEther("10", 18);
-    await localToken.connect(alice).faucet(amount);
-    await localToken.connect(alice).approve(localOFT.address, amount);
+    const amount = ethers.utils.parseEther("10", 18);
+    await localToken.connect(acc2).faucet(amount);
+    await localToken.connect(acc2).approve(localOFT.address, amount);
 
-    const bobAddressBytes32 = ethers.utils.defaultAbiCoder.encode(["address"], [bob.address]);
+    const acc3AddressBytes32 = ethers.utils.defaultAbiCoder.encode(["address"], [acc3.address]);
     const nativeFee = (
-      await localOFT.estimateSendFee(remoteChainId, bobAddressBytes32, amount, false, defaultAdapterParams)
+      await localOFT.estimateSendFee(remoteChainId, acc3AddressBytes32, amount, false, defaultAdapterParams)
     ).nativeFee;
     await expect(
       localOFT
-        .connect(alice)
+        .connect(acc2)
         .sendFrom(
-          alice.address,
+          acc2.address,
           remoteChainId,
-          bobAddressBytes32,
+          acc3AddressBytes32,
           amount,
-          [alice.address, ethers.constants.AddressZero, defaultAdapterParams],
+          [acc2.address, ethers.constants.AddressZero, defaultAdapterParams],
           { value: nativeFee },
         ),
     ).not.to.emit(remoteOFT, "ReceiveFromChain");
   });
 
   it("Reverts if max daily transaction limit exceed", async function () {
-    initialAmount = ethers.utils.parseEther("110", 18);
-    amount = ethers.utils.parseEther("10", 18);
-    await localToken.connect(alice).faucet(initialAmount);
-    await localToken.connect(alice).approve(localOFT.address, initialAmount);
+    const initialAmount = ethers.utils.parseEther("110", 18);
+    const amount = ethers.utils.parseEther("10", 18);
+    await localToken.connect(acc2).faucet(initialAmount);
+    await localToken.connect(acc2).approve(localOFT.address, initialAmount);
 
-    const bobAddressBytes32 = ethers.utils.defaultAbiCoder.encode(["address"], [bob.address]);
+    const acc3AddressBytes32 = ethers.utils.defaultAbiCoder.encode(["address"], [acc3.address]);
     const nativeFee = (
-      await localOFT.estimateSendFee(remoteChainId, bobAddressBytes32, amount, false, defaultAdapterParams)
+      await localOFT.estimateSendFee(remoteChainId, acc3AddressBytes32, amount, false, defaultAdapterParams)
     ).nativeFee;
 
     // After 10 transaction it should fail as limit of max daily transaction is 100 USD and price per full token in USD is 1
     for (let i = 0; i < 10; i++) {
       await localOFT
-        .connect(alice)
+        .connect(acc2)
         .sendFrom(
-          alice.address,
+          acc2.address,
           remoteChainId,
-          bobAddressBytes32,
+          acc3AddressBytes32,
           amount,
-          [alice.address, ethers.constants.AddressZero, defaultAdapterParams],
+          [acc2.address, ethers.constants.AddressZero, defaultAdapterParams],
           { value: nativeFee },
         );
     }
@@ -363,13 +360,13 @@ describe("Proxy OFTV2: ", function () {
     expect(await remoteOFT.circulatingSupply()).equals(maxDailyTransactionLimit);
     await expect(
       localOFT
-        .connect(alice)
+        .connect(acc2)
         .sendFrom(
-          alice.address,
+          acc2.address,
           remoteChainId,
-          bobAddressBytes32,
+          acc3AddressBytes32,
           amount,
-          [alice.address, ethers.constants.AddressZero, defaultAdapterParams],
+          [acc2.address, ethers.constants.AddressZero, defaultAdapterParams],
           { value: nativeFee },
         ),
     ).to.be.revertedWith("Daily Transaction Limit Exceed");
@@ -378,43 +375,43 @@ describe("Proxy OFTV2: ", function () {
   it("Reverts if max daily transaction limit exceed on remote chain", async function () {
     const remoteReceiveLimit = convertToUnit(90, 18);
     const data = remoteOFT.interface.encodeFunctionData("setMaxDailyReceiveLimit", [localChainId, remoteReceiveLimit]);
-    await deployer.sendTransaction({
+    await acc1.sendTransaction({
       to: bridgeAdminRemote.address,
       data: data,
     });
 
-    initialAmount = ethers.utils.parseEther("110", 18);
-    amount = ethers.utils.parseEther("10", 18);
-    await localToken.connect(alice).faucet(initialAmount);
-    await localToken.connect(alice).approve(localOFT.address, initialAmount);
+    const initialAmount = ethers.utils.parseEther("110", 18);
+    const amount = ethers.utils.parseEther("10", 18);
+    await localToken.connect(acc2).faucet(initialAmount);
+    await localToken.connect(acc2).approve(localOFT.address, initialAmount);
 
-    const bobAddressBytes32 = ethers.utils.defaultAbiCoder.encode(["address"], [bob.address]);
+    const acc3AddressBytes32 = ethers.utils.defaultAbiCoder.encode(["address"], [acc3.address]);
     const nativeFee = (
-      await localOFT.estimateSendFee(remoteChainId, bobAddressBytes32, amount, false, defaultAdapterParams)
+      await localOFT.estimateSendFee(remoteChainId, acc3AddressBytes32, amount, false, defaultAdapterParams)
     ).nativeFee;
 
     // After 10 transaction it should fail as limit of max daily transaction is 100 USD and price per full token in USD is 1
     for (let i = 0; i < 9; i++) {
       await localOFT
-        .connect(alice)
+        .connect(acc2)
         .sendFrom(
-          alice.address,
+          acc2.address,
           remoteChainId,
-          bobAddressBytes32,
+          acc3AddressBytes32,
           amount,
-          [alice.address, ethers.constants.AddressZero, defaultAdapterParams],
+          [acc2.address, ethers.constants.AddressZero, defaultAdapterParams],
           { value: nativeFee },
         );
     }
     await expect(
       localOFT
-        .connect(alice)
+        .connect(acc2)
         .sendFrom(
-          alice.address,
+          acc2.address,
           remoteChainId,
-          bobAddressBytes32,
+          acc3AddressBytes32,
           amount,
-          [alice.address, ethers.constants.AddressZero, defaultAdapterParams],
+          [acc2.address, ethers.constants.AddressZero, defaultAdapterParams],
           { value: nativeFee },
         ),
     ).not.to.emit(remoteOFT, "ReceiveFromChain");
@@ -423,26 +420,26 @@ describe("Proxy OFTV2: ", function () {
   });
 
   it("Reset limit if 24hour window passed", async function () {
-    initialAmount = ethers.utils.parseEther("110", 18);
-    amount = ethers.utils.parseEther("10", 18);
-    await localToken.connect(alice).faucet(initialAmount);
-    await localToken.connect(alice).approve(localOFT.address, initialAmount);
+    const initialAmount = ethers.utils.parseEther("110", 18);
+    const amount = ethers.utils.parseEther("10", 18);
+    await localToken.connect(acc2).faucet(initialAmount);
+    await localToken.connect(acc2).approve(localOFT.address, initialAmount);
 
-    const bobAddressBytes32 = ethers.utils.defaultAbiCoder.encode(["address"], [bob.address]);
+    const acc3AddressBytes32 = ethers.utils.defaultAbiCoder.encode(["address"], [acc3.address]);
     const nativeFee = (
-      await localOFT.estimateSendFee(remoteChainId, bobAddressBytes32, amount, false, defaultAdapterParams)
+      await localOFT.estimateSendFee(remoteChainId, acc3AddressBytes32, amount, false, defaultAdapterParams)
     ).nativeFee;
 
     // After 10 transaction it should fail as limit of max daily transaction is 100 USD and price per full token in USD is 1
     for (let i = 0; i < 10; i++) {
       await localOFT
-        .connect(alice)
+        .connect(acc2)
         .sendFrom(
-          alice.address,
+          acc2.address,
           remoteChainId,
-          bobAddressBytes32,
+          acc3AddressBytes32,
           amount,
-          [alice.address, ethers.constants.AddressZero, defaultAdapterParams],
+          [acc2.address, ethers.constants.AddressZero, defaultAdapterParams],
           { value: nativeFee },
         );
     }
@@ -452,13 +449,13 @@ describe("Proxy OFTV2: ", function () {
 
     await expect(
       localOFT
-        .connect(alice)
+        .connect(acc2)
         .sendFrom(
-          alice.address,
+          acc2.address,
           remoteChainId,
-          bobAddressBytes32,
+          acc3AddressBytes32,
           amount,
-          [alice.address, ethers.constants.AddressZero, defaultAdapterParams],
+          [acc2.address, ethers.constants.AddressZero, defaultAdapterParams],
           { value: nativeFee },
         ),
     ).to.be.revertedWith("Daily Transaction Limit Exceed");
@@ -467,41 +464,41 @@ describe("Proxy OFTV2: ", function () {
 
     await expect(
       localOFT
-        .connect(alice)
+        .connect(acc2)
         .sendFrom(
-          alice.address,
+          acc2.address,
           remoteChainId,
-          bobAddressBytes32,
+          acc3AddressBytes32,
           amount,
-          [alice.address, ethers.constants.AddressZero, defaultAdapterParams],
+          [acc2.address, ethers.constants.AddressZero, defaultAdapterParams],
           { value: nativeFee },
         ),
     )
       .to.be.emit(remoteOFT, "ReceiveFromChain")
-      .withArgs(localChainId, bob.address, amount);
+      .withArgs(localChainId, acc3.address, amount);
   });
 
   it("Reverts on remote chain if minting permission is not granted to remoteOFT", async function () {
     accessControlManager.isAllowedToCall.returns(false);
     expect(await remoteEndpoint.inboundNonce(localChainId, localPath)).lessThanOrEqual(0);
-    amount = ethers.utils.parseEther("10", 18);
-    await localToken.connect(alice).faucet(amount);
-    await localToken.connect(alice).approve(localOFT.address, amount);
+    const amount = ethers.utils.parseEther("10", 18);
+    await localToken.connect(acc2).faucet(amount);
+    await localToken.connect(acc2).approve(localOFT.address, amount);
 
-    const bobAddressBytes32 = ethers.utils.defaultAbiCoder.encode(["address"], [bob.address]);
+    const acc3AddressBytes32 = ethers.utils.defaultAbiCoder.encode(["address"], [acc3.address]);
     const nativeFee = (
-      await localOFT.estimateSendFee(remoteChainId, bobAddressBytes32, amount, false, defaultAdapterParams)
+      await localOFT.estimateSendFee(remoteChainId, acc3AddressBytes32, amount, false, defaultAdapterParams)
     ).nativeFee;
 
     await expect(
       localOFT
-        .connect(alice)
+        .connect(acc2)
         .sendFrom(
-          alice.address,
+          acc2.address,
           remoteChainId,
-          bobAddressBytes32,
+          acc3AddressBytes32,
           amount,
-          [alice.address, ethers.constants.AddressZero, defaultAdapterParams],
+          [acc2.address, ethers.constants.AddressZero, defaultAdapterParams],
           { value: nativeFee },
         ),
     ).not.to.emit(remoteOFT, "ReceiveFromChain");
@@ -512,26 +509,26 @@ describe("Proxy OFTV2: ", function () {
   });
 
   it("Reverts on remote chain if minting cap is reached", async function () {
-    await remoteToken.connect(deployer).setMintCap(remoteOFT.address, convertToUnit(10, 18));
+    await remoteToken.connect(acc1).setMintCap(remoteOFT.address, convertToUnit(10, 18));
     expect(await remoteEndpoint.inboundNonce(localChainId, localPath)).lessThanOrEqual(0);
-    initialAmount = ethers.utils.parseEther("20", 18);
-    amount = ethers.utils.parseEther("10", 18);
-    await localToken.connect(alice).faucet(initialAmount);
-    await localToken.connect(alice).approve(localOFT.address, initialAmount);
+    const initialAmount = ethers.utils.parseEther("20", 18);
+    const amount = ethers.utils.parseEther("10", 18);
+    await localToken.connect(acc2).faucet(initialAmount);
+    await localToken.connect(acc2).approve(localOFT.address, initialAmount);
 
-    const bobAddressBytes32 = ethers.utils.defaultAbiCoder.encode(["address"], [bob.address]);
+    const acc3AddressBytes32 = ethers.utils.defaultAbiCoder.encode(["address"], [acc3.address]);
     const nativeFee = (
-      await localOFT.estimateSendFee(remoteChainId, bobAddressBytes32, amount, false, defaultAdapterParams)
+      await localOFT.estimateSendFee(remoteChainId, acc3AddressBytes32, amount, false, defaultAdapterParams)
     ).nativeFee;
 
     await localOFT
-      .connect(alice)
+      .connect(acc2)
       .sendFrom(
-        alice.address,
+        acc2.address,
         remoteChainId,
-        bobAddressBytes32,
+        acc3AddressBytes32,
         amount,
-        [alice.address, ethers.constants.AddressZero, defaultAdapterParams],
+        [acc2.address, ethers.constants.AddressZero, defaultAdapterParams],
         { value: nativeFee },
       ),
       // Msg should reach remote chain
@@ -539,13 +536,13 @@ describe("Proxy OFTV2: ", function () {
 
     await expect(
       localOFT
-        .connect(alice)
+        .connect(acc2)
         .sendFrom(
-          alice.address,
+          acc2.address,
           remoteChainId,
-          bobAddressBytes32,
+          acc3AddressBytes32,
           amount,
-          [alice.address, ethers.constants.AddressZero, defaultAdapterParams],
+          [acc2.address, ethers.constants.AddressZero, defaultAdapterParams],
           { value: nativeFee },
         ),
     ).not.to.emit(remoteOFT, "ReceiveFromChain");
@@ -555,71 +552,71 @@ describe("Proxy OFTV2: ", function () {
   });
 
   it("Reverts initialy and should success on retry", async function () {
-    initialAmount = ethers.utils.parseEther("20", 18);
-    amount = ethers.utils.parseEther("10", 18);
-    await localToken.connect(alice).faucet(initialAmount);
-    await localToken.connect(alice).approve(localOFT.address, initialAmount);
+    const initialAmount = ethers.utils.parseEther("20", 18);
+    const amount = ethers.utils.parseEther("10", 18);
+    await localToken.connect(acc2).faucet(initialAmount);
+    await localToken.connect(acc2).approve(localOFT.address, initialAmount);
 
-    const bobAddressBytes32 = ethers.utils.defaultAbiCoder.encode(["address"], [bob.address]);
+    const acc3AddressBytes32 = ethers.utils.defaultAbiCoder.encode(["address"], [acc3.address]);
     const nativeFee = (
-      await localOFT.estimateSendFee(remoteChainId, bobAddressBytes32, amount, false, defaultAdapterParams)
+      await localOFT.estimateSendFee(remoteChainId, acc3AddressBytes32, amount, false, defaultAdapterParams)
     ).nativeFee;
     // Blocking next message
     await remoteEndpoint.blockNextMsg();
     await localOFT
-      .connect(alice)
+      .connect(acc2)
       .sendFrom(
-        alice.address,
+        acc2.address,
         remoteChainId,
-        bobAddressBytes32,
+        acc3AddressBytes32,
         amount,
-        [alice.address, ethers.constants.AddressZero, defaultAdapterParams],
+        [acc2.address, ethers.constants.AddressZero, defaultAdapterParams],
         { value: nativeFee },
       );
     expect(await remoteEndpoint.hasStoredPayload(localChainId, localPath)).equals(true);
     // Initial state
     expect(await remoteOFT.circulatingSupply()).to.equal(0);
-    expect(await remoteToken.balanceOf(bob.address)).to.be.equal(0);
+    expect(await remoteToken.balanceOf(acc3.address)).to.be.equal(0);
 
     const ld2sdAmount = convertToUnit(10, 8);
     const ptSend = await localOFT.PT_SEND();
     const payload = await ethers.utils.solidityPack(
       ["uint8", "bytes", "uint64"],
-      [ptSend, bobAddressBytes32, ld2sdAmount],
+      [ptSend, acc3AddressBytes32, ld2sdAmount],
     );
     await remoteEndpoint.retryPayload(localChainId, localPath, payload);
 
     // tokens received on the remote chain
     expect(await remoteOFT.circulatingSupply()).to.equal(amount);
-    expect(await remoteToken.balanceOf(bob.address)).to.be.equal(amount);
+    expect(await remoteToken.balanceOf(acc3.address)).to.be.equal(amount);
   });
 
   it("Reverts initialy and should fail on retry if trusted remote changed", async function () {
-    initialAmount = ethers.utils.parseEther("20", 18);
-    amount = ethers.utils.parseEther("10", 18);
-    await localToken.connect(alice).faucet(initialAmount);
-    await localToken.connect(alice).approve(localOFT.address, initialAmount);
+    const initialAmount = ethers.utils.parseEther("20", 18);
+    const amount = ethers.utils.parseEther("10", 18);
+    await localToken.connect(acc2).faucet(initialAmount);
+    await localToken.connect(acc2).approve(localOFT.address, initialAmount);
 
-    const bobAddressBytes32 = ethers.utils.defaultAbiCoder.encode(["address"], [bob.address]);
+    const acc3AddressBytes32 = ethers.utils.defaultAbiCoder.encode(["address"], [acc3.address]);
     const nativeFee = (
-      await localOFT.estimateSendFee(remoteChainId, bobAddressBytes32, amount, false, defaultAdapterParams)
+      await localOFT.estimateSendFee(remoteChainId, acc3AddressBytes32, amount, false, defaultAdapterParams)
     ).nativeFee;
     // Blocking next message
     await remoteEndpoint.blockNextMsg();
     await localOFT
-      .connect(alice)
+      .connect(acc2)
       .sendFrom(
-        alice.address,
+        acc2.address,
         remoteChainId,
-        bobAddressBytes32,
+        acc3AddressBytes32,
         amount,
-        [alice.address, ethers.constants.AddressZero, defaultAdapterParams],
+        [acc2.address, ethers.constants.AddressZero, defaultAdapterParams],
         { value: nativeFee },
       );
     expect(await remoteEndpoint.hasStoredPayload(localChainId, localPath)).equals(true);
     // Initial state
     expect(await remoteOFT.circulatingSupply()).to.equal(0);
-    expect(await remoteToken.balanceOf(bob.address)).to.be.equal(0);
+    expect(await remoteToken.balanceOf(acc3.address)).to.be.equal(0);
 
     await bridgeAdminRemote.setTrustedRemoteAddress(localChainId, remoteOFT.address);
 
@@ -627,7 +624,7 @@ describe("Proxy OFTV2: ", function () {
     const ptSend = await localOFT.PT_SEND();
     const payload = await ethers.utils.solidityPack(
       ["uint8", "bytes", "uint64"],
-      [ptSend, bobAddressBytes32, ld2sdAmount],
+      [ptSend, acc3AddressBytes32, ld2sdAmount],
     );
     await expect(remoteEndpoint.retryPayload(localChainId, localPath, payload)).to.be.revertedWith(
       "LzApp: invalid source sending contract",
@@ -636,29 +633,29 @@ describe("Proxy OFTV2: ", function () {
 
   it("Reverts on remote chain if bridge is paused", async function () {
     const data = remoteOFT.interface.encodeFunctionData("pause");
-    await deployer.sendTransaction({
+    await acc1.sendTransaction({
       to: bridgeAdminRemote.address,
       data: data,
     });
 
-    amount = ethers.utils.parseEther("10", 18);
-    await localToken.connect(alice).faucet(amount);
-    await localToken.connect(alice).approve(localOFT.address, amount);
+    const amount = ethers.utils.parseEther("10", 18);
+    await localToken.connect(acc2).faucet(amount);
+    await localToken.connect(acc2).approve(localOFT.address, amount);
 
-    const bobAddressBytes32 = ethers.utils.defaultAbiCoder.encode(["address"], [bob.address]);
+    const acc3AddressBytes32 = ethers.utils.defaultAbiCoder.encode(["address"], [acc3.address]);
     const nativeFee = (
-      await localOFT.estimateSendFee(remoteChainId, bobAddressBytes32, amount, false, defaultAdapterParams)
+      await localOFT.estimateSendFee(remoteChainId, acc3AddressBytes32, amount, false, defaultAdapterParams)
     ).nativeFee;
 
     await expect(
       localOFT
-        .connect(alice)
+        .connect(acc2)
         .sendFrom(
-          alice.address,
+          acc2.address,
           remoteChainId,
-          bobAddressBytes32,
+          acc3AddressBytes32,
           amount,
-          [alice.address, ethers.constants.AddressZero, defaultAdapterParams],
+          [acc2.address, ethers.constants.AddressZero, defaultAdapterParams],
           { value: nativeFee },
         ),
     ).not.to.emit(remoteOFT, "ReceiveFromChain");
@@ -667,55 +664,55 @@ describe("Proxy OFTV2: ", function () {
   it("Reverts on remote chain if xvs token is paused", async function () {
     await remoteToken.pause();
 
-    amount = ethers.utils.parseEther("10", 18);
-    await localToken.connect(alice).faucet(amount);
-    await localToken.connect(alice).approve(localOFT.address, amount);
+    const amount = ethers.utils.parseEther("10", 18);
+    await localToken.connect(acc2).faucet(amount);
+    await localToken.connect(acc2).approve(localOFT.address, amount);
 
-    const bobAddressBytes32 = ethers.utils.defaultAbiCoder.encode(["address"], [bob.address]);
+    const acc3AddressBytes32 = ethers.utils.defaultAbiCoder.encode(["address"], [acc3.address]);
     const nativeFee = (
-      await localOFT.estimateSendFee(remoteChainId, bobAddressBytes32, amount, false, defaultAdapterParams)
+      await localOFT.estimateSendFee(remoteChainId, acc3AddressBytes32, amount, false, defaultAdapterParams)
     ).nativeFee;
 
     await expect(
       localOFT
-        .connect(alice)
+        .connect(acc2)
         .sendFrom(
-          alice.address,
+          acc2.address,
           remoteChainId,
-          bobAddressBytes32,
+          acc3AddressBytes32,
           amount,
-          [alice.address, ethers.constants.AddressZero, defaultAdapterParams],
+          [acc2.address, ethers.constants.AddressZero, defaultAdapterParams],
           { value: nativeFee },
         ),
     ).not.to.emit(remoteOFT, "ReceiveFromChain");
   });
 
   it("Reverts if amount is too small", async function () {
-    amount = ethers.utils.parseEther("0.00000000001", 18);
-    await localToken.connect(alice).faucet(amount);
-    await localToken.connect(alice).approve(localOFT.address, amount);
+    const amount = ethers.utils.parseEther("0.00000000001", 18);
+    await localToken.connect(acc2).faucet(amount);
+    await localToken.connect(acc2).approve(localOFT.address, amount);
 
-    const bobAddressBytes32 = ethers.utils.defaultAbiCoder.encode(["address"], [bob.address]);
+    const acc3AddressBytes32 = ethers.utils.defaultAbiCoder.encode(["address"], [acc3.address]);
     const nativeFee = (
-      await localOFT.estimateSendFee(remoteChainId, bobAddressBytes32, amount, false, defaultAdapterParams)
+      await localOFT.estimateSendFee(remoteChainId, acc3AddressBytes32, amount, false, defaultAdapterParams)
     ).nativeFee;
 
     await expect(
       localOFT
-        .connect(alice)
+        .connect(acc2)
         .sendFrom(
-          alice.address,
+          acc2.address,
           remoteChainId,
-          bobAddressBytes32,
+          acc3AddressBytes32,
           amount,
-          [alice.address, ethers.constants.AddressZero, defaultAdapterParams],
+          [acc2.address, ethers.constants.AddressZero, defaultAdapterParams],
           { value: nativeFee },
         ),
     ).to.be.revertedWith("OFTCore: amount too small");
   });
   it("Successs on removal of trusted remote", async function () {
     const data = localOFT.interface.encodeFunctionData("removeTrustedRemote", [remoteChainId]);
-    await deployer.sendTransaction({
+    await acc1.sendTransaction({
       to: bridgeAdminLocal.address,
       data: data,
     });

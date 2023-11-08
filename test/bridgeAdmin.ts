@@ -1,3 +1,4 @@
+import { loadFixture } from "@nomicfoundation/hardhat-network-helpers";
 import { expect } from "chai";
 import { ethers, upgrades } from "hardhat";
 import { SignerWithAddress } from "hardhat-deploy-ethers/signers";
@@ -27,41 +28,41 @@ describe("Bridge Admin: ", function () {
     remoteOFT: XVSProxyOFTDest,
     bridgeAdmin: XVSBridgeAdmin,
     remotePath: string,
-    alice: SignerWithAddress,
-    deployer: SignerWithAddress,
+    acc2: SignerWithAddress,
+    acc1: SignerWithAddress,
     accessControlManager: AccessControlManager,
     remoteToken: XVS;
 
-  async function grantPermissions() {
+  const grantPermissionsFixture = async () => {
     let tx = await accessControlManager
-      .connect(deployer)
-      .giveCallPermission(bridgeAdmin.address, "setMaxSingleTransactionLimit(uint16,uint256)", alice.address);
+      .connect(acc1)
+      .giveCallPermission(bridgeAdmin.address, "setMaxSingleTransactionLimit(uint16,uint256)", acc2.address);
     await tx.wait();
 
     tx = await accessControlManager
-      .connect(deployer)
-      .giveCallPermission(bridgeAdmin.address, "setMaxDailyLimit(uint16,uint256)", alice.address);
+      .connect(acc1)
+      .giveCallPermission(bridgeAdmin.address, "setMaxDailyLimit(uint16,uint256)", acc2.address);
     await tx.wait();
 
     tx = await accessControlManager
-      .connect(deployer)
-      .giveCallPermission(bridgeAdmin.address, "setMaxSingleReceiveTransactionLimit(uint16,uint256)", alice.address);
+      .connect(acc1)
+      .giveCallPermission(bridgeAdmin.address, "setMaxSingleReceiveTransactionLimit(uint16,uint256)", acc2.address);
     await tx.wait();
 
     tx = await accessControlManager
-      .connect(deployer)
-      .giveCallPermission(bridgeAdmin.address, "setMaxDailyReceiveLimit(uint16,uint256)", alice.address);
+      .connect(acc1)
+      .giveCallPermission(bridgeAdmin.address, "setMaxDailyReceiveLimit(uint16,uint256)", acc2.address);
     await tx.wait();
 
     tx = await accessControlManager
-      .connect(deployer)
-      .giveCallPermission(bridgeAdmin.address, "transferBridgeOwnership(address)", alice.address);
+      .connect(acc1)
+      .giveCallPermission(bridgeAdmin.address, "transferBridgeOwnership(address)", acc2.address);
     await tx.wait();
-  }
+  };
 
   before(async function () {
-    deployer = (await ethers.getSigners())[0];
-    alice = (await ethers.getSigners())[1];
+    acc1 = (await ethers.getSigners())[0];
+    acc2 = (await ethers.getSigners())[1];
 
     LZEndpointMock = await ethers.getContractFactory("LZEndpointMock");
     ProxyOFTV2Dest = await ethers.getContractFactory("XVSProxyOFTDest");
@@ -105,10 +106,11 @@ describe("Bridge Admin: ", function () {
     ];
     const removeArray = new Array(functionregistry.length).fill(false);
     await bridgeAdmin.upsertSignature(functionregistry, removeArray);
+    await loadFixture(grantPermissionsFixture);
   });
 
   it("Revert if EOA called owner function of bridge", async function () {
-    await expect(remoteOFT.connect(deployer).setTrustedRemote(localChainId, remotePath)).to.be.revertedWith(
+    await expect(remoteOFT.connect(acc1).setTrustedRemote(localChainId, remotePath)).to.be.revertedWith(
       "Ownable: caller is not the owner",
     );
   });
@@ -116,7 +118,7 @@ describe("Bridge Admin: ", function () {
   it("Revert if permisssions are not granted to call owner functions of bridge", async function () {
     let data = remoteOFT.interface.encodeFunctionData("setTrustedRemote", [localChainId, remotePath]);
     await expect(
-      deployer.sendTransaction({
+      acc1.sendTransaction({
         to: bridgeAdmin.address,
         data: data,
       }),
@@ -127,7 +129,7 @@ describe("Bridge Admin: ", function () {
       singleTransactionLimit,
     ]);
     await expect(
-      deployer.sendTransaction({
+      acc1.sendTransaction({
         to: bridgeAdmin.address,
         data: data,
       }),
@@ -135,7 +137,7 @@ describe("Bridge Admin: ", function () {
 
     data = remoteOFT.interface.encodeFunctionData("setMaxDailyLimit", [localChainId, maxDailyTransactionLimit]);
     await expect(
-      deployer.sendTransaction({
+      acc1.sendTransaction({
         to: bridgeAdmin.address,
         data: data,
       }),
@@ -146,7 +148,7 @@ describe("Bridge Admin: ", function () {
       singleTransactionLimit,
     ]);
     await expect(
-      deployer.sendTransaction({
+      acc1.sendTransaction({
         to: bridgeAdmin.address,
         data: data,
       }),
@@ -154,7 +156,7 @@ describe("Bridge Admin: ", function () {
 
     data = remoteOFT.interface.encodeFunctionData("setMaxDailyReceiveLimit", [localChainId, maxDailyTransactionLimit]);
     await expect(
-      deployer.sendTransaction({
+      acc1.sendTransaction({
         to: bridgeAdmin.address,
         data: data,
       }),
@@ -162,10 +164,8 @@ describe("Bridge Admin: ", function () {
   });
 
   it("Success if permisssions are granted to call owner functions of bridge", async function () {
-    await grantPermissions();
-
     let data = remoteOFT.interface.encodeFunctionData("setMaxDailyLimit", [localChainId, maxDailyTransactionLimit]);
-    await alice.sendTransaction({
+    await acc2.sendTransaction({
       to: bridgeAdmin.address,
       data: data,
     });
@@ -174,13 +174,13 @@ describe("Bridge Admin: ", function () {
       localChainId,
       singleTransactionLimit,
     ]);
-    await alice.sendTransaction({
+    await acc2.sendTransaction({
       to: bridgeAdmin.address,
       data: data,
     });
 
     data = remoteOFT.interface.encodeFunctionData("setMaxDailyReceiveLimit", [localChainId, maxDailyTransactionLimit]);
-    await alice.sendTransaction({
+    await acc2.sendTransaction({
       to: bridgeAdmin.address,
       data: data,
     });
@@ -189,7 +189,7 @@ describe("Bridge Admin: ", function () {
       localChainId,
       singleTransactionLimit,
     ]);
-    await alice.sendTransaction({
+    await acc2.sendTransaction({
       to: bridgeAdmin.address,
       data: data,
     });
@@ -202,7 +202,7 @@ describe("Bridge Admin: ", function () {
       maxDailyTransactionLimit,
     ]);
     await expect(
-      deployer.sendTransaction({
+      acc1.sendTransaction({
         to: bridgeAdmin.address,
         data: data,
       }),
@@ -212,7 +212,7 @@ describe("Bridge Admin: ", function () {
   it("Revert if function is not found in bridge admin function registry", async function () {
     const data = remoteOFT.interface.encodeFunctionData("oracle");
     await expect(
-      deployer.sendTransaction({
+      acc1.sendTransaction({
         to: bridgeAdmin.address,
         data: data,
       }),
@@ -220,7 +220,7 @@ describe("Bridge Admin: ", function () {
   });
 
   it("Success on trnafer bridge owner", async function () {
-    await bridgeAdmin.connect(alice).transferBridgeOwnership(alice.address);
-    expect(await remoteOFT.owner()).equals(alice.address);
+    await bridgeAdmin.connect(acc2).transferBridgeOwnership(acc2.address);
+    expect(await remoteOFT.owner()).equals(acc2.address);
   });
 });
