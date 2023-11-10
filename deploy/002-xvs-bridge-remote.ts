@@ -11,7 +11,7 @@ import {
   xvsTokenPermissions,
 } from "../helpers/deploymentConfig";
 import { toAddress } from "../helpers/utils";
-import { XVSBridgeAdmin, XVSProxyOFTDest } from "../typechain";
+import { XVS, XVSBridgeAdmin, XVSProxyOFTDest } from "../typechain";
 
 interface GovernanceCommand {
   contract: string;
@@ -88,10 +88,18 @@ const func: DeployFunction = async function (hre: HardhatRuntimeEnvironment) {
 
   const proxyOwnerAddress = await toAddress(preconfiguredAddresses.NormalTimelock, hre);
 
+  const XVS = await deploy("XVS", {
+    from: deployer,
+    contract: "XVS",
+    args: [preconfiguredAddresses.AccessControlManager],
+    autoMine: true,
+    log: true,
+  });
+
   const XVSProxyOFTDest = await deploy("XVSProxyOFTDest", {
     from: deployer,
     contract: "XVSProxyOFTDest",
-    args: [preconfiguredAddresses.XVS, 8, preconfiguredAddresses.LzEndpoint, preconfiguredAddresses.ResilientOracle],
+    args: [XVS.address, 8, preconfiguredAddresses.LzEndpoint, preconfiguredAddresses.ResilientOracle],
     autoMine: true,
     log: true,
   });
@@ -115,11 +123,15 @@ const func: DeployFunction = async function (hre: HardhatRuntimeEnvironment) {
 
   const bridge = await ethers.getContractAt<XVSProxyOFTDest>("XVSProxyOFTDest", XVSProxyOFTDest.address, deployer);
   const bridgeAdmin = await ethers.getContractAt<XVSBridgeAdmin>("XVSBridgeAdmin", XVSBridgeAdmin.address, deployer);
+  const xvs = await ethers.getContractAt<XVS>("XVS", XVS.address, deployer);
 
   await executeBridgeCommands(bridge, hre, deployer);
 
   const removeArray = new Array(xvsBridgeMethods.length).fill(false);
   let tx = await bridgeAdmin.upsertSignature(xvsBridgeMethods, removeArray);
+  await tx.wait();
+
+  tx = await xvs.transferOwnership(preconfiguredAddresses.NormalTimelock);
   await tx.wait();
 
   tx = await bridge.transferOwnership(XVSBridgeAdmin.address);
@@ -144,15 +156,15 @@ const func: DeployFunction = async function (hre: HardhatRuntimeEnvironment) {
       xvsTokenPermissions,
       preconfiguredAddresses.AccessControlManager,
       XVSProxyOFTDest.address,
-      preconfiguredAddresses.XVS,
+      XVS.address,
       hre,
     )),
 
     ...(await configureAccessControls(
-      ["setMintCap(address,uint256"],
+      ["setMintCap(address,uint256)"],
       preconfiguredAddresses.AccessControlManager,
       preconfiguredAddresses.NormalTimelock,
-      preconfiguredAddresses.XVS,
+      XVS.address,
       hre,
     )),
 
@@ -178,7 +190,7 @@ const func: DeployFunction = async function (hre: HardhatRuntimeEnvironment) {
       value: 0,
     },
 
-    ...(await configureXVSTokenMintCapCommands(preconfiguredAddresses.XVS, XVSProxyOFTDest.address)),
+    ...(await configureXVSTokenMintCapCommands(XVS.address, XVSProxyOFTDest.address)),
   ];
   console.log("Please propose a Multisig tx with the following commands:");
   console.log(
