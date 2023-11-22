@@ -125,6 +125,24 @@ const config: HardhatUserConfig = {
     pages: "files",
     templates: "./docgen-templates",
   },
+  external: {
+    deployments: {
+      bsctestnet: [
+        "node_modules/@venusprotocol/governance-contracts/deployments/bsctestnet",
+        "node_modules/@venusprotocol/venus-protocol/deployments/bsctestnet",
+        "node_modules/@venusprotocol/oracle/deployments/bsctestnet",
+      ],
+      bscmainnet: [
+        "node_modules/@venusprotocol/governance-contracts/deployments/bscmainnet",
+        "node_modules/@venusprotocol/venus-protocol/deployments/bsctestnet",
+        "node_modules/@venusprotocol/oracle/deployments/bsctestnet",
+      ],
+      sepolia: [
+        "node_modules/@venusprotocol/governance-contracts/deployments/sepolia",
+        "node_modules/@venusprotocol/oracle/deployments/sepolia",
+      ],
+    },
+  },
 };
 
 function isFork() {

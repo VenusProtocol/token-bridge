@@ -11,7 +11,7 @@ import {
   xvsTokenPermissions,
 } from "../helpers/deploymentConfig";
 import { toAddress } from "../helpers/utils";
-import { XVS, XVSBridgeAdmin, XVSProxyOFTDest } from "../typechain";
+import { XVSProxyOFTDest } from "../typechain";
 
 interface GovernanceCommand {
   contract: string;
@@ -87,11 +87,12 @@ const func: DeployFunction = async function (hre: HardhatRuntimeEnvironment) {
   const preconfiguredAddresses = await getPreConfiguredAddresses(hre.network.name);
 
   const proxyOwnerAddress = await toAddress(preconfiguredAddresses.NormalTimelock, hre);
+  const accessControlManager = await ethers.getContract("AccessControlManager");
 
   const XVS = await deploy("XVS", {
     from: deployer,
     contract: "XVS",
-    args: [preconfiguredAddresses.AccessControlManager],
+    args: [accessControlManager.address],
     autoMine: true,
     log: true,
   });
@@ -113,7 +114,7 @@ const func: DeployFunction = async function (hre: HardhatRuntimeEnvironment) {
       proxyContract: "OpenZeppelinTransparentProxy",
       execute: {
         methodName: "initialize",
-        args: [preconfiguredAddresses.AccessControlManager],
+        args: [accessControlManager.address],
       },
       upgradeIndex: 0,
     },
@@ -121,9 +122,9 @@ const func: DeployFunction = async function (hre: HardhatRuntimeEnvironment) {
     autoMine: true,
   });
 
-  const bridge = await ethers.getContractAt<XVSProxyOFTDest>("XVSProxyOFTDest", XVSProxyOFTDest.address, deployer);
-  const bridgeAdmin = await ethers.getContractAt<XVSBridgeAdmin>("XVSBridgeAdmin", XVSBridgeAdmin.address, deployer);
-  const xvs = await ethers.getContractAt<XVS>("XVS", XVS.address, deployer);
+  const bridge = await ethers.getContract<XVSProxyOFTDest>("XVSProxyOFTDest");
+  const bridgeAdmin = await ethers.getContract("XVSBridgeAdmin");
+  const xvs = await ethers.getContract("XVS");
 
   await executeBridgeCommands(bridge, hre, deployer);
 
@@ -146,7 +147,7 @@ const func: DeployFunction = async function (hre: HardhatRuntimeEnvironment) {
   const commands = [
     ...(await configureAccessControls(
       xvsBridgeMethods,
-      preconfiguredAddresses.AccessControlManager,
+      accessControlManager.address,
       preconfiguredAddresses.NormalTimelock,
       XVSBridgeAdmin.address,
       hre,
@@ -154,7 +155,7 @@ const func: DeployFunction = async function (hre: HardhatRuntimeEnvironment) {
 
     ...(await configureAccessControls(
       xvsTokenPermissions,
-      preconfiguredAddresses.AccessControlManager,
+      accessControlManager.address,
       XVSProxyOFTDest.address,
       XVS.address,
       hre,
@@ -162,7 +163,7 @@ const func: DeployFunction = async function (hre: HardhatRuntimeEnvironment) {
 
     ...(await configureAccessControls(
       ["setMintCap(address,uint256)"],
-      preconfiguredAddresses.AccessControlManager,
+      accessControlManager.address,
       preconfiguredAddresses.NormalTimelock,
       XVS.address,
       hre,
@@ -170,7 +171,7 @@ const func: DeployFunction = async function (hre: HardhatRuntimeEnvironment) {
 
     ...(await configureAccessControls(
       bridgeAdminMethods,
-      preconfiguredAddresses.AccessControlManager,
+      accessControlManager.address,
       preconfiguredAddresses.NormalTimelock,
       XVSBridgeAdmin.address,
       hre,
