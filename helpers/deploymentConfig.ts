@@ -14,7 +14,7 @@ export const preconfiguredAddresses = {
     LzVirtualChainId: "10102",
   },
   bscmainnet: {
-    LzEndpoint: "0x6592b5DE802159F3E74B2486b091D11a8256ab8A",
+    LzEndpoint: "0x3c2269811836af69497E5F486A85D7316753cf62",
     LzVirtualChainId: "102",
   },
   sepolia: {
