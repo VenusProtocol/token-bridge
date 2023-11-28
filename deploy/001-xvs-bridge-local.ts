@@ -11,7 +11,6 @@ import {
 } from "../helpers/deploymentConfig";
 import { toAddress } from "../helpers/utils";
 import { getArgTypesFromSignature } from "../helpers/utils";
-import { XVSBridgeAdmin, XVSProxyOFTSrc } from "../typechain";
 
 interface GovernanceCommand {
   contract: string;
@@ -70,11 +69,14 @@ const func: DeployFunction = async function (hre: HardhatRuntimeEnvironment) {
   const { deploy } = deployments;
   const { deployer } = await getNamedAccounts();
   const preconfiguredAddresses = await getPreConfiguredAddresses(hre.network.name);
+  const accessControlManager = await ethers.getContract("AccessControlManager");
+  const normalTimelock = await ethers.getContract("NormalTimelock");
+  const resilientOracle = await ethers.getContract("ResilientOracle");
 
   const XVSProxyOFTSrc = await deploy("XVSProxyOFTSrc", {
     from: deployer,
     contract: "XVSProxyOFTSrc",
-    args: [preconfiguredAddresses.XVS, 8, preconfiguredAddresses.LzEndpoint, preconfiguredAddresses.ResilientOracle],
+    args: [preconfiguredAddresses.XVS, 8, preconfiguredAddresses.LzEndpoint, resilientOracle.address],
     autoMine: true,
     log: true,
   });
@@ -84,11 +86,11 @@ const func: DeployFunction = async function (hre: HardhatRuntimeEnvironment) {
     args: [XVSProxyOFTSrc.address],
     contract: "XVSBridgeAdmin",
     proxy: {
-      owner: preconfiguredAddresses.NormalTimelock,
+      owner: normalTimelock.address,
       proxyContract: "OpenZeppelinTransparentProxy",
       execute: {
         methodName: "initialize",
-        args: [preconfiguredAddresses.AccessControlManager],
+        args: [accessControlManager.address],
       },
       upgradeIndex: 0,
     },
@@ -96,8 +98,8 @@ const func: DeployFunction = async function (hre: HardhatRuntimeEnvironment) {
     autoMine: true,
   });
 
-  const bridge = await ethers.getContractAt<XVSProxyOFTSrc>("XVSProxyOFTSrc", XVSProxyOFTSrc.address, deployer);
-  const bridgeAdmin = await ethers.getContractAt<XVSBridgeAdmin>("XVSBridgeAdmin", XVSBridgeAdmin.address, deployer);
+  const bridge = await ethers.getContract("XVSProxyOFTSrc");
+  const bridgeAdmin = await ethers.getContract("XVSBridgeAdmin");
 
   const removeArray = new Array(xvsBridgeMethods.length).fill(false);
   let tx = await bridgeAdmin.upsertSignature(xvsBridgeMethods, removeArray);
@@ -106,24 +108,24 @@ const func: DeployFunction = async function (hre: HardhatRuntimeEnvironment) {
   tx = await bridge.transferOwnership(XVSBridgeAdmin.address);
   await tx.wait();
 
-  tx = await bridgeAdmin.transferOwnership(preconfiguredAddresses.NormalTimelock);
+  tx = await bridgeAdmin.transferOwnership(normalTimelock.address);
   await tx.wait();
   console.log(
-    `Bridge Admin owner ${deployer} sucessfully changed to ${preconfiguredAddresses.NormalTimelock}. Please accept the ownership.`,
+    `Bridge Admin owner ${deployer} sucessfully changed to ${normalTimelock.address}. Please accept the ownership.`,
   );
 
   const commands = [
     ...(await configureAccessControls(
       xvsBridgeMethods,
-      preconfiguredAddresses.AccessControlManager,
-      preconfiguredAddresses.NormalTimelock,
+      accessControlManager.address,
+      normalTimelock.address,
       XVSBridgeAdmin.address,
       hre,
     )),
     ...(await configureAccessControls(
       bridgeAdminMethods,
-      preconfiguredAddresses.AccessControlManager,
-      preconfiguredAddresses.NormalTimelock,
+      accessControlManager.address,
+      normalTimelock.address,
       XVSBridgeAdmin.address,
       hre,
     )),
