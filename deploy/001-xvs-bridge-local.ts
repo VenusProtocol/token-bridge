@@ -72,11 +72,12 @@ const func: DeployFunction = async function (hre: HardhatRuntimeEnvironment) {
   const accessControlManager = await ethers.getContract("AccessControlManager");
   const normalTimelock = await ethers.getContract("NormalTimelock");
   const resilientOracle = await ethers.getContract("ResilientOracle");
+  const XVS = await ethers.getContract("XVS");
 
   const XVSProxyOFTSrc = await deploy("XVSProxyOFTSrc", {
     from: deployer,
     contract: "XVSProxyOFTSrc",
-    args: [preconfiguredAddresses.XVS, 8, preconfiguredAddresses.LzEndpoint, resilientOracle.address],
+    args: [XVS.address, 8, preconfiguredAddresses.LzEndpoint, resilientOracle.address],
     autoMine: true,
     log: true,
   });
@@ -101,7 +102,7 @@ const func: DeployFunction = async function (hre: HardhatRuntimeEnvironment) {
   const bridge = await ethers.getContract("XVSProxyOFTSrc");
   const bridgeAdmin = await ethers.getContract("XVSBridgeAdmin");
 
-  const removeArray = new Array(xvsBridgeMethods.length).fill(false);
+  const removeArray = new Array(xvsBridgeMethods.length).fill(true);
   let tx = await bridgeAdmin.upsertSignature(xvsBridgeMethods, removeArray);
   await tx.wait();
 
