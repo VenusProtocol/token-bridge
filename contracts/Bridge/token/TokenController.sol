@@ -60,6 +60,10 @@ contract TokenController is Ownable, Pausable {
      * @notice This error is used to indicate that minting is not allowed for the specified addresses.
      */
     error MintNotAllowed(address from, address to);
+    /**
+     * @notice This error is used to indicate that sender is not allowed to perform this action.
+     */
+    error Unauthorized();
 
     /**
      * @param accessControlManager_ Address of access control manager contract.
@@ -174,9 +178,8 @@ contract TokenController is Ownable, Pausable {
 
     /// @dev Checks the caller is allowed to call the specified fuction
     function _ensureAllowed(string memory functionSig_) internal view {
-        require(
-            IAccessControlManagerV8(accessControlManager).isAllowedToCall(msg.sender, functionSig_),
-            "access denied"
-        );
+        if (!IAccessControlManagerV8(accessControlManager).isAllowedToCall(msg.sender, functionSig_)) {
+            revert Unauthorized();
+        }
     }
 }
