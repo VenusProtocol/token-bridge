@@ -168,7 +168,7 @@
       ]
     },
     "XVSBridgeAdmin": {
-      "address": "0x021e15D34b1d0DFFf94f3F77f63e82F3523F47da",
+      "address": "0x5D08D49A2e43aC4c72C60754d1550BA12e846d66",
       "abi": [
         {
           "anonymous": false,
@@ -331,7 +331,7 @@
             {
               "indexed": false,
               "internalType": "bool",
-              "name": "isRemoved",
+              "name": "active",
               "type": "bool"
             }
           ],
@@ -596,7 +596,7 @@
             },
             {
               "internalType": "bool[]",
-              "name": "remove_",
+              "name": "active_",
               "type": "bool[]"
             }
           ],
@@ -629,7 +629,7 @@
       ]
     },
     "XVSBridgeAdmin_Implementation": {
-      "address": "0x825bc313102Cb102F5F0D8eBca19913DD17592DB",
+      "address": "0x8a4C5090d972C83C44E8132a1Fc2Ff3E948E9A71",
       "abi": [
         {
           "inputs": [
@@ -680,7 +680,7 @@
             {
               "indexed": false,
               "internalType": "bool",
-              "name": "isRemoved",
+              "name": "active",
               "type": "bool"
             }
           ],
@@ -949,7 +949,7 @@
             },
             {
               "internalType": "bool[]",
-              "name": "remove_",
+              "name": "active_",
               "type": "bool[]"
             }
           ],
@@ -961,7 +961,7 @@
       ]
     },
     "XVSBridgeAdmin_Proxy": {
-      "address": "0x021e15D34b1d0DFFf94f3F77f63e82F3523F47da",
+      "address": "0x5D08D49A2e43aC4c72C60754d1550BA12e846d66",
       "abi": [
         {
           "inputs": [
@@ -1110,7 +1110,7 @@
       ]
     },
     "XVSProxyOFTSrc": {
-      "address": "0x19861D039284e2Cf09403Ab8124B064a791a79f2",
+      "address": "0x963cAbDC5bb51C1479ec94Df44DE2EC1a49439E3",
       "abi": [
         {
           "inputs": [
@@ -1216,6 +1216,19 @@
             }
           ],
           "name": "FallbackWithdraw",
+          "type": "event"
+        },
+        {
+          "anonymous": false,
+          "inputs": [
+            {
+              "indexed": true,
+              "internalType": "address",
+              "name": "innerToken",
+              "type": "address"
+            }
+          ],
+          "name": "InnerTokenAdded",
           "type": "event"
         },
         {

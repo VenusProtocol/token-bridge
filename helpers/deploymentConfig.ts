@@ -60,7 +60,7 @@ export const bridgeConfig: BridgeConfig = {
       { method: "setMinDstGas(uint16,uint16,uint256)", args: [10161, 0, "200000"] },
       { method: "setMaxDailyLimit(uint16,uint256)", args: [10161, "500000000000000000000"] },
       { method: "setMaxSingleTransactionLimit(uint16,uint256)", args: [10161, "10000000000000000000"] },
-      { method: "setMaxDailyReceiveLimit(uint16,uint256)", args: [10161, "50000000000000000000"] },
+      { method: "setMaxDailyReceiveLimit(uint16,uint256)", args: [10161, "500000000000000000000"] },
       { method: "setMaxSingleReceiveTransactionLimit(uint16,uint256)", args: [10161, "10000000000000000000"] },
     ],
   },
