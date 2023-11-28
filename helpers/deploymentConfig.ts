@@ -10,12 +10,10 @@ const SEPOLIA_MULTISIG = "0x94fa6078b6b8a26f0b6edffbe6501b22a10470fb";
 
 export const preconfiguredAddresses = {
   bsctestnet: {
-    XVS: "0xB9e0E753630434d7863528cc73CB7AC638a7c8ff",
     LzEndpoint: "0x6Fcb97553D41516Cb228ac03FdC8B9a0a9df04A1",
     LzVirtualChainId: "10102",
   },
   bscmainnet: {
-    XVS: "0xcF6BB5389c92Bdda8a3747Ddb454cB7a64626C63",
     LzEndpoint: "0x6592b5DE802159F3E74B2486b091D11a8256ab8A",
     LzVirtualChainId: "102",
   },
@@ -23,7 +21,6 @@ export const preconfiguredAddresses = {
     NormalTimelock: SEPOLIA_MULTISIG,
     FastTrackTimelock: SEPOLIA_MULTISIG,
     CriticalTimelock: SEPOLIA_MULTISIG,
-    ResilientOracle: "0x9005091f2E0b20bEf6AaF2bD7F21dfd45DA8Af07",
     LzEndpoint: "0xae92d5aD7583AD66E49A0c67BAd18F6ba52dDDc1",
     LzVirtualChainId: "10161",
   },

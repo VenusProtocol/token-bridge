@@ -134,8 +134,8 @@ const config: HardhatUserConfig = {
       ],
       bscmainnet: [
         "node_modules/@venusprotocol/governance-contracts/deployments/bscmainnet",
-        "node_modules/@venusprotocol/venus-protocol/deployments/bsctestnet",
-        "node_modules/@venusprotocol/oracle/deployments/bsctestnet",
+        "node_modules/@venusprotocol/venus-protocol/deployments/bscmainnet",
+        "node_modules/@venusprotocol/oracle/deployments/bscmainnet",
       ],
       sepolia: [
         "node_modules/@venusprotocol/governance-contracts/deployments/sepolia",
