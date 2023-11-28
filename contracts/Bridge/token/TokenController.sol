@@ -23,7 +23,7 @@ contract TokenController is Ownable, Pausable {
      */
     mapping(address => bool) public _blacklist;
     /**
-     * @notice A mapping is used to keep track of the maximum amount a minter is permitted to miny..
+     * @notice A mapping is used to keep track of the maximum amount a minter is permitted to mint.
      */
     mapping(address => uint256) public minterToCap;
     /**

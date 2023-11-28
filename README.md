@@ -1,4 +1,4 @@
-[![GitHub Actions](https://github.com/VenusProtocol/solidity-utilities/actions/workflows/cd.yaml/badge.svg)](https://github.com/VenusProtocol/solidity-utilities/actions/workflows/cd.yaml) [![GitHub Actions](https://github.com/VenusProtocol/solidity-utilities/actions/workflows/ci.yaml/badge.svg)](https://github.com/VenusProtocol/solidity-utilities/actions/workflows/ci.yaml)
+[![GitHub Actions](https://github.com/VenusProtocol/token-bridge/actions/workflows/cd.yaml/badge.svg)](https://github.com/VenusProtocol/token-bridge/actions/workflows/cd.yaml) [![GitHub Actions](https://github.com/VenusProtocol/token-bridge/actions/workflows/ci.yaml/badge.svg)](https://github.com/VenusProtocol/token-bridge/actions/workflows/ci.yaml)
 
 # Development
 
@@ -47,7 +47,7 @@ npx hardhat test
 
 ```
 
-- To run fork tests add FORK_MAINNET=true PRIVATE_KEY and QUICK_NODE_KEY in the .env file.
+- To run fork tests add FORK=true, FORKED_NETWORK and one ARCHIVE_NODE var in the .env file.
 
 ## Releases and Versioning
 
