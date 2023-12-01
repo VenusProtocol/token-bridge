@@ -86,6 +86,14 @@ const config: HardhatUserConfig = {
       chainId: 1,
       accounts: process.env.DEPLOYER_PRIVATE_KEY ? [`0x${process.env.DEPLOYER_PRIVATE_KEY}`] : [],
     },
+    opbnbtestnet: {
+      url: process.env.OPBNB_TESTNET_ARCHIVE_NODE_URL || "https://opbnb-testnet-rpc.bnbchain.org",
+      chainId: 5611,
+      live: true,
+      accounts: {
+        mnemonic: process.env.MNEMONIC || "",
+      },
+    },
   },
   gasReporter: {
     enabled: process.env.REPORT_GAS !== undefined,

@@ -204,5 +204,5 @@ const func: DeployFunction = async function (hre: HardhatRuntimeEnvironment) {
 func.tags = ["XVSBridgeDest"];
 
 func.skip = async (hre: HardhatRuntimeEnvironment) =>
-  !(hre.network.name === "sepolia" || hre.network.name === "ethereum");
+  !(hre.network.name === "sepolia" || hre.network.name === "ethereum" || hre.network.name === "opbnbtestnet");
 export default func;
