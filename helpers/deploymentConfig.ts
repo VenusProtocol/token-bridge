@@ -30,6 +30,8 @@ export const preconfiguredAddresses = {
   },
   opbnbtestnet: {
     NormalTimelock: OPBNB_TESTNET_MULTISIG,
+    LzEndpoint: "0x83c73Da98cf733B03315aFa8758834b36a195b87",
+    LzVirtualChainId: "10202",
   },
 };
 
@@ -61,7 +63,7 @@ export const xvsTokenPermissions = ["mint(address,uint256)", "burn(address,uint2
 export const bridgeConfig: BridgeConfig = {
   bsctestnet: {
     methods: [
-      { method: "setMinDstGas(uint16,uint16,uint256)", args: [10161, 0, "200000"] },
+      { method: "setMinDstGas(uint16,uint16,uint256)", args: [10161, 0, "300000"] },
       { method: "setMaxDailyLimit(uint16,uint256)", args: [10161, "500000000000000000000"] },
       { method: "setMaxSingleTransactionLimit(uint16,uint256)", args: [10161, "10000000000000000000"] },
       { method: "setMaxDailyReceiveLimit(uint16,uint256)", args: [10161, "500000000000000000000"] },
@@ -70,7 +72,7 @@ export const bridgeConfig: BridgeConfig = {
   },
   bscmainnet: {
     methods: [
-      { method: "setMinDstGas(uint16,uint16,uint256)", args: [101, 0, "200000"] },
+      { method: "setMinDstGas(uint16,uint16,uint256)", args: [101, 0, "300000"] },
       { method: "setMaxDailyLimit(uint16,uint256)", args: [101, "500000000000000000000"] },
       { method: "setMaxSingleTransactionLimit(uint16,uint256)", args: [101, "10000000000000000000"] },
       { method: "setMaxDailyReceiveLimit(uint16,uint256)", args: [101, "500000000000000000000"] },
@@ -79,7 +81,16 @@ export const bridgeConfig: BridgeConfig = {
   },
   sepolia: {
     methods: [
-      { method: "setMinDstGas(uint16,uint16,uint256)", args: [10102, 0, "200000"] },
+      { method: "setMinDstGas(uint16,uint16,uint256)", args: [10102, 0, "300000"] },
+      { method: "setMaxDailyLimit(uint16,uint256)", args: [10102, "500000000000000000000"] },
+      { method: "setMaxSingleTransactionLimit(uint16,uint256)", args: [10102, "10000000000000000000"] },
+      { method: "setMaxDailyReceiveLimit(uint16,uint256)", args: [10102, "500000000000000000000"] },
+      { method: "setMaxSingleReceiveTransactionLimit(uint16,uint256)", args: [10102, "10000000000000000000"] },
+    ],
+  },
+  opbnbtestnet: {
+    methods: [
+      { method: "setMinDstGas(uint16,uint16,uint256)", args: [10102, 0, "300000"] },
       { method: "setMaxDailyLimit(uint16,uint256)", args: [10102, "500000000000000000000"] },
       { method: "setMaxSingleTransactionLimit(uint16,uint256)", args: [10102, "10000000000000000000"] },
       { method: "setMaxDailyReceiveLimit(uint16,uint256)", args: [10102, "500000000000000000000"] },
