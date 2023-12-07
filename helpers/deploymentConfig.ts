@@ -7,6 +7,7 @@ interface BridgeConfig {
 }
 
 const SEPOLIA_MULTISIG = "0x94fa6078b6b8a26f0b6edffbe6501b22a10470fb";
+const OPBNB_TESTNET_MULTISIG = "0xb15f6EfEbC276A3b9805df81b5FB3D50C2A62BDf";
 
 export const preconfiguredAddresses = {
   bsctestnet: {
@@ -26,6 +27,9 @@ export const preconfiguredAddresses = {
   },
   ethereum: {
     // TODO
+  },
+  opbnbtestnet: {
+    NormalTimelock: OPBNB_TESTNET_MULTISIG,
   },
 };
 
@@ -94,6 +98,8 @@ export async function getPreConfiguredAddresses(networkName: string): Promise<Pr
       return preconfiguredAddresses.sepolia;
     case "ethereum":
       return preconfiguredAddresses.ethereum;
+    case "opbnbtestnet":
+      return preconfiguredAddresses.opbnbtestnet;
     default:
       throw new Error(`config for network ${networkName} is not available.`);
   }
