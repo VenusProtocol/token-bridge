@@ -106,6 +106,8 @@ abstract contract BaseXVSProxyOFT is Pausable, ExponentialNoError, BaseOFTV2 {
      * @custom:error ZeroAddressNotAllowed is thrown when token contract address is zero.
      * @custom:error ZeroAddressNotAllowed is thrown when lzEndpoint contract address is zero.
      * @custom:error ZeroAddressNotAllowed is thrown when oracle contract address is zero.
+     * @custom:event Emits InnerTokenAdded with token address.
+     * @custom:event Emits OracleChanged with zero address and oracle address.
      */
     constructor(
         address tokenAddress_,
@@ -231,6 +233,8 @@ abstract contract BaseXVSProxyOFT is Pausable, ExponentialNoError, BaseOFTV2 {
     /**
      * @notice Remove trusted remote from storage.
      * @param remoteChainId_ The chain's id corresponds to setting the trusted remote to empty.
+     * @custom:access Only owner.
+     * @custom:event Emits TrustedRemoteRemoved once chain id is removed from trusted remote.
      */
     function removeTrustedRemote(uint16 remoteChainId_) external onlyOwner {
         delete trustedRemoteLookup[remoteChainId_];
@@ -261,11 +265,18 @@ abstract contract BaseXVSProxyOFT is Pausable, ExponentialNoError, BaseOFTV2 {
 
     /**
      * @notice Return's the address of the inner token of this bridge.
+     * @return Address of the inner token of this bridge.
      */
     function token() public view override returns (address) {
         return address(innerToken);
     }
 
+    /**
+     * @notice Checks if the sender is eligible to send tokens
+     * @param from_ Sender's address sending tokens
+     * @param dstChainId_ Chain id on which tokens should be sent
+     * @param amount_ Amount of tokens to be sent
+     */
     function _isEligibleToSend(address from_, uint16 dstChainId_, uint256 amount_) internal {
         // Check if the sender's address is whitelisted
         bool isWhiteListedUser = whitelist[from_];
@@ -304,6 +315,12 @@ abstract contract BaseXVSProxyOFT is Pausable, ExponentialNoError, BaseOFTV2 {
         chainIdToLast24HourTransferred[dstChainId_] = transferredInWindow;
     }
 
+    /**
+     * @notice Checks if receiver is able to receive tokens
+     * @param toAddress_ Receiver address
+     * @param srcChainId_ Source chain id from which token is send
+     * @param receivedAmount_ Amount of tokens received
+     */
     function _isEligibleToReceive(address toAddress_, uint16 srcChainId_, uint256 receivedAmount_) internal {
         // Check if the recipient's address is whitelisted
         bool isWhiteListedUser = whitelist[toAddress_];
@@ -343,6 +360,13 @@ abstract contract BaseXVSProxyOFT is Pausable, ExponentialNoError, BaseOFTV2 {
         chainIdToLast24HourReceived[srcChainId_] = receivedInWindow;
     }
 
+    /**
+     * @notice Transfer tokens from sender to receiver account.
+     * @param from_ Address from which token has to be transferred(Sender).
+     * @param to_ Address on which token will be tranferred(Receiver).
+     * @param amount_ Amount of token to be transferred.
+     * @return Actual balance difference.
+     */
     function _transferFrom(
         address from_,
         address to_,
@@ -357,6 +381,10 @@ abstract contract BaseXVSProxyOFT is Pausable, ExponentialNoError, BaseOFTV2 {
         return innerToken.balanceOf(to_) - before;
     }
 
+    /**
+     * @notice Returns Conversion rate factor from large decimals to shared decimals.
+     * @return Conversion rate factor.
+     */
     function _ld2sdRate() internal view override returns (uint256) {
         return ld2sdRate;
     }

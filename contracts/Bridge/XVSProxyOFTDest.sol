@@ -25,10 +25,13 @@ contract XVSProxyOFTDest is BaseXVSProxyOFT {
         address oracle_
     ) BaseXVSProxyOFT(tokenAddress_, sharedDecimals_, lzEndpoint_, oracle_) {}
 
-    /** @notice Clear failed messages from the storage.
+    /**
+     * @notice Clear failed messages from the storage.
      * @param srcChainId_ Chain id of source
      * @param srcAddress_ Address of source followed by current bridge address
      * @param nonce_ Nonce_ of the transaction
+     * @custom:access Only owner
+     * @custom:event Emits DropFailedMessage on clearance of failed message.
      */
     function dropFailedMessage(uint16 srcChainId_, bytes memory srcAddress_, uint64 nonce_) external onlyOwner {
         failedMessages[srcChainId_][srcAddress_][nonce_] = bytes32(0);
@@ -37,11 +40,19 @@ contract XVSProxyOFTDest is BaseXVSProxyOFT {
 
     /**
      * @notice Returns the total circulating supply of the token on the destination chain i.e (total supply).
+     * @return total circulating supply of the token on the destination chain.
      */
     function circulatingSupply() public view override returns (uint256) {
         return innerToken.totalSupply();
     }
 
+    /**
+     * @notice Debit tokens from the given address
+     * @param from_  Address from which tokens to be debited
+     * @param dstChainId_ Destination chain id
+     * @param amount_ Amount of tokens to be debited
+     * @return Actual amount debited
+     */
     function _debitFrom(
         address from_,
         uint16 dstChainId_,
@@ -54,6 +65,13 @@ contract XVSProxyOFTDest is BaseXVSProxyOFT {
         return amount_;
     }
 
+    /**
+     * @notice Credit tokens in the given account
+     * @param srcChainId_  Source chain id
+     * @param toAddress_ Address on which token will be credited
+     * @param amount_ Amount of tokens to be credited
+     * @return Actual amount credited
+     */
     function _creditTo(
         uint16 srcChainId_,
         address toAddress_,

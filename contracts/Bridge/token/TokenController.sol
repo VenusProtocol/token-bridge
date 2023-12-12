@@ -151,6 +151,9 @@ contract TokenController is Ownable, Pausable {
      * @param from_  Minter address.
      * @param to_  Receiver address.
      * @param amount_  Amount to be mint.
+     * @custom:error MintNotAllowed is thrown when user is in blacklist
+     * @custom:error MintLimitExceed is thrown when minting limit exceeds the cap.
+     * @custom:event Emits MintLimitDecreased with minter address and available limits.
      */
     function _isEligibleToMint(address from_, address to_, uint256 amount_) internal {
         if (_blacklist[to_]) {
@@ -175,6 +178,7 @@ contract TokenController is Ownable, Pausable {
      * @dev This is post hook of burn function, increases minting limit of the minter.
      * @param from_ Minter address.
      * @param amount_  Amount burned.
+     * @custom:event Emits MintLimitIncreased with minter address and availabe limit.
      */
     function _increaseMintLimit(address from_, uint256 amount_) internal {
         uint256 totalMintedOld = minterToMintedAmount[from_];
@@ -184,7 +188,11 @@ contract TokenController is Ownable, Pausable {
         emit MintLimitIncreased(from_, availableLimit);
     }
 
-    /// @dev Checks the caller is allowed to call the specified fuction
+    /**
+     * @dev Checks the caller is allowed to call the specified fuction.
+     * @param functionSig_ Function signatureon which access is to be checked.
+     * @custom:error Unauthorized, thrown when unauthorised user try to access function.
+     */
     function _ensureAllowed(string memory functionSig_) internal view {
         if (!IAccessControlManagerV8(accessControlManager).isAllowedToCall(msg.sender, functionSig_)) {
             revert Unauthorized();
