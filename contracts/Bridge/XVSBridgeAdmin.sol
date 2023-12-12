@@ -66,7 +66,7 @@ contract XVSBridgeAdmin is AccessControlledV8 {
     }
 
     /**
-     * @notice A registry of functions that are allowed to be executed from proposals
+     * @notice A setter for the registry of functions that are allowed to be executed from proposals.
      * @param signatures_  Function signature to be added or removed.
      * @param active_ bool value, should be true to add function.
      */
@@ -87,7 +87,7 @@ contract XVSBridgeAdmin is AccessControlledV8 {
     }
 
     /**
-     * @notice This function transfer the ownership of the bridge from this contract to new owner.
+     * @notice This function transfers the ownership of the bridge from this contract to new owner.
      * @param newOwner_ New owner of the XVS Bridge.
      * @custom:access Controlled by AccessControlManager.
      */

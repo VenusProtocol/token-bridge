@@ -61,12 +61,12 @@ abstract contract BaseXVSProxyOFT is Pausable, ExponentialNoError, BaseOFTV2 {
      */
     mapping(uint16 => uint256) public chainIdToLast24HourReceiveWindowStart;
     /**
-     * @notice Address on which cap check and bound limit is not appicable.
+     * @notice Address on which cap check and bound limit is not applicable.
      */
     mapping(address => bool) public whitelist;
 
     /**
-     * @notice Emmited when address is added to whitelist.
+     * @notice Emitted when address is added to whitelist.
      */
     event SetWhitelist(address indexed addr, bool isWhitelist);
     /**
@@ -100,7 +100,7 @@ abstract contract BaseXVSProxyOFT is Pausable, ExponentialNoError, BaseOFTV2 {
 
     /**
      * @param tokenAddress_ Address of the inner token.
-     * @param sharedDecimals_ No of shared decimals.
+     * @param sharedDecimals_ Number of shared decimals.
      * @param lzEndpoint_ Address of the layer zero endpoint contract.
      * @param oracle_ Address of the price oracle.
      * @custom:error ZeroAddressNotAllowed is thrown when token contract address is zero.
@@ -203,7 +203,7 @@ abstract contract BaseXVSProxyOFT is Pausable, ExponentialNoError, BaseOFTV2 {
 
     /**
      * @notice Sets the whitelist address to skip checks on transaction limit.
-     * @param user_ Adress to be add in whitelist.
+     * @param user_ Address to be add in whitelist.
      * @param val_ Boolean to be set (true for user_ address is whitelisted).
      * @custom:access Only owner.
      * @custom:event Emits setWhitelist.

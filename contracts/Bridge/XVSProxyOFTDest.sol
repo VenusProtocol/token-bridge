@@ -14,7 +14,7 @@ import { BaseXVSProxyOFT } from "./BaseXVSProxyOFT.sol";
 
 contract XVSProxyOFTDest is BaseXVSProxyOFT {
     /**
-     * @notice Emits when stored message dropped without successfull retrying.
+     * @notice Emits when stored message dropped without successful retrying.
      */
     event DropFailedMessage(uint16 srcChainId, bytes indexed srcAddress, uint64 nonce);
 

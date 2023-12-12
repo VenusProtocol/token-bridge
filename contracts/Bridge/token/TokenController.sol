@@ -27,7 +27,7 @@ contract TokenController is Ownable, Pausable {
      */
     mapping(address => uint256) public minterToCap;
     /**
-     * @notice A Mapping used to keep track of the amount i.e already m inted by minter.
+     * @notice A Mapping used to keep track of the amount i.e already minted by minter.
      */
     mapping(address => uint256) public minterToMintedAmount;
 
@@ -106,7 +106,7 @@ contract TokenController is Ownable, Pausable {
     }
 
     /**
-     * @notice Sets the minitng cap for minter.
+     * @notice Sets the minting cap for minter.
      * @param minter_ Minter address.
      * @param amount_ Cap for the minter.
      * @custom:access Controlled by AccessControlManager.
@@ -165,7 +165,7 @@ contract TokenController is Ownable, Pausable {
     }
 
     /**
-     * @dev This is post hook of burn function, increases minitng limit of the minter.
+     * @dev This is post hook of burn function, increases minting limit of the minter.
      * @param from_ Minter address.
      * @param amount_  Amount burned.
      */

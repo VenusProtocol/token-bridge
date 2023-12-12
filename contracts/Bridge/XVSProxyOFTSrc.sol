@@ -16,7 +16,7 @@ import { BaseXVSProxyOFT } from "./BaseXVSProxyOFT.sol";
 contract XVSProxyOFTSrc is BaseXVSProxyOFT {
     using SafeERC20 for IERC20;
     /**
-     * @notice total amount is transferred from this chain to other chains.
+     * @notice Total amount that is transferred from this chain to other chains.
      */
     uint256 public outboundAmount;
 
@@ -25,7 +25,7 @@ contract XVSProxyOFTSrc is BaseXVSProxyOFT {
      */
     event FallbackWithdraw(address indexed to, uint256 amount);
     /**
-     * @notice Emits when stored message dropped without successfull retrying.
+     * @notice Emits when stored message dropped without successful retrying.
      */
     event DropFailedMessage(uint16 srcChainId, bytes indexed srcAddress, uint64 nonce);
 
@@ -44,7 +44,7 @@ contract XVSProxyOFTSrc is BaseXVSProxyOFT {
     function fallbackWithdraw(address to_, uint256 amount_) external onlyOwner {
         require(outboundAmount >= amount_, "Withdraw amount should be less than outbound amount");
         unchecked {
-        outboundAmount -= amount_;
+            outboundAmount -= amount_;
         }
         _transferFrom(address(this), to_, amount_);
         emit FallbackWithdraw(to_, amount_);
