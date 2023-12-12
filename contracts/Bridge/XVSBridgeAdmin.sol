@@ -33,10 +33,8 @@ contract XVSBridgeAdmin is AccessControlledV8 {
 
     /**
      * @param accessControlManager_ Address of access control manager contract.
-     * @custom:error ZeroAddressNotAllowed is thrown when accessControlManager contract address is zero.
      */
     function initialize(address accessControlManager_) external initializer {
-        ensureNonzeroAddress(accessControlManager_);
         __AccessControlled_init(accessControlManager_);
     }
 
@@ -93,7 +91,6 @@ contract XVSBridgeAdmin is AccessControlledV8 {
      */
     function transferBridgeOwnership(address newOwner_) external {
         _checkAccessAllowed("transferBridgeOwnership(address)");
-        ensureNonzeroAddress(newOwner_);
         XVSBridge.transferOwnership(newOwner_);
     }
 

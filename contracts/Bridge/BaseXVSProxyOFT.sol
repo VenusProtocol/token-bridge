@@ -125,7 +125,6 @@ abstract contract BaseXVSProxyOFT is Pausable, ExponentialNoError, BaseOFTV2 {
 
         require(sharedDecimals_ <= decimals, "ProxyOFT: sharedDecimals must be <= decimals");
         ld2sdRate = 10 ** (decimals - sharedDecimals_);
-        
 
         emit InnerTokenAdded(tokenAddress_);
         emit OracleChanged(address(0), oracle_);
