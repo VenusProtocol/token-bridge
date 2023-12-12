@@ -114,6 +114,7 @@ contract TokenController is Ownable, Pausable {
      */
     function setMintCap(address minter_, uint256 amount_) external {
         _ensureAllowed("setMintCap(address,uint256)");
+        require(amount_ > minterToMintedAmount[minter_], "New cap should be greater than minted tokens");
         minterToCap[minter_] = amount_;
         emit MintCapChanged(minter_, amount_);
     }
