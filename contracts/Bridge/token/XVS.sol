@@ -51,7 +51,7 @@ contract XVS is ERC20, TokenController {
      * @param to_ Address of the account to which tokens are to be transferred.
      * @param amount_ The amount of tokens to be transferred.
      */
-    function _transfer(address from_, address to_, uint256 amount_) internal override {
+    function _transfer(address from_, address to_, uint256 amount_) internal override whenNotPaused {
         if (_blacklist[to_]) {
             revert TransferNotAllowed(to_);
         }
