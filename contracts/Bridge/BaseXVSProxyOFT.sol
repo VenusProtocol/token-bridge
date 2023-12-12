@@ -115,6 +115,7 @@ abstract contract BaseXVSProxyOFT is Pausable, ExponentialNoError, BaseOFTV2 {
     ) BaseOFTV2(sharedDecimals_, lzEndpoint_) {
         ensureNonzeroAddress(tokenAddress_);
         ensureNonzeroAddress(lzEndpoint_);
+        ensureNonzeroAddress(oracle_);
 
         innerToken = IERC20(tokenAddress_);
 
@@ -125,7 +126,6 @@ abstract contract BaseXVSProxyOFT is Pausable, ExponentialNoError, BaseOFTV2 {
         require(sharedDecimals_ <= decimals, "ProxyOFT: sharedDecimals must be <= decimals");
         ld2sdRate = 10 ** (decimals - sharedDecimals_);
         
-        ensureNonzeroAddress(oracle_);
 
         emit InnerTokenAdded(tokenAddress_);
         emit OracleChanged(address(0), oracle_);
