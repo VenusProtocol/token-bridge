@@ -44,4 +44,17 @@ contract XVS is ERC20, TokenController {
         _burn(account_, amount_);
         _increaseMintLimit(msg.sender, amount_);
     }
+
+    /**
+     * @notice Moves `amount` of tokens from `from` to `to`.
+     * @param from_ Address of account from which tokens are to be transferred.
+     * @param to_ Address of the account to which tokens are to be transferred.
+     * @param amount_ The amount of tokens to be transferred.
+     */
+    function _transfer(address from_, address to_, uint256 amount_) internal override {
+        if (_blacklist[to_]) {
+            revert TransferNotAllowed(to_);
+        }
+        super._transfer(from_, to_, amount_);
+    }
 }
