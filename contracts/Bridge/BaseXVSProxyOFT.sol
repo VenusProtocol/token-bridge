@@ -99,6 +99,16 @@ abstract contract BaseXVSProxyOFT is Pausable, ExponentialNoError, BaseOFTV2 {
     event InnerTokenAdded(address indexed innerToken);
 
     /**
+     *@notice Emitted on sweep token success
+     */
+    event SweepToken(address indexed token, address indexed to, uint256 sweepAmount);
+
+    /**
+     *@notice Error thrown when this contract balance is less than sweep amount
+     */
+    error InsufficientBalance(uint256 sweepAmount, uint256 balance);
+
+    /**
      * @param tokenAddress_ Address of the inner token.
      * @param sharedDecimals_ Number of shared decimals.
      * @param lzEndpoint_ Address of the layer zero endpoint contract.
@@ -228,6 +238,26 @@ abstract contract BaseXVSProxyOFT is Pausable, ExponentialNoError, BaseOFTV2 {
      */
     function unpause() external onlyOwner {
         _unpause();
+    }
+
+    /**
+     * @notice A public function to sweep accidental ERC-20 transfers to this contract. Tokens are sent to user
+     * @param token_ The address of the ERC-20 token to sweep
+     * @param to_ The address of the recipient
+     * @param amount_ The amount of tokens needs to transfer
+     * @custom:event Emits SweepToken event
+     * @custom:error Throw InsufficientBalance if amount_ is greater than the available balance of the token in the contract
+     * @custom:access Only Owner
+     */
+    function sweepToken(IERC20 token_, address to_, uint256 amount_) external onlyOwner {
+        uint256 balance = token_.balanceOf(address(this));
+        if (amount_ > balance) {
+            revert InsufficientBalance(amount_, balance);
+        }
+
+        emit SweepToken(address(token_), to_, amount_);
+
+        token_.safeTransfer(to_, amount_);
     }
 
     /**
