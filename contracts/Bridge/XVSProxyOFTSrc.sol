@@ -42,7 +42,10 @@ contract XVSProxyOFTSrc is BaseXVSProxyOFT {
      * @param amount_ The amount of withdrawal
      */
     function fallbackWithdraw(address to_, uint256 amount_) external onlyOwner {
+        require(outboundAmount >= amount_, "Withdraw amount should be less than outbound amount");
+        unchecked {
         outboundAmount -= amount_;
+        }
         _transferFrom(address(this), to_, amount_);
         emit FallbackWithdraw(to_, amount_);
     }
