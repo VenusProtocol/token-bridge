@@ -124,7 +124,7 @@ abstract contract BaseXVSProxyOFT is Pausable, ExponentialNoError, BaseOFTV2 {
 
         require(sharedDecimals_ <= decimals, "ProxyOFT: sharedDecimals must be <= decimals");
         ld2sdRate = 10 ** (decimals - sharedDecimals_);
-
+        
         ensureNonzeroAddress(oracle_);
 
         emit InnerTokenAdded(tokenAddress_);
@@ -238,6 +238,23 @@ abstract contract BaseXVSProxyOFT is Pausable, ExponentialNoError, BaseOFTV2 {
         emit TrustedRemoteRemoved(remoteChainId_);
     }
 
+    function retryMessage(
+        uint16 _srcChainId,
+        bytes calldata _srcAddress,
+        uint64 _nonce,
+        bytes calldata _payload
+    ) public payable override {
+        bytes memory trustedRemote = trustedRemoteLookup[_srcChainId];
+        // it will still block the message pathway from (srcChainId, srcAddress). should not receive message from untrusted remote.
+        require(
+            _srcAddress.length == trustedRemote.length &&
+                trustedRemote.length > 0 &&
+                keccak256(_srcAddress) == keccak256(trustedRemote),
+            "LzApp: invalid source sending contract"
+        );
+        super.retryMessage(_srcChainId, _srcAddress, _nonce, _payload);
+    }
+
     /**
      * @notice Empty implementation of renounce ownership to avoid any mishappening.
      */
@@ -339,23 +356,6 @@ abstract contract BaseXVSProxyOFT is Pausable, ExponentialNoError, BaseOFTV2 {
             innerToken.safeTransferFrom(from_, to_, amount_);
         }
         return innerToken.balanceOf(to_) - before;
-    }
-
-    function _nonblockingLzReceive(
-        uint16 _srcChainId,
-        bytes memory _srcAddress,
-        uint64 _nonce,
-        bytes memory _payload
-    ) internal override {
-        bytes memory trustedRemote = trustedRemoteLookup[_srcChainId];
-        // if will still block the message pathway from (srcChainId, srcAddress). should not receive message from untrusted remote.
-        require(
-            _srcAddress.length == trustedRemote.length &&
-                trustedRemote.length > 0 &&
-                keccak256(_srcAddress) == keccak256(trustedRemote),
-            "LzApp: invalid source sending contract"
-        );
-        super._nonblockingLzReceive(_srcChainId, _srcAddress, _nonce, _payload);
     }
 
     function _ld2sdRate() internal view override returns (uint256) {
