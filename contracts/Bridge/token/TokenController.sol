@@ -21,7 +21,7 @@ contract TokenController is Ownable, Pausable {
     /**
      * @notice A Mapping used to keep track of the blacklist status of addresses.
      */
-    mapping(address => bool) public _blacklist;
+    mapping(address => bool) internal _blacklist;
     /**
      * @notice A mapping is used to keep track of the maximum amount a minter is permitted to mint.
      */
