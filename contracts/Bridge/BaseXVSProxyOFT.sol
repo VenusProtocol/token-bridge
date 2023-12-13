@@ -239,6 +239,60 @@ abstract contract BaseXVSProxyOFT is Pausable, ExponentialNoError, BaseOFTV2 {
     }
 
     /**
+     * @notice View function similar to _isEligibleToSend internal function.
+     * @param from_ Address on which eligibility has to be checked.
+     * @param dstChainId_  Destination chain id.
+     * @param amount_ Amount of tokens.
+     * @return isEligibleToSend_  boolean indicating eligibility to send tokens.
+     * @return maxSingleTransactionLimit Maximum single transaction limit corresponding to chain id.
+     * @return maxDailyLimit Maximum daily limit to send tokens.
+     * @return amountInUsd Amount in USD.
+     * @return transferredInWindow Number of tokens transferred in 24 hour window.
+     * @return last24HourWindowStart Timestamp marking the start of the last 24-hour window.
+     * @return isWhiteListedUser Boolean indicating whether the sender is whitelisted.
+     */
+    function isEligibleToSend(
+        address from_,
+        uint16 dstChainId_,
+        uint256 amount_
+    )
+        external
+        view
+        returns (
+            bool isEligibleToSend_,
+            uint256 maxSingleTransactionLimit,
+            uint256 maxDailyLimit,
+            uint256 amountInUsd,
+            uint256 transferredInWindow,
+            uint256 last24HourWindowStart,
+            bool isWhiteListedUser
+        )
+    {
+        // Check if the sender's address is whitelisted
+        isWhiteListedUser = whitelist[from_];
+
+        // Calculate the amount in USD using the oracle price
+        Exp memory oraclePrice = Exp({ mantissa: oracle.getPrice(token()) });
+        amountInUsd = mul_ScalarTruncate(oraclePrice, amount_);
+
+        // Load values for the 24-hour window checks
+        last24HourWindowStart = chainIdToLast24HourWindowStart[dstChainId_];
+        transferredInWindow = chainIdToLast24HourTransferred[dstChainId_];
+        maxSingleTransactionLimit = chainIdToMaxSingleTransactionLimit[dstChainId_];
+        maxDailyLimit = chainIdToMaxDailyLimit[dstChainId_];
+
+        // Check if the time window has changed (more than 24 hours have passed)
+        if (block.timestamp - last24HourWindowStart > 1 days) {
+            transferredInWindow = amountInUsd;
+        } else {
+            transferredInWindow += amountInUsd;
+        }
+        isEligibleToSend_ = (whitelist[from_] ||
+            ((amountInUsd <= maxSingleTransactionLimit) &&
+                (transferredInWindow <= chainIdToMaxDailyLimit[dstChainId_])));
+    }
+
+    /**
      * @notice Empty implementation of renounce ownership to avoid any mishappening.
      */
     function renounceOwnership() public override {}
