@@ -757,13 +757,9 @@ describe("Proxy OFTV2: ", function () {
 
     const initialAmount = ethers.utils.parseEther("1", 18);
     await localToken.connect(acc2).faucet(initialAmount);
-    // verify acc2 has tokens and acc3 has no tokens on remote chain
     expect(await localToken.balanceOf(acc2.address)).to.be.equal(initialAmount);
     expect(await remoteToken.balanceOf(acc3.address)).to.be.equal(0);
-    // acc2 sends tokens to acc3 on remote chain
-    // approve the proxy to swap your tokens
     await localToken.connect(acc2).approve(localOFT.address, initialAmount);
-    // swaps token to remote chain
     const acc3AddressBytes32 = ethers.utils.defaultAbiCoder.encode(["address"], [acc3.address]);
     const nativeFee = (
       await localOFT.estimateSendFee(remoteChainId, acc3AddressBytes32, initialAmount, false, defaultAdapterParams)

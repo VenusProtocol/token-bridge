@@ -291,7 +291,7 @@ abstract contract BaseXVSProxyOFT is Pausable, ExponentialNoError, BaseOFTV2 {
             } else {
                 transferredInWindow += amountInUsd;
             }
-            eligibleToSend = (whitelist[from_] ||
+            eligibleToSend = (isWhiteListedUser ||
                 ((amountInUsd <= maxSingleTransactionLimit) &&
                     (transferredInWindow <= chainIdToMaxDailyLimit[dstChainId_])));
         } else {
