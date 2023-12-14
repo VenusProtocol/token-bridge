@@ -718,4 +718,88 @@ describe("Proxy OFTV2: ", function () {
     });
     expect(await localOFT.trustedRemoteLookup(remoteChainId)).equals("0x");
   });
+  it("Returns correct limits and eligibility of user initially", async function () {
+    const amount = ethers.utils.parseEther("10", 18);
+    const {
+      eligibleToSend,
+      maxSingleTransactionLimit,
+      maxDailyLimit,
+      amountInUsd,
+      transferredInWindow,
+      last24HourWindowStart,
+      isWhiteListedUser,
+    } = await localOFT.connect(acc1).isEligibleToSend(acc2.address, remoteChainId, amount);
+    expect(eligibleToSend).to.be.true;
+    expect(await localOFT.chainIdToMaxSingleTransactionLimit(remoteChainId)).to.be.equals(maxSingleTransactionLimit);
+    expect(await localOFT.chainIdToMaxDailyLimit(remoteChainId)).to.be.equals(maxDailyLimit);
+    const oraclePrice = await oracle.getPrice(await localOFT.token());
+    const expectedAmount = BigInt((oraclePrice * amount) / 1e18);
+    expect(expectedAmount).to.be.equals(amountInUsd);
+    expect((await localOFT.chainIdToLast24HourTransferred(remoteChainId)).add(amountInUsd)).to.be.equals(
+      transferredInWindow,
+    );
+    const currentTimestamp = (await ethers.provider.getBlock("latest")).timestamp;
+    expect((await localOFT.chainIdToLast24HourWindowStart(remoteChainId)).add(currentTimestamp)).to.be.equals(
+      last24HourWindowStart,
+    );
+    expect(await localOFT.whitelist(acc2.address)).to.be.equals(isWhiteListedUser);
+  });
+
+  it("Returns upadted value of limits and eligibility of user", async function () {
+    const data = localOFT.interface.encodeFunctionData("setMaxSingleTransactionLimit", [
+      remoteChainId,
+      singleTransactionLimit,
+    ]);
+    await acc1.sendTransaction({
+      to: bridgeAdminLocal.address,
+      data: data,
+    });
+
+    const initialAmount = ethers.utils.parseEther("1", 18);
+    await localToken.connect(acc2).faucet(initialAmount);
+    // verify acc2 has tokens and acc3 has no tokens on remote chain
+    expect(await localToken.balanceOf(acc2.address)).to.be.equal(initialAmount);
+    expect(await remoteToken.balanceOf(acc3.address)).to.be.equal(0);
+    // acc2 sends tokens to acc3 on remote chain
+    // approve the proxy to swap your tokens
+    await localToken.connect(acc2).approve(localOFT.address, initialAmount);
+    // swaps token to remote chain
+    const acc3AddressBytes32 = ethers.utils.defaultAbiCoder.encode(["address"], [acc3.address]);
+    const nativeFee = (
+      await localOFT.estimateSendFee(remoteChainId, acc3AddressBytes32, initialAmount, false, defaultAdapterParams)
+    ).nativeFee;
+
+    await localOFT
+      .connect(acc2)
+      .sendFrom(
+        acc2.address,
+        remoteChainId,
+        acc3AddressBytes32,
+        initialAmount,
+        [acc2.address, ethers.constants.AddressZero, defaultAdapterParams],
+        { value: nativeFee },
+      );
+
+    const {
+      eligibleToSend,
+      maxSingleTransactionLimit,
+      maxDailyLimit,
+      amountInUsd,
+      transferredInWindow,
+      last24HourWindowStart,
+      isWhiteListedUser,
+    } = await localOFT.connect(acc1).isEligibleToSend(acc2.address, remoteChainId, initialAmount);
+
+    expect(eligibleToSend).to.be.true;
+    expect(await localOFT.chainIdToMaxSingleTransactionLimit(remoteChainId)).to.be.equals(maxSingleTransactionLimit);
+    expect(await localOFT.chainIdToMaxDailyLimit(remoteChainId)).to.be.equals(maxDailyLimit);
+    const oraclePrice = await oracle.getPrice(await localOFT.token());
+    const expectedAmount = BigInt((oraclePrice * initialAmount) / 1e18);
+    expect(expectedAmount).to.be.equals(amountInUsd);
+    expect((await localOFT.chainIdToLast24HourTransferred(remoteChainId)).add(amountInUsd)).to.be.equals(
+      transferredInWindow,
+    );
+    expect(await localOFT.chainIdToLast24HourWindowStart(remoteChainId)).to.be.equals(last24HourWindowStart);
+    expect(await localOFT.whitelist(acc2.address)).to.be.equals(isWhiteListedUser);
+  });
 });

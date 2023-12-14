@@ -239,17 +239,19 @@ abstract contract BaseXVSProxyOFT is Pausable, ExponentialNoError, BaseOFTV2 {
     }
 
     /**
-     * @notice View function similar to _isEligibleToSend internal function.
-     * @param from_ Address on which eligibility has to be checked.
-     * @param dstChainId_  Destination chain id.
-     * @param amount_ Amount of tokens.
-     * @return isEligibleToSend_  boolean indicating eligibility to send tokens.
-     * @return maxSingleTransactionLimit Maximum single transaction limit corresponding to chain id.
-     * @return maxDailyLimit Maximum daily limit to send tokens.
-     * @return amountInUsd Amount in USD.
-     * @return transferredInWindow Number of tokens transferred in 24 hour window.
-     * @return last24HourWindowStart Timestamp marking the start of the last 24-hour window.
-     * @return isWhiteListedUser Boolean indicating whether the sender is whitelisted.
+     * @notice Checks the eligibility of a sender to initiate a cross-chain token transfer.
+     * @dev This external view function assesses whether the specified sender is eligible to transfer the given amount
+     *      to the specified destination chain. It considers factors such as whitelisting, transaction limits, and a 24-hour window.
+     * @param from_ The sender's address initiating the transfer.
+     * @param dstChainId_ Indicates destination chain.
+     * @param amount_ The quantity of tokens to be transferred.
+     * @return eligibleToSend A boolean indicating whether the sender is eligible to transfer the tokens.
+     * @return maxSingleTransactionLimit The maximum limit for a single transaction.
+     * @return maxDailyLimit The maximum daily limit for transactions.
+     * @return amountInUsd The equivalent amount in USD based on the oracle price.
+     * @return transferredInWindow The total amount transferred in the current 24-hour window.
+     * @return last24HourWindowStart The timestamp when the current 24-hour window started.
+     * @return isWhiteListedUser A boolean indicating whether the sender is whitelisted.
      */
     function isEligibleToSend(
         address from_,
@@ -259,7 +261,7 @@ abstract contract BaseXVSProxyOFT is Pausable, ExponentialNoError, BaseOFTV2 {
         external
         view
         returns (
-            bool isEligibleToSend_,
+            bool eligibleToSend,
             uint256 maxSingleTransactionLimit,
             uint256 maxDailyLimit,
             uint256 amountInUsd,
@@ -276,20 +278,33 @@ abstract contract BaseXVSProxyOFT is Pausable, ExponentialNoError, BaseOFTV2 {
         amountInUsd = mul_ScalarTruncate(oraclePrice, amount_);
 
         // Load values for the 24-hour window checks
+        uint256 currentBlockTimestamp = block.timestamp;
         last24HourWindowStart = chainIdToLast24HourWindowStart[dstChainId_];
         transferredInWindow = chainIdToLast24HourTransferred[dstChainId_];
         maxSingleTransactionLimit = chainIdToMaxSingleTransactionLimit[dstChainId_];
         maxDailyLimit = chainIdToMaxDailyLimit[dstChainId_];
-
-        // Check if the time window has changed (more than 24 hours have passed)
-        if (block.timestamp - last24HourWindowStart > 1 days) {
-            transferredInWindow = amountInUsd;
+        if (!isWhiteListedUser) {
+            // Check if the time window has changed (more than 24 hours have passed)
+            if (currentBlockTimestamp - last24HourWindowStart > 1 days) {
+                transferredInWindow = amountInUsd;
+                last24HourWindowStart = currentBlockTimestamp;
+            } else {
+                transferredInWindow += amountInUsd;
+            }
+            eligibleToSend = (whitelist[from_] ||
+                ((amountInUsd <= maxSingleTransactionLimit) &&
+                    (transferredInWindow <= chainIdToMaxDailyLimit[dstChainId_])));
         } else {
-            transferredInWindow += amountInUsd;
+            return (
+                true,
+                maxSingleTransactionLimit,
+                maxDailyLimit,
+                amountInUsd,
+                transferredInWindow,
+                last24HourWindowStart,
+                isWhiteListedUser
+            );
         }
-        isEligibleToSend_ = (whitelist[from_] ||
-            ((amountInUsd <= maxSingleTransactionLimit) &&
-                (transferredInWindow <= chainIdToMaxDailyLimit[dstChainId_])));
     }
 
     /**
