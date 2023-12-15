@@ -283,28 +283,14 @@ abstract contract BaseXVSProxyOFT is Pausable, ExponentialNoError, BaseOFTV2 {
         transferredInWindow = chainIdToLast24HourTransferred[dstChainId_];
         maxSingleTransactionLimit = chainIdToMaxSingleTransactionLimit[dstChainId_];
         maxDailyLimit = chainIdToMaxDailyLimit[dstChainId_];
-        if (!isWhiteListedUser) {
-            // Check if the time window has changed (more than 24 hours have passed)
-            if (currentBlockTimestamp - last24HourWindowStart > 1 days) {
-                transferredInWindow = amountInUsd;
-                last24HourWindowStart = currentBlockTimestamp;
-            } else {
-                transferredInWindow += amountInUsd;
-            }
-            eligibleToSend = (isWhiteListedUser ||
-                ((amountInUsd <= maxSingleTransactionLimit) &&
-                    (transferredInWindow <= chainIdToMaxDailyLimit[dstChainId_])));
+        if (currentBlockTimestamp - last24HourWindowStart > 1 days) {
+            transferredInWindow = amountInUsd;
+            last24HourWindowStart = currentBlockTimestamp;
         } else {
-            return (
-                true,
-                maxSingleTransactionLimit,
-                maxDailyLimit,
-                amountInUsd,
-                transferredInWindow,
-                last24HourWindowStart,
-                isWhiteListedUser
-            );
+            transferredInWindow += amountInUsd;
         }
+        eligibleToSend = (isWhiteListedUser ||
+            ((amountInUsd <= maxSingleTransactionLimit) && (transferredInWindow <= maxDailyLimit)));
     }
 
     /**
