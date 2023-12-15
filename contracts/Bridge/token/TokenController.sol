@@ -61,9 +61,9 @@ contract TokenController is Ownable, Pausable {
      */
     error MintNotAllowed(address from, address to);
     /**
-     * @notice This error is used to indicate that transfers are not allowed for the to_ address.
+     * @notice This error is used to indicate that transfers are not allowed for the user address.
      */
-    error TransferNotAllowed(address to);
+    error TransferNotAllowed(address user);
     /**
      * @notice This error is used to indicate that sender is not allowed to perform this action.
      */
