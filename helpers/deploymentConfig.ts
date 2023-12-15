@@ -52,6 +52,7 @@ export const xvsBridgeMethods = [
   "setPayloadSizeLimit(uint16,uint256)",
   "setWhitelist(address,bool)",
   "setConfig(uint16,uint16,uint256,bytes)",
+  "updateSendAndCallEnabled(bool)",
 ];
 
 export const bridgeAdminMethods = ["setTrustedRemoteAddress(uint16,bytes)", "transferBridgeOwnership(address)"];

@@ -132,6 +132,7 @@ describe("Proxy OFTV2: ", function () {
       "setPayloadSizeLimit(uint16,uint256)",
       "setUseCustomAdapterParams(bool)",
       "removeTrustedRemote(uint16)",
+      "updateSendAndCallEnabled(bool)",
     ];
     const activeArray = new Array(functionregistry.length).fill(true);
     await bridgeAdminRemote.upsertSignature(functionregistry, activeArray);
@@ -717,5 +718,66 @@ describe("Proxy OFTV2: ", function () {
       data: data,
     });
     expect(await localOFT.trustedRemoteLookup(remoteChainId)).equals("0x");
+  });
+  it("Reverts when sendAndCall is disabled", async function () {
+    const amount = ethers.utils.parseEther("2", 18);
+    const dstGasForCall_ = 0;
+    const uint160Value = BigInt("0x" + acc3.address.slice(2));
+    const bytes32Value = uint160Value << BigInt(96);
+    const acc3AddressBytes32 = "0x" + bytes32Value.toString(16).padStart(32, "0");
+
+    await expect(
+      localOFT
+        .connect(acc1)
+        .sendAndCall(acc3.address, remoteChainId, acc3AddressBytes32, amount, "0x", dstGasForCall_, [
+          acc1.address,
+          acc1.address,
+          "0x",
+        ]),
+    ).to.be.revertedWith("sendAndCall is disabled");
+  });
+
+  it("Successfully call sendAndCall", async function () {
+    const uint160Value = BigInt("0x" + acc3.address.slice(2));
+    const bytes32Value = uint160Value << BigInt(96);
+    const acc3AddressBytes32 = "0x" + bytes32Value.toString(16).padStart(32, "0");
+    let data = localOFT.interface.encodeFunctionData("setMinDstGas", [remoteChainId, 1, 300000]);
+    const amount = ethers.utils.parseEther("2", 18);
+    const dstGasForCall_ = 0;
+    await acc1.sendTransaction({
+      to: bridgeAdminLocal.address,
+      data: data,
+    });
+
+    await acc1.sendTransaction({
+      to: bridgeAdminLocal.address,
+      data: data,
+    });
+    data = localOFT.interface.encodeFunctionData("updateSendAndCallEnabled", [true]);
+    await acc1.sendTransaction({
+      to: bridgeAdminLocal.address,
+      data: data,
+    });
+
+    const adapterParams = ethers.utils.solidityPack(["uint16", "uint256"], [1, 300000]);
+    await localToken.connect(acc1).faucet(amount);
+    await localToken.connect(acc1).approve(localOFT.address, amount);
+    expect(await localOFT.sendAndCallEnabled()).to.be.true;
+
+    const nativeFee = (await localOFT.estimateSendFee(remoteChainId, acc3AddressBytes32, amount, false, adapterParams))
+      .nativeFee;
+
+    await localOFT
+      .connect(acc1)
+      .sendAndCall(
+        acc1.address,
+        remoteChainId,
+        acc3AddressBytes32,
+        amount,
+        "0x",
+        dstGasForCall_,
+        [acc1.address, acc1.address, adapterParams],
+        { value: nativeFee },
+      );
   });
 });
