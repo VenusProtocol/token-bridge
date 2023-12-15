@@ -559,9 +559,9 @@ describe("Proxy OFTV2: ", function () {
       ),
       // Msg should reach remote chain
       expect(await remoteEndpoint.inboundNonce(localChainId, localPath)).equals(1);
-    await expect(remoteToken.connect(acc1).setMintCap(remoteOFT.address, convertToUnit(1, 18))).to.be.revertedWith(
-      "New cap should be greater than minted tokens",
-    );
+    await expect(
+      remoteToken.connect(acc1).setMintCap(remoteOFT.address, convertToUnit(1, 18)),
+    ).to.be.revertedWithCustomError(remoteToken, "NewCapNotGreaterThanMintedTokens");
   });
 
   it("Reverts on remote chain if minting cap is reached", async function () {

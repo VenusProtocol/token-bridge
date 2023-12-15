@@ -89,7 +89,7 @@ contract XVSBridgeAdmin is AccessControlledV8 {
                 emit FunctionRegistryChanged(signatures_[i], false);
             }
             unchecked {
-                i++;
+                ++i;
             }
         }
     }

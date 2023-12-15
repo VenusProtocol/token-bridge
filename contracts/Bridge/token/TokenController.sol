@@ -68,6 +68,10 @@ contract TokenController is Ownable, Pausable {
      * @notice This error is used to indicate that sender is not allowed to perform this action.
      */
     error Unauthorized();
+    /**
+     * @notice This error is used to indicate that the new cap is greater than the previously minted tokens for the minter.
+     */
+    error NewCapNotGreaterThanMintedTokens();
 
     /**
      * @param accessControlManager_ Address of access control manager contract.
@@ -118,7 +122,11 @@ contract TokenController is Ownable, Pausable {
      */
     function setMintCap(address minter_, uint256 amount_) external {
         _ensureAllowed("setMintCap(address,uint256)");
-        require(amount_ > minterToMintedAmount[minter_], "New cap should be greater than minted tokens");
+
+        if (amount_ < minterToMintedAmount[minter_]) {
+            revert NewCapNotGreaterThanMintedTokens();
+        }
+
         minterToCap[minter_] = amount_;
         emit MintCapChanged(minter_, amount_);
     }
