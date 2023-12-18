@@ -1,0 +1,7 @@
+{
+  "name": "opbnbtestnet",
+  "chainId": "5611",
+  "addresses": {
+    "XVS": "0x3d0e20D4caD958bc848B045e1da19Fe378f86f03"
+  }
+}
