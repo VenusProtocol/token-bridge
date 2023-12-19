@@ -68,7 +68,7 @@ contract XVSProxyOFTSrc is BaseXVSProxyOFT {
 
     /**
      * @notice Returns the total circulating supply of the token on the source chain i.e (total supply - locked in this contract).
-     * @return Returns total supply of the token.
+     * @return Returns difference in total supply and the outbound amount.
      */
     function circulatingSupply() public view override returns (uint256) {
         return innerToken.totalSupply() - outboundAmount;
