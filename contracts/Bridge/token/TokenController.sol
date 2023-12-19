@@ -57,13 +57,9 @@ contract TokenController is Ownable, Pausable {
      */
     error MintLimitExceed();
     /**
-     * @notice This error is used to indicate that minting is not allowed for the specified addresses.
+     * @notice This error is used to indicate that `mint` `burn` and `transfer` actions are not allowed for the user address.
      */
-    error MintNotAllowed(address from, address to);
-    /**
-     * @notice This error is used to indicate that transfers are not allowed for the user address.
-     */
-    error TransferNotAllowed(address user);
+    error AccountBlacklisted(address user);
     /**
      * @notice This error is used to indicate that sender is not allowed to perform this action.
      */
@@ -159,14 +155,10 @@ contract TokenController is Ownable, Pausable {
      * @param from_  Minter address.
      * @param to_  Receiver address.
      * @param amount_  Amount to be mint.
-     * @custom:error MintNotAllowed is thrown when user is in blacklist
      * @custom:error MintLimitExceed is thrown when minting limit exceeds the cap.
      * @custom:event Emits MintLimitDecreased with minter address and available limits.
      */
     function _isEligibleToMint(address from_, address to_, uint256 amount_) internal {
-        if (_blacklist[to_]) {
-            revert MintNotAllowed(from_, to_);
-        }
         uint256 mintingCap = minterToCap[from_];
         uint256 totalMintedOld = minterToMintedAmount[from_];
         uint256 totalMintedNew = totalMintedOld + amount_;

@@ -533,7 +533,7 @@ describe("Proxy OFTV2: ", function () {
     await remoteToken.updateBlacklist(acc3.address, true);
     await expect(remoteToken.connect(acc2).transfer(acc3.address, amount)).to.be.revertedWithCustomError(
       remoteToken,
-      "TransferNotAllowed",
+      "AccountBlacklisted",
     );
   });
 

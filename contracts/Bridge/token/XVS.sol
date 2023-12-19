@@ -22,7 +22,6 @@ contract XVS is ERC20, TokenController {
      * @param amount_ Amount of tokens to be assigned.
      * @custom:access Controlled by AccessControlManager.
      * @custom:event Emits MintLimitDecreased with new available limit.
-     * @custom:error MintNotAllowed is thrown when minting is not allowed to to_ address.
      * @custom:error MintLimitExceed is thrown when minting amount exceeds the maximum cap.
      */
     function mint(address account_, uint256 amount_) external whenNotPaused {
@@ -46,19 +45,19 @@ contract XVS is ERC20, TokenController {
     }
 
     /**
-     * @notice Moves `amount` of tokens from `from` to `to`.
+     * @notice Hook that is called before any transfer of tokens. This includes
+     * minting and burning.
      * @param from_ Address of account from which tokens are to be transferred.
      * @param to_ Address of the account to which tokens are to be transferred.
      * @param amount_ The amount of tokens to be transferred.
-     * @custom:error TransferNotAllowed is thrown when either `from` or `to` address is blacklisted.
+     * @custom:error AccountBlacklisted is thrown when either `from` or `to` address is blacklisted.
      */
-    function _transfer(address from_, address to_, uint256 amount_) internal override whenNotPaused {
+    function _beforeTokenTransfer(address from_, address to_, uint256 amount_) internal override whenNotPaused {
         if (_blacklist[to_]) {
-            revert TransferNotAllowed(to_);
+            revert AccountBlacklisted(to_);
         }
         if (_blacklist[from_]) {
-            revert TransferNotAllowed(from_);
+            revert AccountBlacklisted(from_);
         }
-        super._transfer(from_, to_, amount_);
     }
 }
