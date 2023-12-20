@@ -284,20 +284,6 @@ abstract contract BaseXVSProxyOFT is Pausable, ExponentialNoError, BaseOFTV2 {
     }
 
     /**
-     * @notice Initiates a cross-chain token transfer and triggers a call on the destination chain.
-     * @dev This internal override function enables the contract to send tokens and invoke calls on the specified
-     *      destination chain. It checks whether the sendAndCall feature is enabled before proceeding with the transfer.
-     * @param from_ Address from which tokens will be debited.
-     * @param dstChainId_ Destination chain id on which tokens will be send.
-     * @param toAddress_ Address on which tokens will be credited on destination chain.
-     * @param amount_ Amount of tokens that will be transferred.
-     * @param payload_ Additional data payload for the call on the destination chain.
-     * @param dstGasForCall_ The amount of gas allocated for the call on the destination chain.
-     * @param callparams_ Additional parameters, including refund address, ZRO payment address,
-     *                   and adapter params.
-     */
-
-    /**
      * @notice Checks the eligibility of a sender to initiate a cross-chain token transfer.
      * @dev This external view function assesses whether the specified sender is eligible to transfer the given amount
      *      to the specified destination chain. It considers factors such as whitelisting, transaction limits, and a 24-hour window.
@@ -352,6 +338,19 @@ abstract contract BaseXVSProxyOFT is Pausable, ExponentialNoError, BaseOFTV2 {
             ((amountInUsd <= maxSingleTransactionLimit) && (transferredInWindow <= maxDailyLimit)));
     }
 
+    /**
+     * @notice Initiates a cross-chain token transfer and triggers a call on the destination chain.
+     * @dev This internal override function enables the contract to send tokens and invoke calls on the specified
+     *      destination chain. It checks whether the sendAndCall feature is enabled before proceeding with the transfer.
+     * @param from_ Address from which tokens will be debited.
+     * @param dstChainId_ Destination chain id on which tokens will be send.
+     * @param toAddress_ Address on which tokens will be credited on destination chain.
+     * @param amount_ Amount of tokens that will be transferred.
+     * @param payload_ Additional data payload for the call on the destination chain.
+     * @param dstGasForCall_ The amount of gas allocated for the call on the destination chain.
+     * @param callparams_ Additional parameters, including refund address, ZRO payment address,
+     *                   and adapter params.
+     */
     function sendAndCall(
         address from_,
         uint16 dstChainId_,
