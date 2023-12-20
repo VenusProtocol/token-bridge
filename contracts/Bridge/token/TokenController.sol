@@ -21,13 +21,13 @@ contract TokenController is Ownable, Pausable {
     /**
      * @notice A Mapping used to keep track of the blacklist status of addresses.
      */
-    mapping(address => bool) public _blacklist;
+    mapping(address => bool) internal _blacklist;
     /**
      * @notice A mapping is used to keep track of the maximum amount a minter is permitted to mint.
      */
     mapping(address => uint256) public minterToCap;
     /**
-     * @notice A Mapping used to keep track of the amount i.e already m inted by minter.
+     * @notice A Mapping used to keep track of the amount i.e already minted by minter.
      */
     mapping(address => uint256) public minterToMintedAmount;
 
@@ -57,13 +57,17 @@ contract TokenController is Ownable, Pausable {
      */
     error MintLimitExceed();
     /**
-     * @notice This error is used to indicate that minting is not allowed for the specified addresses.
+     * @notice This error is used to indicate that `mint` `burn` and `transfer` actions are not allowed for the user address.
      */
-    error MintNotAllowed(address from, address to);
+    error AccountBlacklisted(address user);
     /**
      * @notice This error is used to indicate that sender is not allowed to perform this action.
      */
     error Unauthorized();
+    /**
+     * @notice This error is used to indicate that the new cap is greater than the previously minted tokens for the minter.
+     */
+    error NewCapNotGreaterThanMintedTokens();
 
     /**
      * @param accessControlManager_ Address of access control manager contract.
@@ -106,7 +110,7 @@ contract TokenController is Ownable, Pausable {
     }
 
     /**
-     * @notice Sets the minitng cap for minter.
+     * @notice Sets the minting cap for minter.
      * @param minter_ Minter address.
      * @param amount_ Cap for the minter.
      * @custom:access Controlled by AccessControlManager.
@@ -114,6 +118,11 @@ contract TokenController is Ownable, Pausable {
      */
     function setMintCap(address minter_, uint256 amount_) external {
         _ensureAllowed("setMintCap(address,uint256)");
+
+        if (amount_ < minterToMintedAmount[minter_]) {
+            revert NewCapNotGreaterThanMintedTokens();
+        }
+
         minterToCap[minter_] = amount_;
         emit MintCapChanged(minter_, amount_);
     }
@@ -146,11 +155,10 @@ contract TokenController is Ownable, Pausable {
      * @param from_  Minter address.
      * @param to_  Receiver address.
      * @param amount_  Amount to be mint.
+     * @custom:error MintLimitExceed is thrown when minting limit exceeds the cap.
+     * @custom:event Emits MintLimitDecreased with minter address and available limits.
      */
     function _isEligibleToMint(address from_, address to_, uint256 amount_) internal {
-        if (_blacklist[to_]) {
-            revert MintNotAllowed(from_, to_);
-        }
         uint256 mintingCap = minterToCap[from_];
         uint256 totalMintedOld = minterToMintedAmount[from_];
         uint256 totalMintedNew = totalMintedOld + amount_;
@@ -159,14 +167,18 @@ contract TokenController is Ownable, Pausable {
             revert MintLimitExceed();
         }
         minterToMintedAmount[from_] = totalMintedNew;
-        uint256 availableLimit = mintingCap - totalMintedNew;
+        uint256 availableLimit;
+        unchecked {
+            availableLimit = mintingCap - totalMintedNew;
+        }
         emit MintLimitDecreased(from_, availableLimit);
     }
 
     /**
-     * @dev This is post hook of burn function, increases minitng limit of the minter.
+     * @dev This is post hook of burn function, increases minting limit of the minter.
      * @param from_ Minter address.
      * @param amount_  Amount burned.
+     * @custom:event Emits MintLimitIncreased with minter address and availabe limit.
      */
     function _increaseMintLimit(address from_, uint256 amount_) internal {
         uint256 totalMintedOld = minterToMintedAmount[from_];
@@ -176,7 +188,11 @@ contract TokenController is Ownable, Pausable {
         emit MintLimitIncreased(from_, availableLimit);
     }
 
-    /// @dev Checks the caller is allowed to call the specified fuction
+    /**
+     * @dev Checks the caller is allowed to call the specified fuction.
+     * @param functionSig_ Function signatureon which access is to be checked.
+     * @custom:error Unauthorized, thrown when unauthorised user try to access function.
+     */
     function _ensureAllowed(string memory functionSig_) internal view {
         if (!IAccessControlManagerV8(accessControlManager).isAllowedToCall(msg.sender, functionSig_)) {
             revert Unauthorized();

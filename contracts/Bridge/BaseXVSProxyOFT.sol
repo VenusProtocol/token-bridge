@@ -62,12 +62,12 @@ abstract contract BaseXVSProxyOFT is Pausable, ExponentialNoError, BaseOFTV2 {
      */
     mapping(uint16 => uint256) public chainIdToLast24HourReceiveWindowStart;
     /**
-     * @notice Address on which cap check and bound limit is not appicable.
+     * @notice Address on which cap check and bound limit is not applicable.
      */
     mapping(address => bool) public whitelist;
 
     /**
-     * @notice Emmited when address is added to whitelist.
+     * @notice Emitted when address is added to whitelist.
      */
     event SetWhitelist(address indexed addr, bool isWhitelist);
     /**
@@ -98,20 +98,29 @@ abstract contract BaseXVSProxyOFT is Pausable, ExponentialNoError, BaseOFTV2 {
      * @notice Event emitted when inner token set successfully.
      */
     event InnerTokenAdded(address indexed innerToken);
-
+    /**
+     *@notice Emitted on sweep token success
+     */
+    event SweepToken(address indexed token, address indexed to, uint256 sweepAmount);
     /**
      * @notice Event emitted when SendAndCallEnabled updated successfully.
      */
     event UpdateSendAndCallEnabled(bool indexed enabled);
+    /**
+     *@notice Error thrown when this contract balance is less than sweep amount
+     */
+    error InsufficientBalance(uint256 sweepAmount, uint256 balance);
 
     /**
      * @param tokenAddress_ Address of the inner token.
-     * @param sharedDecimals_ No of shared decimals.
+     * @param sharedDecimals_ Number of shared decimals.
      * @param lzEndpoint_ Address of the layer zero endpoint contract.
      * @param oracle_ Address of the price oracle.
      * @custom:error ZeroAddressNotAllowed is thrown when token contract address is zero.
      * @custom:error ZeroAddressNotAllowed is thrown when lzEndpoint contract address is zero.
      * @custom:error ZeroAddressNotAllowed is thrown when oracle contract address is zero.
+     * @custom:event Emits InnerTokenAdded with token address.
+     * @custom:event Emits OracleChanged with zero address and oracle address.
      */
     constructor(
         address tokenAddress_,
@@ -121,6 +130,7 @@ abstract contract BaseXVSProxyOFT is Pausable, ExponentialNoError, BaseOFTV2 {
     ) BaseOFTV2(sharedDecimals_, lzEndpoint_) {
         ensureNonzeroAddress(tokenAddress_);
         ensureNonzeroAddress(lzEndpoint_);
+        ensureNonzeroAddress(oracle_);
 
         innerToken = IERC20(tokenAddress_);
 
@@ -130,8 +140,6 @@ abstract contract BaseXVSProxyOFT is Pausable, ExponentialNoError, BaseOFTV2 {
 
         require(sharedDecimals_ <= decimals, "ProxyOFT: sharedDecimals must be <= decimals");
         ld2sdRate = 10 ** (decimals - sharedDecimals_);
-
-        ensureNonzeroAddress(oracle_);
 
         emit InnerTokenAdded(tokenAddress_);
         emit OracleChanged(address(0), oracle_);
@@ -209,7 +217,7 @@ abstract contract BaseXVSProxyOFT is Pausable, ExponentialNoError, BaseOFTV2 {
 
     /**
      * @notice Sets the whitelist address to skip checks on transaction limit.
-     * @param user_ Adress to be add in whitelist.
+     * @param user_ Address to be add in whitelist.
      * @param val_ Boolean to be set (true for user_ address is whitelisted).
      * @custom:access Only owner.
      * @custom:event Emits setWhitelist.
@@ -236,8 +244,30 @@ abstract contract BaseXVSProxyOFT is Pausable, ExponentialNoError, BaseOFTV2 {
     }
 
     /**
+     * @notice A public function to sweep accidental ERC-20 transfers to this contract. Tokens are sent to user
+     * @param token_ The address of the ERC-20 token to sweep
+     * @param to_ The address of the recipient
+     * @param amount_ The amount of tokens needs to transfer
+     * @custom:event Emits SweepToken event
+     * @custom:error Throw InsufficientBalance if amount_ is greater than the available balance of the token in the contract
+     * @custom:access Only Owner
+     */
+    function sweepToken(IERC20 token_, address to_, uint256 amount_) external onlyOwner {
+        uint256 balance = token_.balanceOf(address(this));
+        if (amount_ > balance) {
+            revert InsufficientBalance(amount_, balance);
+        }
+
+        emit SweepToken(address(token_), to_, amount_);
+
+        token_.safeTransfer(to_, amount_);
+    }
+
+    /**
      * @notice Remove trusted remote from storage.
      * @param remoteChainId_ The chain's id corresponds to setting the trusted remote to empty.
+     * @custom:access Only owner.
+     * @custom:event Emits TrustedRemoteRemoved once chain id is removed from trusted remote.
      */
     function removeTrustedRemote(uint16 remoteChainId_) external onlyOwner {
         delete trustedRemoteLookup[remoteChainId_];
@@ -267,6 +297,61 @@ abstract contract BaseXVSProxyOFT is Pausable, ExponentialNoError, BaseOFTV2 {
      *                   and adapter params.
      */
 
+    /**
+     * @notice Checks the eligibility of a sender to initiate a cross-chain token transfer.
+     * @dev This external view function assesses whether the specified sender is eligible to transfer the given amount
+     *      to the specified destination chain. It considers factors such as whitelisting, transaction limits, and a 24-hour window.
+     * @param from_ The sender's address initiating the transfer.
+     * @param dstChainId_ Indicates destination chain.
+     * @param amount_ The quantity of tokens to be transferred.
+     * @return eligibleToSend A boolean indicating whether the sender is eligible to transfer the tokens.
+     * @return maxSingleTransactionLimit The maximum limit for a single transaction.
+     * @return maxDailyLimit The maximum daily limit for transactions.
+     * @return amountInUsd The equivalent amount in USD based on the oracle price.
+     * @return transferredInWindow The total amount transferred in the current 24-hour window.
+     * @return last24HourWindowStart The timestamp when the current 24-hour window started.
+     * @return isWhiteListedUser A boolean indicating whether the sender is whitelisted.
+     */
+    function isEligibleToSend(
+        address from_,
+        uint16 dstChainId_,
+        uint256 amount_
+    )
+        external
+        view
+        returns (
+            bool eligibleToSend,
+            uint256 maxSingleTransactionLimit,
+            uint256 maxDailyLimit,
+            uint256 amountInUsd,
+            uint256 transferredInWindow,
+            uint256 last24HourWindowStart,
+            bool isWhiteListedUser
+        )
+    {
+        // Check if the sender's address is whitelisted
+        isWhiteListedUser = whitelist[from_];
+
+        // Calculate the amount in USD using the oracle price
+        Exp memory oraclePrice = Exp({ mantissa: oracle.getPrice(token()) });
+        amountInUsd = mul_ScalarTruncate(oraclePrice, amount_);
+
+        // Load values for the 24-hour window checks
+        uint256 currentBlockTimestamp = block.timestamp;
+        last24HourWindowStart = chainIdToLast24HourWindowStart[dstChainId_];
+        transferredInWindow = chainIdToLast24HourTransferred[dstChainId_];
+        maxSingleTransactionLimit = chainIdToMaxSingleTransactionLimit[dstChainId_];
+        maxDailyLimit = chainIdToMaxDailyLimit[dstChainId_];
+        if (currentBlockTimestamp - last24HourWindowStart > 1 days) {
+            transferredInWindow = amountInUsd;
+            last24HourWindowStart = currentBlockTimestamp;
+        } else {
+            transferredInWindow += amountInUsd;
+        }
+        eligibleToSend = (isWhiteListedUser ||
+            ((amountInUsd <= maxSingleTransactionLimit) && (transferredInWindow <= maxDailyLimit)));
+    }
+
     function sendAndCall(
         address from_,
         uint16 dstChainId_,
@@ -281,6 +366,23 @@ abstract contract BaseXVSProxyOFT is Pausable, ExponentialNoError, BaseOFTV2 {
         super.sendAndCall(from_, dstChainId_, toAddress_, amount_, payload_, dstGasForCall_, callparams_);
     }
 
+    function retryMessage(
+        uint16 _srcChainId,
+        bytes calldata _srcAddress,
+        uint64 _nonce,
+        bytes calldata _payload
+    ) public payable override {
+        bytes memory trustedRemote = trustedRemoteLookup[_srcChainId];
+        // it will still block the message pathway from (srcChainId, srcAddress). should not receive message from untrusted remote.
+        require(
+            _srcAddress.length == trustedRemote.length &&
+                trustedRemote.length > 0 &&
+                keccak256(_srcAddress) == keccak256(trustedRemote),
+            "LzApp: invalid source sending contract"
+        );
+        super.retryMessage(_srcChainId, _srcAddress, _nonce, _payload);
+    }
+
     /**
      * @notice Empty implementation of renounce ownership to avoid any mishappening.
      */
@@ -288,11 +390,18 @@ abstract contract BaseXVSProxyOFT is Pausable, ExponentialNoError, BaseOFTV2 {
 
     /**
      * @notice Return's the address of the inner token of this bridge.
+     * @return Address of the inner token of this bridge.
      */
     function token() public view override returns (address) {
         return address(innerToken);
     }
 
+    /**
+     * @notice Checks if the sender is eligible to send tokens
+     * @param from_ Sender's address sending tokens
+     * @param dstChainId_ Chain id on which tokens should be sent
+     * @param amount_ Amount of tokens to be sent
+     */
     function _isEligibleToSend(address from_, uint16 dstChainId_, uint256 amount_) internal {
         // Check if the sender's address is whitelisted
         bool isWhiteListedUser = whitelist[from_];
@@ -331,6 +440,12 @@ abstract contract BaseXVSProxyOFT is Pausable, ExponentialNoError, BaseOFTV2 {
         chainIdToLast24HourTransferred[dstChainId_] = transferredInWindow;
     }
 
+    /**
+     * @notice Checks if receiver is able to receive tokens
+     * @param toAddress_ Receiver address
+     * @param srcChainId_ Source chain id from which token is send
+     * @param receivedAmount_ Amount of tokens received
+     */
     function _isEligibleToReceive(address toAddress_, uint16 srcChainId_, uint256 receivedAmount_) internal {
         // Check if the recipient's address is whitelisted
         bool isWhiteListedUser = whitelist[toAddress_];
@@ -370,6 +485,13 @@ abstract contract BaseXVSProxyOFT is Pausable, ExponentialNoError, BaseOFTV2 {
         chainIdToLast24HourReceived[srcChainId_] = receivedInWindow;
     }
 
+    /**
+     * @notice Transfer tokens from sender to receiver account.
+     * @param from_ Address from which token has to be transferred(Sender).
+     * @param to_ Address on which token will be tranferred(Receiver).
+     * @param amount_ Amount of token to be transferred.
+     * @return Actual balance difference.
+     */
     function _transferFrom(
         address from_,
         address to_,
@@ -384,23 +506,10 @@ abstract contract BaseXVSProxyOFT is Pausable, ExponentialNoError, BaseOFTV2 {
         return innerToken.balanceOf(to_) - before;
     }
 
-    function _nonblockingLzReceive(
-        uint16 _srcChainId,
-        bytes memory _srcAddress,
-        uint64 _nonce,
-        bytes memory _payload
-    ) internal override {
-        bytes memory trustedRemote = trustedRemoteLookup[_srcChainId];
-        // if will still block the message pathway from (srcChainId, srcAddress). should not receive message from untrusted remote.
-        require(
-            _srcAddress.length == trustedRemote.length &&
-                trustedRemote.length > 0 &&
-                keccak256(_srcAddress) == keccak256(trustedRemote),
-            "LzApp: invalid source sending contract"
-        );
-        super._nonblockingLzReceive(_srcChainId, _srcAddress, _nonce, _payload);
-    }
-
+    /**
+     * @notice Returns Conversion rate factor from large decimals to shared decimals.
+     * @return Conversion rate factor.
+     */
     function _ld2sdRate() internal view override returns (uint256) {
         return ld2sdRate;
     }
