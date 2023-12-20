@@ -23,6 +23,7 @@ abstract contract BaseXVSProxyOFT is Pausable, ExponentialNoError, BaseOFTV2 {
     using SafeERC20 for IERC20;
     IERC20 internal immutable innerToken;
     uint256 internal immutable ld2sdRate;
+    bool public sendAndCallEnabled;
 
     /**
      * @notice The address of ResilientOracle contract wrapped in its interface.
@@ -97,12 +98,14 @@ abstract contract BaseXVSProxyOFT is Pausable, ExponentialNoError, BaseOFTV2 {
      * @notice Event emitted when inner token set successfully.
      */
     event InnerTokenAdded(address indexed innerToken);
-
     /**
      *@notice Emitted on sweep token success
      */
     event SweepToken(address indexed token, address indexed to, uint256 sweepAmount);
-
+    /**
+     * @notice Event emitted when SendAndCallEnabled updated successfully.
+     */
+    event UpdateSendAndCallEnabled(bool indexed enabled);
     /**
      *@notice Error thrown when this contract balance is less than sweep amount
      */
@@ -271,21 +274,13 @@ abstract contract BaseXVSProxyOFT is Pausable, ExponentialNoError, BaseOFTV2 {
         emit TrustedRemoteRemoved(remoteChainId_);
     }
 
-    function retryMessage(
-        uint16 _srcChainId,
-        bytes calldata _srcAddress,
-        uint64 _nonce,
-        bytes calldata _payload
-    ) public payable override {
-        bytes memory trustedRemote = trustedRemoteLookup[_srcChainId];
-        // it will still block the message pathway from (srcChainId, srcAddress). should not receive message from untrusted remote.
-        require(
-            _srcAddress.length == trustedRemote.length &&
-                trustedRemote.length > 0 &&
-                keccak256(_srcAddress) == keccak256(trustedRemote),
-            "LzApp: invalid source sending contract"
-        );
-        super.retryMessage(_srcChainId, _srcAddress, _nonce, _payload);
+    /**
+     * @notice It enables or disables sendAndCall functionality for the bridge.
+     * @param enabled_ Boolean indicating whether the sendAndCall function should be enabled or disabled.
+     */
+    function updateSendAndCallEnabled(bool enabled_) external onlyOwner {
+        sendAndCallEnabled = enabled_;
+        emit UpdateSendAndCallEnabled(enabled_);
     }
 
     /**
@@ -341,6 +336,50 @@ abstract contract BaseXVSProxyOFT is Pausable, ExponentialNoError, BaseOFTV2 {
         }
         eligibleToSend = (isWhiteListedUser ||
             ((amountInUsd <= maxSingleTransactionLimit) && (transferredInWindow <= maxDailyLimit)));
+    }
+
+    /**
+     * @notice Initiates a cross-chain token transfer and triggers a call on the destination chain.
+     * @dev This internal override function enables the contract to send tokens and invoke calls on the specified
+     *      destination chain. It checks whether the sendAndCall feature is enabled before proceeding with the transfer.
+     * @param from_ Address from which tokens will be debited.
+     * @param dstChainId_ Destination chain id on which tokens will be send.
+     * @param toAddress_ Address on which tokens will be credited on destination chain.
+     * @param amount_ Amount of tokens that will be transferred.
+     * @param payload_ Additional data payload for the call on the destination chain.
+     * @param dstGasForCall_ The amount of gas allocated for the call on the destination chain.
+     * @param callparams_ Additional parameters, including refund address, ZRO payment address,
+     *                   and adapter params.
+     */
+    function sendAndCall(
+        address from_,
+        uint16 dstChainId_,
+        bytes32 toAddress_,
+        uint256 amount_,
+        bytes calldata payload_,
+        uint64 dstGasForCall_,
+        LzCallParams calldata callparams_
+    ) public payable override {
+        require(sendAndCallEnabled, "sendAndCall is disabled");
+
+        super.sendAndCall(from_, dstChainId_, toAddress_, amount_, payload_, dstGasForCall_, callparams_);
+    }
+
+    function retryMessage(
+        uint16 _srcChainId,
+        bytes calldata _srcAddress,
+        uint64 _nonce,
+        bytes calldata _payload
+    ) public payable override {
+        bytes memory trustedRemote = trustedRemoteLookup[_srcChainId];
+        // it will still block the message pathway from (srcChainId, srcAddress). should not receive message from untrusted remote.
+        require(
+            _srcAddress.length == trustedRemote.length &&
+                trustedRemote.length > 0 &&
+                keccak256(_srcAddress) == keccak256(trustedRemote),
+            "LzApp: invalid source sending contract"
+        );
+        super.retryMessage(_srcChainId, _srcAddress, _nonce, _payload);
     }
 
     /**

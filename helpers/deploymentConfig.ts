@@ -53,6 +53,7 @@ export const xvsBridgeMethods = [
   "setWhitelist(address,bool)",
   "setConfig(uint16,uint16,uint256,bytes)",
   "sweepToken(address,address,uint256)",
+  "updateSendAndCallEnabled(bool)",
 ];
 
 export const bridgeAdminMethods = ["setTrustedRemoteAddress(uint16,bytes)", "transferBridgeOwnership(address)"];
