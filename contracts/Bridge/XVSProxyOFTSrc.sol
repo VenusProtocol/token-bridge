@@ -16,7 +16,7 @@ import { BaseXVSProxyOFT } from "./BaseXVSProxyOFT.sol";
 contract XVSProxyOFTSrc is BaseXVSProxyOFT {
     using SafeERC20 for IERC20;
     /**
-     * @notice total amount is transferred from this chain to other chains.
+     * @notice Total amount that is transferred from this chain to other chains.
      */
     uint256 public outboundAmount;
 
@@ -25,7 +25,7 @@ contract XVSProxyOFTSrc is BaseXVSProxyOFT {
      */
     event FallbackWithdraw(address indexed to, uint256 amount);
     /**
-     * @notice Emits when stored message dropped without successfull retrying.
+     * @notice Emits when stored message dropped without successful retrying.
      */
     event DropFailedMessage(uint16 srcChainId, bytes indexed srcAddress, uint64 nonce);
 
@@ -36,21 +36,30 @@ contract XVSProxyOFTSrc is BaseXVSProxyOFT {
         address oracle_
     ) BaseXVSProxyOFT(tokenAddress_, sharedDecimals_, lzEndpoint_, oracle_) {}
 
-    /** @notice Only call it when there is no way to recover the failed message.
+    /**
+     * @notice Only call it when there is no way to recover the failed message.
      * `dropFailedMessage` must be called first if transaction is from remote->local chain to avoid double spending.
      * @param to_ The address to withdraw to
      * @param amount_ The amount of withdrawal
+     * @custom:access Only owner.
+     * @custom:event Emits FallbackWithdraw, once done with transfer.
      */
     function fallbackWithdraw(address to_, uint256 amount_) external onlyOwner {
-        outboundAmount -= amount_;
+        require(outboundAmount >= amount_, "Withdraw amount should be less than outbound amount");
+        unchecked {
+            outboundAmount -= amount_;
+        }
         _transferFrom(address(this), to_, amount_);
         emit FallbackWithdraw(to_, amount_);
     }
 
-    /** @notice Clear failed messages from the storage.
+    /**
+     * @notice Clear failed messages from the storage.
      * @param srcChainId_ Chain id of source
      * @param srcAddress_ Address of source followed by current bridge address
      * @param nonce_ Nonce_ of the transaction
+     * @custom:access Only owner.
+     * @custom:event Emits DropFailedMessage on clearance of failed message.
      */
     function dropFailedMessage(uint16 srcChainId_, bytes memory srcAddress_, uint64 nonce_) external onlyOwner {
         failedMessages[srcChainId_][srcAddress_][nonce_] = bytes32(0);
@@ -59,11 +68,19 @@ contract XVSProxyOFTSrc is BaseXVSProxyOFT {
 
     /**
      * @notice Returns the total circulating supply of the token on the source chain i.e (total supply - locked in this contract).
+     * @return Returns difference in total supply and the outbound amount.
      */
     function circulatingSupply() public view override returns (uint256) {
         return innerToken.totalSupply() - outboundAmount;
     }
 
+    /**
+     * @notice Debit tokens from the given address
+     * @param from_  Address from which tokens to be debited
+     * @param dstChainId_ Destination chain id
+     * @param amount_ Amount of tokens to be debited
+     * @return Actual amount debited
+     */
     function _debitFrom(
         address from_,
         uint16 dstChainId_,
@@ -78,6 +95,13 @@ contract XVSProxyOFTSrc is BaseXVSProxyOFT {
         return amount;
     }
 
+    /**
+     * @notice Credit tokens in the given account
+     * @param srcChainId_  Source chain id
+     * @param toAddress_ Address on which token will be credited
+     * @param amount_ Amount of tokens to be credited
+     * @return Actual amount credited
+     */
     function _creditTo(
         uint16 srcChainId_,
         address toAddress_,

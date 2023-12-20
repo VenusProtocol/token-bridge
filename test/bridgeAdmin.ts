@@ -219,7 +219,7 @@ describe("Bridge Admin: ", function () {
     ).to.be.revertedWith("Function not found");
   });
 
-  it("Success on trnafer bridge owner", async function () {
+  it("Success on transfer bridge owner", async function () {
     await bridgeAdmin.connect(acc2).transferBridgeOwnership(acc2.address);
     expect(await remoteOFT.owner()).equals(acc2.address);
   });

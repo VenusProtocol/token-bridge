@@ -21,7 +21,9 @@ contract XVSBridgeAdmin is AccessControlledV8 {
      */
     mapping(bytes4 => string) public functionRegistry;
 
-    // Event emitted when function registry updated
+    /**
+     * @notice emitted when function registry updated
+     */
     event FunctionRegistryChanged(string signature, bool active);
 
     /// @custom:oz-upgrades-unsafe-allow constructor
@@ -33,15 +35,14 @@ contract XVSBridgeAdmin is AccessControlledV8 {
 
     /**
      * @param accessControlManager_ Address of access control manager contract.
-     * @custom:error ZeroAddressNotAllowed is thrown when accessControlManager contract address is zero.
      */
     function initialize(address accessControlManager_) external initializer {
-        ensureNonzeroAddress(accessControlManager_);
         __AccessControlled_init(accessControlManager_);
     }
 
     /**
-     * @notice Invoked when called function does not exist in the contract
+     * @notice Invoked when called function does not exist in the contract.
+     * @return Response of low level call.
      * @custom:access Controlled by AccessControlManager.
      */
     fallback(bytes calldata data) external returns (bytes memory) {
@@ -54,8 +55,10 @@ contract XVSBridgeAdmin is AccessControlledV8 {
     }
 
     /**
+     * @notice Sets trusted remote on particular chain.
      * @param remoteChainId_ Chain Id of the destination chain.
      * @param remoteAddress_ Address of the destination bridge.
+     * @custom:access Controlled by AccessControlManager.
      * @custom:error ZeroAddressNotAllowed is thrown when remoteAddress_ contract address is zero.
      */
     function setTrustedRemoteAddress(uint16 remoteChainId_, bytes calldata remoteAddress_) external {
@@ -66,14 +69,16 @@ contract XVSBridgeAdmin is AccessControlledV8 {
     }
 
     /**
-     * @notice A registry of functions that are allowed to be executed from proposals
+     * @notice A setter for the registry of functions that are allowed to be executed from proposals.
      * @param signatures_  Function signature to be added or removed.
      * @param active_ bool value, should be true to add function.
+     * @custom:access Only owner.
+     * @custom:event Emits FunctionRegistryChanged if bool value of function changes.
      */
     function upsertSignature(string[] calldata signatures_, bool[] calldata active_) external onlyOwner {
         uint256 signatureLength = signatures_.length;
         require(signatureLength == active_.length, "Input arrays must have the same length");
-        for (uint256 i; i < signatureLength; i++) {
+        for (uint256 i; i < signatureLength; ) {
             bytes4 sigHash = bytes4(keccak256(bytes(signatures_[i])));
             bytes memory signature = bytes(functionRegistry[sigHash]);
             if (active_[i] && signature.length == 0) {
@@ -83,25 +88,28 @@ contract XVSBridgeAdmin is AccessControlledV8 {
                 delete functionRegistry[sigHash];
                 emit FunctionRegistryChanged(signatures_[i], false);
             }
+            unchecked {
+                ++i;
+            }
         }
     }
 
     /**
-     * @notice This function transfer the ownership of the bridge from this contract to new owner.
+     * @notice This function transfers the ownership of the bridge from this contract to new owner.
      * @param newOwner_ New owner of the XVS Bridge.
      * @custom:access Controlled by AccessControlManager.
      */
     function transferBridgeOwnership(address newOwner_) external {
         _checkAccessAllowed("transferBridgeOwnership(address)");
-        ensureNonzeroAddress(newOwner_);
         XVSBridge.transferOwnership(newOwner_);
     }
 
     /**
-     * @notice Returns bool = true if srcAddress_ is trustedRemote corresponds to chainId_.
+     * @notice Returns true if remote address is trustedRemote corresponds to chainId_.
      * @param remoteChainId_ Chain Id of the destination chain.
      * @param remoteAddress_ Address of the destination bridge.
      * @custom:error ZeroAddressNotAllowed is thrown when remoteAddress_ contract address is zero.
+     * @return Bool indicating whether the remote chain is trusted or not.
      */
     function isTrustedRemote(uint16 remoteChainId_, bytes calldata remoteAddress_) external returns (bool) {
         require(remoteChainId_ != 0, "ChainId must not be zero");
@@ -116,11 +124,18 @@ contract XVSBridgeAdmin is AccessControlledV8 {
 
     /**
      * @dev Returns function name string associated with function signature.
+     * @param signature_ Four bytes of function signature.
+     * @return Function signature corresponding to its hash.
      */
     function _getFunctionName(bytes4 signature_) internal view returns (string memory) {
         return functionRegistry[signature_];
     }
 
+    /**
+     * @notice Converts given bytes into address.
+     * @param b Bytes to be converted into address.
+     * @return Converted address of given bytes.
+     */
     function bytesToAddress(bytes calldata b) private pure returns (address) {
         return address(uint160(bytes20(b)));
     }
