@@ -4,7 +4,7 @@ import { DeployFunction } from "hardhat-deploy/types";
 import { HardhatRuntimeEnvironment } from "hardhat/types";
 
 import {
-  bridgeAdminMethods,
+  NormalTimelockPermissions,
   bridgeConfig,
   getPreConfiguredAddresses,
   xvsBridgeMethods,
@@ -171,7 +171,7 @@ const func: DeployFunction = async function (hre: HardhatRuntimeEnvironment) {
     )),
 
     ...(await configureAccessControls(
-      bridgeAdminMethods,
+      NormalTimelockPermissions,
       accessControlManager.address,
       preconfiguredAddresses.NormalTimelock,
       XVSBridgeAdmin.address,

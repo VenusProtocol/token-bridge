@@ -51,6 +51,10 @@ contract TokenController is Ownable, Pausable {
      * @notice Emitted when the address of the access control manager of the contract is updated.
      */
     event NewAccessControlManager(address indexed oldAccessControlManager, address indexed newAccessControlManager);
+    /**
+     * @notice Emitted when all minted tokens are migrated from one minter to another.
+     */
+    event MintedTokensMigrated(address indexed source, address indexed destination);
 
     /**
      * @notice This error is used to indicate that the minting limit has been exceeded. It is typically thrown when a minting operation would surpass the defined cap.
@@ -139,6 +143,41 @@ contract TokenController is Ownable, Pausable {
         ensureNonzeroAddress(newAccessControlAddress_);
         emit NewAccessControlManager(accessControlManager, newAccessControlAddress_);
         accessControlManager = newAccessControlAddress_;
+    }
+
+    /**
+     * @notice Migrates all minted tokens from one minter to another. This function is useful when we want to permanent take down a bridge.
+     * @param source_ Minter address to migrate tokens from.
+     * @param destination_ Minter address to migrate tokens to.
+     * @custom:access Controlled by AccessControlManager.
+     * @custom:error MintLimitExceed is thrown when the minting limit exceeds the cap after migration.
+     * @custom:event Emits MintLimitIncreased and MintLimitDecreased events for 'source' and 'destination'.
+     * @custom:event Emits MintedTokensMigrated.
+     */
+    function migrateMinterTokens(address source_, address destination_) external {
+        _ensureAllowed("migrateMinterTokens(address,address)");
+
+        uint256 sourceCap = minterToCap[source_];
+        uint256 destinationCap = minterToCap[destination_];
+
+        uint256 sourceMinted = minterToMintedAmount[source_];
+        uint256 destinationMinted = minterToMintedAmount[destination_];
+        uint256 newDestinationMinted = destinationMinted + sourceMinted;
+
+        if (newDestinationMinted > destinationCap) {
+            revert MintLimitExceed();
+        }
+
+        minterToMintedAmount[source_] = 0;
+        minterToMintedAmount[destination_] = newDestinationMinted;
+        uint256 availableLimit;
+        unchecked {
+            availableLimit = destinationCap - newDestinationMinted;
+        }
+
+        emit MintLimitDecreased(destination_, availableLimit);
+        emit MintLimitIncreased(source_, sourceCap);
+        emit MintedTokensMigrated(source_, destination_);
     }
 
     /**

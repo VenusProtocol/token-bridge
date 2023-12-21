@@ -47,6 +47,7 @@ export const xvsBridgeMethods = [
   "removeTrustedRemote(uint16)",
   "dropFailedMessage(uint16,bytes)",
   "fallbackWithdraw(address,uint256)",
+  "fallbackDeposit(uint256)",
   "setPrecrime(address)",
   "setMinDstGas(uint16,uint16,uint256)",
   "setPayloadSizeLimit(uint16,uint256)",
@@ -56,7 +57,11 @@ export const xvsBridgeMethods = [
   "updateSendAndCallEnabled(bool)",
 ];
 
-export const bridgeAdminMethods = ["setTrustedRemoteAddress(uint16,bytes)", "transferBridgeOwnership(address)"];
+export const NormalTimelockPermissions = [
+  "setTrustedRemoteAddress(uint16,bytes)",
+  "transferBridgeOwnership(address)",
+  "migrateMinterTokens(address,address)",
+];
 
 export const xvsTokenPermissions = ["mint(address,uint256)", "burn(address,uint256)"];
 
