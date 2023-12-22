@@ -66,11 +66,12 @@ contract XVSProxyOFTSrc is BaseXVSProxyOFT {
      */
     function fallbackDeposit(uint256 amount_) external onlyOwner {
         (uint256 actualAmount, ) = _removeDust(amount_);
-        _transferFrom(msg.sender, address(this), actualAmount);
 
         outboundAmount += actualAmount;
         uint256 cap = _sd2ld(type(uint64).max);
         require(cap >= outboundAmount, "ProxyOFT: outboundAmount overflow");
+
+        _transferFrom(msg.sender, address(this), actualAmount);
 
         emit FallbackDeposit(actualAmount);
     }
