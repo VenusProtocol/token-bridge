@@ -72,6 +72,14 @@ contract TokenController is Ownable, Pausable {
      * @notice This error is used to indicate that the new cap is greater than the previously minted tokens for the minter.
      */
     error NewCapNotGreaterThanMintedTokens();
+    /**
+     * @notice This error is used to indicate that the addresses must be different.
+     */
+    error AddressesMustDiffer();
+    /**
+     * @notice This error is used to indicate that the minter did not mint the required amount of tokens.
+     */
+    error MintedAmountExceed();
 
     /**
      * @param accessControlManager_ Address of access control manager contract.
@@ -151,11 +159,16 @@ contract TokenController is Ownable, Pausable {
      * @param destination_ Minter address to migrate tokens to.
      * @custom:access Controlled by AccessControlManager.
      * @custom:error MintLimitExceed is thrown when the minting limit exceeds the cap after migration.
+     * @custom:error AddressesMustDiffer is thrown when the source_ and destination_ addresses are the same.
      * @custom:event Emits MintLimitIncreased and MintLimitDecreased events for 'source' and 'destination'.
      * @custom:event Emits MintedTokensMigrated.
      */
     function migrateMinterTokens(address source_, address destination_) external {
         _ensureAllowed("migrateMinterTokens(address,address)");
+
+        if (source_ == destination_) {
+            revert AddressesMustDiffer();
+        }
 
         uint256 sourceCap = minterToCap[source_];
         uint256 destinationCap = minterToCap[destination_];
@@ -217,11 +230,20 @@ contract TokenController is Ownable, Pausable {
      * @dev This is post hook of burn function, increases minting limit of the minter.
      * @param from_ Minter address.
      * @param amount_  Amount burned.
+     * @custom:error MintedAmountExceed is thrown when `amount_` is greater than the tokens minted by `from_`.
      * @custom:event Emits MintLimitIncreased with minter address and availabe limit.
      */
     function _increaseMintLimit(address from_, uint256 amount_) internal {
         uint256 totalMintedOld = minterToMintedAmount[from_];
-        uint256 totalMintedNew = totalMintedOld - amount_;
+
+        if (totalMintedOld < amount_) {
+            revert MintedAmountExceed();
+        }
+
+        uint256 totalMintedNew;
+        unchecked {
+            totalMintedNew = totalMintedOld - amount_;
+        }
         minterToMintedAmount[from_] = totalMintedNew;
         uint256 availableLimit = minterToCap[from_] - totalMintedNew;
         emit MintLimitIncreased(from_, availableLimit);
