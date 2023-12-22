@@ -37,6 +37,10 @@ extendConfig((config: HardhatConfig) => {
           "node_modules/@venusprotocol/governance-contracts/deployments/sepolia",
           "node_modules/@venusprotocol/oracle/deployments/sepolia",
         ],
+        opbnbtestnet: [
+          "node_modules/@venusprotocol/governance-contracts/deployments/opbnbtestnet",
+          "node_modules/@venusprotocol/oracle/deployments/opbnbtestnet",
+        ],
       },
     };
   }
@@ -101,6 +105,7 @@ const config: HardhatUserConfig = {
     sepolia: {
       url: process.env.ARCHIVE_NODE_sepolia || "https://ethereum-sepolia.blockpi.network/v1/rpc/public",
       chainId: 11155111,
+      live: true,
       accounts: {
         mnemonic: process.env.MNEMONIC || "",
       },
@@ -114,6 +119,7 @@ const config: HardhatUserConfig = {
       url: process.env.ARCHIVE_NODE_opbnbtestnet || "https://opbnb-testnet-rpc.bnbchain.org",
       chainId: 5611,
       live: true,
+      gasPrice: 300000000000,
       accounts: DEPLOYER_PRIVATE_KEY ? [`0x${DEPLOYER_PRIVATE_KEY}`] : [],
     },
     opbnbmainnet: {
@@ -173,7 +179,7 @@ const config: HardhatUserConfig = {
         network: "opbnbmainnet",
         chainId: 204,
         urls: {
-          apiURL: `https://open-platform.nodereal.io/${process.env.ETHERSCAN_API_KEY}/op-bnb-testnet/contract/`,
+          apiURL: `https://open-platform.nodereal.io/${process.env.ETHERSCAN_API_KEY}/op-bnb-mainnet/contract/`,
           browserURL: "https://opbnbscan.com/",
         },
       },
