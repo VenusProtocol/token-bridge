@@ -30,7 +30,6 @@ contract XVSProxyOFTSrc is BaseXVSProxyOFT {
     event DropFailedMessage(uint16 srcChainId, bytes indexed srcAddress, uint64 nonce);
     /**
      * @notice Event emitted when tokens are forcefully locked.
-     * @param amount_ The amount of tokens locked.
      */
     event FallbackDeposit(address indexed from, uint256 amount_);
 
