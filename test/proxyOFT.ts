@@ -51,6 +51,35 @@ describe("Proxy OFTV2: ", function () {
     accessControlManager: FakeContract<AccessControlManager>,
     oracle: FakeContract<ResilientOracleInterface>,
     defaultAdapterParams: any;
+
+  async function sendTokensFromLocalToRemote() {
+    const amount = ethers.utils.parseEther("1", 18);
+    await localToken.connect(acc2).faucet(amount);
+    expect(await localToken.balanceOf(acc2.address)).to.be.equal(amount);
+    expect(await remoteToken.balanceOf(acc3.address)).to.be.equal(0);
+    await localToken.connect(acc2).approve(localOFT.address, amount);
+    const acc3AddressBytes32 = ethers.utils.defaultAbiCoder.encode(["address"], [acc3.address]);
+    const nativeFee = (
+      await localOFT.estimateSendFee(remoteChainId, acc3AddressBytes32, amount, false, defaultAdapterParams)
+    ).nativeFee;
+
+    await localOFT
+      .connect(acc2)
+      .sendFrom(
+        acc2.address,
+        remoteChainId,
+        acc3AddressBytes32,
+        amount,
+        [acc2.address, ethers.constants.AddressZero, defaultAdapterParams],
+        { value: nativeFee },
+      );
+
+    expect(await localToken.balanceOf(localOFT.address)).to.equal(amount);
+    expect(await localOFT.circulatingSupply()).to.equal(0);
+    expect(await localToken.balanceOf(acc2.address)).to.equal(0);
+    expect(await remoteOFT.circulatingSupply()).to.equal(amount);
+    expect(await remoteToken.balanceOf(acc3.address)).to.be.equal(amount);
+  }
   const bridgeFixture = async () => {
     LZEndpointMock = await ethers.getContractFactory("LZEndpointMock");
     ProxyOFTV2Src = await ethers.getContractFactory("XVSProxyOFTSrc");
@@ -400,46 +429,14 @@ describe("Proxy OFTV2: ", function () {
     expect(await localToken.balanceOf(localOFT.address)).to.be.equal(halfAmount);
     expect(await localToken.balanceOf(acc2.address)).to.be.equal(halfAmount.add(dust));
   });
-  it("Reverts when caller and sender are different on remote ", async function () {
-    const initialAmount = ethers.utils.parseEther("1.0000000001", 18); // 1 ether
-    const amount = ethers.utils.parseEther("1", 18);
-    const dust = ethers.utils.parseEther("0.0000000001");
-    await localToken.connect(acc2).faucet(initialAmount);
-    // verify acc2 has tokens and acc3 has no tokens on remote chain
-    expect(await localToken.balanceOf(acc2.address)).to.be.equal(initialAmount);
-    expect(await remoteToken.balanceOf(acc3.address)).to.be.equal(0);
-    // acc2 sends tokens to acc3 on remote chain
-    // approve the proxy to swap your tokens
-    await localToken.connect(acc2).approve(localOFT.address, initialAmount);
-    // swaps token to remote chain
-    const acc3AddressBytes32 = ethers.utils.defaultAbiCoder.encode(["address"], [acc3.address]);
-    let nativeFee = (
-      await localOFT.estimateSendFee(remoteChainId, acc3AddressBytes32, initialAmount, false, defaultAdapterParams)
-    ).nativeFee;
+  it("Reverts when caller and sender are different on remote", async function () {
+    await sendTokensFromLocalToRemote();
 
-    await localOFT
-      .connect(acc2)
-      .sendFrom(
-        acc2.address,
-        remoteChainId,
-        acc3AddressBytes32,
-        initialAmount,
-        [acc2.address, ethers.constants.AddressZero, defaultAdapterParams],
-        { value: nativeFee },
-      );
-
-    // tokens are now owned by the proxy contract, because this is the original oft chain
-    expect(await localToken.balanceOf(localOFT.address)).to.equal(amount);
-    expect(await localOFT.circulatingSupply()).to.equal(amount.div(10 ** (18 - sharedDecimals)));
-    expect(await localToken.balanceOf(acc2.address)).to.equal(dust);
-    // tokens received on the remote chain
-    expect(await remoteOFT.circulatingSupply()).to.equal(amount);
-    expect(await remoteToken.balanceOf(acc3.address)).to.be.equal(amount);
     // acc3 send tokens back to acc2 from remote chain
     const acc2AddressBytes32 = ethers.utils.defaultAbiCoder.encode(["address"], [acc2.address]);
-    const halfAmount = amount.div(2);
-    nativeFee = (
-      await remoteOFT.estimateSendFee(localChainId, acc2AddressBytes32, halfAmount, false, defaultAdapterParams)
+    const amount = ethers.utils.parseEther("1", 18);
+    const nativeFee = (
+      await remoteOFT.estimateSendFee(localChainId, acc2AddressBytes32, amount, false, defaultAdapterParams)
     ).nativeFee;
 
     await expect(
@@ -449,7 +446,7 @@ describe("Proxy OFTV2: ", function () {
           acc2.address,
           localChainId,
           acc2AddressBytes32,
-          halfAmount,
+          amount,
           [acc3.address, ethers.constants.AddressZero, defaultAdapterParams],
           { value: nativeFee },
         ),
@@ -871,53 +868,14 @@ describe("Proxy OFTV2: ", function () {
       data: data,
     });
     expect(await remoteOFT.failedMessages(localChainId, localPath, 1)).to.equals(ethers.constants.HashZero);
-    data = remoteOFT.interface.encodeFunctionData("unpause");
-    await acc1.sendTransaction({
-      to: bridgeAdminRemote.address,
-      data: data,
-    });
   });
 
   it("Drops failed message on local", async function () {
-    const initialAmount = ethers.utils.parseEther("1.0000000001", 18); // 1 ether
-    const amount = ethers.utils.parseEther("1", 18);
-    const dust = ethers.utils.parseEther("0.0000000001");
-    await localToken.connect(acc2).faucet(initialAmount);
-    // verify acc2 has tokens and acc3 has no tokens on remote chain
-    expect(await localToken.balanceOf(acc2.address)).to.be.equal(initialAmount);
-    expect(await remoteToken.balanceOf(acc3.address)).to.be.equal(0);
-    // acc2 sends tokens to acc3 on remote chain
-    // approve the proxy to swap your tokens
-    await localToken.connect(acc2).approve(localOFT.address, initialAmount);
-    // swaps token to remote chain
-    const acc3AddressBytes32 = ethers.utils.defaultAbiCoder.encode(["address"], [acc3.address]);
-    let nativeFee = (
-      await localOFT.estimateSendFee(remoteChainId, acc3AddressBytes32, initialAmount, false, defaultAdapterParams)
-    ).nativeFee;
-
-    await localOFT
-      .connect(acc2)
-      .sendFrom(
-        acc2.address,
-        remoteChainId,
-        acc3AddressBytes32,
-        initialAmount,
-        [acc2.address, ethers.constants.AddressZero, defaultAdapterParams],
-        { value: nativeFee },
-      );
-
-    // tokens are now owned by the proxy contract, because this is the original oft chain
-    expect(await localToken.balanceOf(localOFT.address)).to.equal(amount);
-    expect(await localOFT.circulatingSupply()).to.equal(amount.div(10 ** (18 - sharedDecimals)));
-    expect(await localToken.balanceOf(acc2.address)).to.equal(dust);
-    // tokens received on the remote chain
-    expect(await remoteOFT.circulatingSupply()).to.equal(amount);
-    expect(await remoteToken.balanceOf(acc3.address)).to.be.equal(amount);
-    // acc3 send tokens back to acc2 from remote chain
+    await sendTokensFromLocalToRemote();
     const acc2AddressBytes32 = ethers.utils.defaultAbiCoder.encode(["address"], [acc2.address]);
-    const halfAmount = amount.div(2);
-    nativeFee = (
-      await remoteOFT.estimateSendFee(localChainId, acc2AddressBytes32, halfAmount, false, defaultAdapterParams)
+    const amount = ethers.utils.parseEther("1", 18);
+    const nativeFee = (
+      await remoteOFT.estimateSendFee(localChainId, acc2AddressBytes32, amount, false, defaultAdapterParams)
     ).nativeFee;
     let data = localOFT.interface.encodeFunctionData("pause");
     await acc1.sendTransaction({
@@ -930,7 +888,7 @@ describe("Proxy OFTV2: ", function () {
         acc3.address,
         localChainId,
         acc2AddressBytes32,
-        halfAmount,
+        amount,
         [acc3.address, ethers.constants.AddressZero, defaultAdapterParams],
         { value: nativeFee },
       );
@@ -1373,34 +1331,9 @@ describe("Proxy OFTV2: ", function () {
       }),
     ).to.emit(localOFT, "OracleChanged");
   });
-  it("Migrates bridge", async function () {
+  it("Replace bridge with new bridge", async function () {
+    await sendTokensFromLocalToRemote();
     const amount = ethers.utils.parseEther("1", 18);
-    await localToken.connect(acc2).faucet(amount);
-    expect(await localToken.balanceOf(acc2.address)).to.be.equal(amount);
-    expect(await remoteToken.balanceOf(acc3.address)).to.be.equal(0);
-    await localToken.connect(acc2).approve(localOFT.address, amount);
-    const acc3AddressBytes32 = ethers.utils.defaultAbiCoder.encode(["address"], [acc3.address]);
-    let nativeFee = (
-      await localOFT.estimateSendFee(remoteChainId, acc3AddressBytes32, amount, false, defaultAdapterParams)
-    ).nativeFee;
-
-    await localOFT
-      .connect(acc2)
-      .sendFrom(
-        acc2.address,
-        remoteChainId,
-        acc3AddressBytes32,
-        amount,
-        [acc2.address, ethers.constants.AddressZero, defaultAdapterParams],
-        { value: nativeFee },
-      );
-
-    expect(await localToken.balanceOf(localOFT.address)).to.equal(amount);
-    expect(await localOFT.circulatingSupply()).to.equal(0);
-    expect(await localToken.balanceOf(acc2.address)).to.equal(0);
-    expect(await remoteOFT.circulatingSupply()).to.equal(amount);
-    expect(await remoteToken.balanceOf(acc3.address)).to.be.equal(amount);
-
     const localOFT2 = await ProxyOFTV2Src.deploy(
       localToken.address,
       sharedDecimals,
@@ -1435,29 +1368,14 @@ describe("Proxy OFTV2: ", function () {
     await remoteEndpoint.setDestLzEndpoint(localOFT2.address, localEndpoint.address);
 
     const functionregistry = [
-      "setOracle(address)",
       "setMaxSingleTransactionLimit(uint16,uint256)",
       "setMaxDailyLimit(uint16,uint256)",
       "setMaxSingleReceiveTransactionLimit(uint16,uint256)",
       "setMaxDailyReceiveLimit(uint16,uint256)",
-      "pause()",
-      "unpause()",
-      "setWhitelist(address,bool)",
-      "setConfig(uint16,uint16,uint256,bytes)",
-      "setSendVersion(uint16)",
-      "setReceiveVersion(uint16)",
-      "forceResumeReceive(uint16,bytes)",
       "setTrustedRemoteAddress(uint16,bytes)",
-      "setPrecrime(address)",
       "setMinDstGas(uint16,uint16,uint256)",
-      "setPayloadSizeLimit(uint16,uint256)",
-      "setUseCustomAdapterParams(bool)",
-      "removeTrustedRemote(uint16)",
-      "updateSendAndCallEnabled(bool)",
       "fallbackWithdraw(address,uint256)",
       "fallbackDeposit(address,uint256)",
-      "sweepToken(address,address,uint256)",
-      "dropFailedMessage(uint16,bytes,uint64)",
     ];
     const activeArray = new Array(functionregistry.length).fill(true);
     await bridgeAdminRemote2.upsertSignature(functionregistry, activeArray);
@@ -1564,7 +1482,7 @@ describe("Proxy OFTV2: ", function () {
     ).to.emit(localOFT2, "FallbackDeposit");
 
     const acc2AddressBytes32 = ethers.utils.defaultAbiCoder.encode(["address"], [acc2.address]);
-    nativeFee = (
+    const nativeFee = (
       await remoteOFT2.estimateSendFee(localChainId, acc2AddressBytes32, amount, false, defaultAdapterParams)
     ).nativeFee;
 

@@ -6,7 +6,7 @@ import { SignerWithAddress } from "hardhat-deploy-ethers/signers";
 
 import { AccessControlManager, XVS, XVS__factory } from "../typechain";
 
-describe("Token Convertor: ", function () {
+describe("Token Controller: ", function () {
   let tokenFactory: XVS__factory,
     token: XVS,
     acc2: SignerWithAddress,
