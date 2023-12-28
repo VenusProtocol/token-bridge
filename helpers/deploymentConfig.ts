@@ -29,11 +29,13 @@ export const preconfiguredAddresses = {
     // TODO
   },
   opbnbtestnet: {
+    LzEndpoint: "0x83c73Da98cf733B03315aFa8758834b36a195b87",
+    LzVirtualChainId: "10202",
     NormalTimelock: OPBNB_TESTNET_MULTISIG,
   },
 };
 
-export const xvsBridgeMethods = [
+export const xvsBridgeMethodsSrc = [
   "setSendVersion(uint16)",
   "setReceiveVersion(uint16)",
   "forceResumeReceive(uint16,bytes)",
@@ -57,10 +59,36 @@ export const xvsBridgeMethods = [
   "updateSendAndCallEnabled(bool)",
 ];
 
-export const NormalTimelockPermissions = [
-  "setTrustedRemoteAddress(uint16,bytes)",
-  "transferBridgeOwnership(address)",
+export const xvsBridgeMethodsDest = [
+  "setSendVersion(uint16)",
+  "setReceiveVersion(uint16)",
+  "forceResumeReceive(uint16,bytes)",
+  "setOracle(address)",
+  "setMaxSingleTransactionLimit(uint16,uint256)",
+  "setMaxDailyLimit(uint16,uint256)",
+  "setMaxSingleReceiveTransactionLimit(uint16,uint256)",
+  "setMaxDailyReceiveLimit(uint16,uint256)",
+  "pause()",
+  "unpause()",
+  "removeTrustedRemote(uint16)",
+  "dropFailedMessage(uint16,bytes)",
+  "setPrecrime(address)",
+  "setMinDstGas(uint16,uint16,uint256)",
+  "setPayloadSizeLimit(uint16,uint256)",
+  "setWhitelist(address,bool)",
+  "setConfig(uint16,uint16,uint256,bytes)",
+  "sweepToken(address,address,uint256)",
+  "updateSendAndCallEnabled(bool)",
+];
+
+export const XVSBridgeAdminMethods = ["setTrustedRemoteAddress(uint16,bytes)", "transferBridgeOwnership(address)"];
+
+export const XVSTokenDestMethods = [
   "migrateMinterTokens(address,address)",
+  "setMintCap(address,uint256)",
+  "updateBlacklist(address,bool)",
+  "pause()",
+  "unpause()",
 ];
 
 export const xvsTokenPermissions = ["mint(address,uint256)", "burn(address,uint256)"];
@@ -68,7 +96,7 @@ export const xvsTokenPermissions = ["mint(address,uint256)", "burn(address,uint2
 export const bridgeConfig: BridgeConfig = {
   bsctestnet: {
     methods: [
-      { method: "setMinDstGas(uint16,uint16,uint256)", args: [10161, 0, "200000"] },
+      { method: "setMinDstGas(uint16,uint16,uint256)", args: [10161, 0, "300000"] },
       { method: "setMaxDailyLimit(uint16,uint256)", args: [10161, "500000000000000000000"] },
       { method: "setMaxSingleTransactionLimit(uint16,uint256)", args: [10161, "10000000000000000000"] },
       { method: "setMaxDailyReceiveLimit(uint16,uint256)", args: [10161, "500000000000000000000"] },
@@ -77,7 +105,7 @@ export const bridgeConfig: BridgeConfig = {
   },
   bscmainnet: {
     methods: [
-      { method: "setMinDstGas(uint16,uint16,uint256)", args: [101, 0, "200000"] },
+      { method: "setMinDstGas(uint16,uint16,uint256)", args: [101, 0, "300000"] },
       { method: "setMaxDailyLimit(uint16,uint256)", args: [101, "500000000000000000000"] },
       { method: "setMaxSingleTransactionLimit(uint16,uint256)", args: [101, "10000000000000000000"] },
       { method: "setMaxDailyReceiveLimit(uint16,uint256)", args: [101, "500000000000000000000"] },
@@ -86,7 +114,16 @@ export const bridgeConfig: BridgeConfig = {
   },
   sepolia: {
     methods: [
-      { method: "setMinDstGas(uint16,uint16,uint256)", args: [10102, 0, "200000"] },
+      { method: "setMinDstGas(uint16,uint16,uint256)", args: [10102, 0, "300000"] },
+      { method: "setMaxDailyLimit(uint16,uint256)", args: [10102, "500000000000000000000"] },
+      { method: "setMaxSingleTransactionLimit(uint16,uint256)", args: [10102, "10000000000000000000"] },
+      { method: "setMaxDailyReceiveLimit(uint16,uint256)", args: [10102, "500000000000000000000"] },
+      { method: "setMaxSingleReceiveTransactionLimit(uint16,uint256)", args: [10102, "10000000000000000000"] },
+    ],
+  },
+  opbnbtestnet: {
+    methods: [
+      { method: "setMinDstGas(uint16,uint16,uint256)", args: [10102, 0, "300000"] },
       { method: "setMaxDailyLimit(uint16,uint256)", args: [10102, "500000000000000000000"] },
       { method: "setMaxSingleTransactionLimit(uint16,uint256)", args: [10102, "10000000000000000000"] },
       { method: "setMaxDailyReceiveLimit(uint16,uint256)", args: [10102, "500000000000000000000"] },

@@ -2,11 +2,11 @@
   "name": "sepolia",
   "chainId": "11155111",
   "addresses": {
-    "DefaultProxyAdmin": "0xf707294B965B57ca16f191D8015AAB72627C7d6e",
-    "XVS": "0xDb633C11D3F9E6B8D17aC2c972C9e3B05DA59bF9",
-    "XVSBridgeAdmin": "0x4A4a5f6Ecc4DB4ad199E8f1Db388FFFb707fad52",
-    "XVSBridgeAdmin_Implementation": "0x9a59dCAB13883D6717098816210D3dF4B271340B",
-    "XVSBridgeAdmin_Proxy": "0x4A4a5f6Ecc4DB4ad199E8f1Db388FFFb707fad52",
-    "XVSProxyOFTDest": "0x307C77D8606d7E486aC5D73d309e16996A336dbd"
+    "DefaultProxyAdmin": "0x01435866babd91311b1355cf3af488cca36db68e",
+    "XVS": "0x66ebd019E86e0af5f228a0439EBB33f045CBe63E",
+    "XVSBridgeAdmin": "0xd3c6bdeeadB2359F726aD4cF42EAa8B7102DAd9B",
+    "XVSBridgeAdmin_Implementation": "0x46958617CeB3A1b61B5C69FecfFE7e54831430B4",
+    "XVSBridgeAdmin_Proxy": "0xd3c6bdeeadB2359F726aD4cF42EAa8B7102DAd9B",
+    "XVSProxyOFTDest": "0xc340b7d3406502F43dC11a988E4EC5bbE536E642"
   }
 }

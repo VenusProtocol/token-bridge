@@ -3,7 +3,7 @@
   "chainId": "11155111",
   "contracts": {
     "DefaultProxyAdmin": {
-      "address": "0xf707294B965B57ca16f191D8015AAB72627C7d6e",
+      "address": "0x01435866babd91311b1355cf3af488cca36db68e",
       "abi": [
         {
           "inputs": [
@@ -168,7 +168,7 @@
       ]
     },
     "XVS": {
-      "address": "0xDb633C11D3F9E6B8D17aC2c972C9e3B05DA59bF9",
+      "address": "0x66ebd019E86e0af5f228a0439EBB33f045CBe63E",
       "abi": [
         {
           "inputs": [
@@ -182,24 +182,29 @@
           "type": "constructor"
         },
         {
+          "inputs": [
+            {
+              "internalType": "address",
+              "name": "user",
+              "type": "address"
+            }
+          ],
+          "name": "AccountBlacklisted",
+          "type": "error"
+        },
+        {
           "inputs": [],
           "name": "MintLimitExceed",
           "type": "error"
         },
         {
-          "inputs": [
-            {
-              "internalType": "address",
-              "name": "from",
-              "type": "address"
-            },
-            {
-              "internalType": "address",
-              "name": "to",
-              "type": "address"
-            }
-          ],
-          "name": "MintNotAllowed",
+          "inputs": [],
+          "name": "NewCapNotGreaterThanMintedTokens",
+          "type": "error"
+        },
+        {
+          "inputs": [],
+          "name": "Unauthorized",
           "type": "error"
         },
         {
@@ -314,6 +319,25 @@
             {
               "indexed": true,
               "internalType": "address",
+              "name": "source",
+              "type": "address"
+            },
+            {
+              "indexed": true,
+              "internalType": "address",
+              "name": "destination",
+              "type": "address"
+            }
+          ],
+          "name": "MintedTokensMigrated",
+          "type": "event"
+        },
+        {
+          "anonymous": false,
+          "inputs": [
+            {
+              "indexed": true,
+              "internalType": "address",
               "name": "oldAccessControlManager",
               "type": "address"
             },
@@ -396,25 +420,6 @@
           ],
           "name": "Unpaused",
           "type": "event"
-        },
-        {
-          "inputs": [
-            {
-              "internalType": "address",
-              "name": "",
-              "type": "address"
-            }
-          ],
-          "name": "_blacklist",
-          "outputs": [
-            {
-              "internalType": "bool",
-              "name": "",
-              "type": "bool"
-            }
-          ],
-          "stateMutability": "view",
-          "type": "function"
         },
         {
           "inputs": [],
@@ -592,6 +597,24 @@
             }
           ],
           "stateMutability": "view",
+          "type": "function"
+        },
+        {
+          "inputs": [
+            {
+              "internalType": "address",
+              "name": "source_",
+              "type": "address"
+            },
+            {
+              "internalType": "address",
+              "name": "destination_",
+              "type": "address"
+            }
+          ],
+          "name": "migrateMinterTokens",
+          "outputs": [],
+          "stateMutability": "nonpayable",
           "type": "function"
         },
         {
@@ -854,7 +877,7 @@
       ]
     },
     "XVSBridgeAdmin": {
-      "address": "0x4A4a5f6Ecc4DB4ad199E8f1Db388FFFb707fad52",
+      "address": "0xd3c6bdeeadB2359F726aD4cF42EAa8B7102DAd9B",
       "abi": [
         {
           "anonymous": false,
@@ -1315,7 +1338,7 @@
       ]
     },
     "XVSBridgeAdmin_Implementation": {
-      "address": "0x9a59dCAB13883D6717098816210D3dF4B271340B",
+      "address": "0x46958617CeB3A1b61B5C69FecfFE7e54831430B4",
       "abi": [
         {
           "inputs": [
@@ -1647,7 +1670,7 @@
       ]
     },
     "XVSBridgeAdmin_Proxy": {
-      "address": "0x4A4a5f6Ecc4DB4ad199E8f1Db388FFFb707fad52",
+      "address": "0xd3c6bdeeadB2359F726aD4cF42EAa8B7102DAd9B",
       "abi": [
         {
           "inputs": [
@@ -1796,7 +1819,7 @@
       ]
     },
     "XVSProxyOFTDest": {
-      "address": "0x307C77D8606d7E486aC5D73d309e16996A336dbd",
+      "address": "0xc340b7d3406502F43dC11a988E4EC5bbE536E642",
       "abi": [
         {
           "inputs": [
@@ -1823,6 +1846,22 @@
           ],
           "stateMutability": "nonpayable",
           "type": "constructor"
+        },
+        {
+          "inputs": [
+            {
+              "internalType": "uint256",
+              "name": "sweepAmount",
+              "type": "uint256"
+            },
+            {
+              "internalType": "uint256",
+              "name": "balance",
+              "type": "uint256"
+            }
+          ],
+          "name": "InsufficientBalance",
+          "type": "error"
         },
         {
           "inputs": [],
@@ -2285,6 +2324,31 @@
           "anonymous": false,
           "inputs": [
             {
+              "indexed": true,
+              "internalType": "address",
+              "name": "token",
+              "type": "address"
+            },
+            {
+              "indexed": true,
+              "internalType": "address",
+              "name": "to",
+              "type": "address"
+            },
+            {
+              "indexed": false,
+              "internalType": "uint256",
+              "name": "sweepAmount",
+              "type": "uint256"
+            }
+          ],
+          "name": "SweepToken",
+          "type": "event"
+        },
+        {
+          "anonymous": false,
+          "inputs": [
+            {
               "indexed": false,
               "internalType": "uint16",
               "name": "chainId",
@@ -2305,6 +2369,19 @@
             }
           ],
           "name": "Unpaused",
+          "type": "event"
+        },
+        {
+          "anonymous": false,
+          "inputs": [
+            {
+              "indexed": true,
+              "internalType": "bool",
+              "name": "enabled",
+              "type": "bool"
+            }
+          ],
+          "name": "UpdateSendAndCallEnabled",
           "type": "event"
         },
         {
@@ -2825,6 +2902,65 @@
         {
           "inputs": [
             {
+              "internalType": "address",
+              "name": "from_",
+              "type": "address"
+            },
+            {
+              "internalType": "uint16",
+              "name": "dstChainId_",
+              "type": "uint16"
+            },
+            {
+              "internalType": "uint256",
+              "name": "amount_",
+              "type": "uint256"
+            }
+          ],
+          "name": "isEligibleToSend",
+          "outputs": [
+            {
+              "internalType": "bool",
+              "name": "eligibleToSend",
+              "type": "bool"
+            },
+            {
+              "internalType": "uint256",
+              "name": "maxSingleTransactionLimit",
+              "type": "uint256"
+            },
+            {
+              "internalType": "uint256",
+              "name": "maxDailyLimit",
+              "type": "uint256"
+            },
+            {
+              "internalType": "uint256",
+              "name": "amountInUsd",
+              "type": "uint256"
+            },
+            {
+              "internalType": "uint256",
+              "name": "transferredInWindow",
+              "type": "uint256"
+            },
+            {
+              "internalType": "uint256",
+              "name": "last24HourWindowStart",
+              "type": "uint256"
+            },
+            {
+              "internalType": "bool",
+              "name": "isWhiteListedUser",
+              "type": "bool"
+            }
+          ],
+          "stateMutability": "view",
+          "type": "function"
+        },
+        {
+          "inputs": [
+            {
               "internalType": "uint16",
               "name": "_srcChainId",
               "type": "uint16"
@@ -3069,32 +3205,32 @@
           "inputs": [
             {
               "internalType": "address",
-              "name": "_from",
+              "name": "from_",
               "type": "address"
             },
             {
               "internalType": "uint16",
-              "name": "_dstChainId",
+              "name": "dstChainId_",
               "type": "uint16"
             },
             {
               "internalType": "bytes32",
-              "name": "_toAddress",
+              "name": "toAddress_",
               "type": "bytes32"
             },
             {
               "internalType": "uint256",
-              "name": "_amount",
+              "name": "amount_",
               "type": "uint256"
             },
             {
               "internalType": "bytes",
-              "name": "_payload",
+              "name": "payload_",
               "type": "bytes"
             },
             {
               "internalType": "uint64",
-              "name": "_dstGasForCall",
+              "name": "dstGasForCall_",
               "type": "uint64"
             },
             {
@@ -3116,13 +3252,26 @@
                 }
               ],
               "internalType": "struct ICommonOFT.LzCallParams",
-              "name": "_callParams",
+              "name": "callparams_",
               "type": "tuple"
             }
           ],
           "name": "sendAndCall",
           "outputs": [],
           "stateMutability": "payable",
+          "type": "function"
+        },
+        {
+          "inputs": [],
+          "name": "sendAndCallEnabled",
+          "outputs": [
+            {
+              "internalType": "bool",
+              "name": "",
+              "type": "bool"
+            }
+          ],
+          "stateMutability": "view",
           "type": "function"
         },
         {
@@ -3455,6 +3604,29 @@
           "type": "function"
         },
         {
+          "inputs": [
+            {
+              "internalType": "contract IERC20",
+              "name": "token_",
+              "type": "address"
+            },
+            {
+              "internalType": "address",
+              "name": "to_",
+              "type": "address"
+            },
+            {
+              "internalType": "uint256",
+              "name": "amount_",
+              "type": "uint256"
+            }
+          ],
+          "name": "sweepToken",
+          "outputs": [],
+          "stateMutability": "nonpayable",
+          "type": "function"
+        },
+        {
           "inputs": [],
           "name": "token",
           "outputs": [
@@ -3502,6 +3674,19 @@
         {
           "inputs": [],
           "name": "unpause",
+          "outputs": [],
+          "stateMutability": "nonpayable",
+          "type": "function"
+        },
+        {
+          "inputs": [
+            {
+              "internalType": "bool",
+              "name": "enabled_",
+              "type": "bool"
+            }
+          ],
+          "name": "updateSendAndCallEnabled",
           "outputs": [],
           "stateMutability": "nonpayable",
           "type": "function"
