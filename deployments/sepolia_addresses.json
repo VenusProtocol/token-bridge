@@ -2,7 +2,7 @@
   "name": "sepolia",
   "chainId": "11155111",
   "addresses": {
-    "DefaultProxyAdmin": "0xe98a3110929c6650c73031756288Ec518f65e846",
+    "DefaultProxyAdmin": "0x01435866babd91311b1355cf3af488cca36db68e",
     "XVS": "0x66ebd019E86e0af5f228a0439EBB33f045CBe63E",
     "XVSBridgeAdmin": "0xd3c6bdeeadB2359F726aD4cF42EAa8B7102DAd9B",
     "XVSBridgeAdmin_Implementation": "0x46958617CeB3A1b61B5C69FecfFE7e54831430B4",

@@ -2,7 +2,7 @@
   "name": "bsctestnet",
   "chainId": "97",
   "addresses": {
-    "DefaultProxyAdmin": "0x7877ffd62649b6a1557b55d4c20fcbab17344c91",
+    "DefaultProxyAdmin": "0xef480a5654b231ff7d80A0681F938f3Db71a6Ca6",
     "XVSBridgeAdmin": "0xB164Cb262328Ca44a806bA9e3d4094931E658513",
     "XVSBridgeAdmin_Implementation": "0x0923693522F43743Af28bb61632fD680dbb4f9bA",
     "XVSBridgeAdmin_Proxy": "0xB164Cb262328Ca44a806bA9e3d4094931E658513",
