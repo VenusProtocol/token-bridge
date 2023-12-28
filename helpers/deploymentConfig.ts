@@ -83,7 +83,13 @@ export const xvsBridgeMethodsDest = [
 
 export const XVSBridgeAdminMethods = ["setTrustedRemoteAddress(uint16,bytes)", "transferBridgeOwnership(address)"];
 
-export const XVSTokenDestMethods = ["migrateMinterTokens(address,address)", "setMintCap(address,uint256)"];
+export const XVSTokenDestMethods = [
+  "migrateMinterTokens(address,address)",
+  "setMintCap(address,uint256)",
+  "updateBlacklist(address,bool)",
+  "pause()",
+  "unpause()",
+];
 
 export const xvsTokenPermissions = ["mint(address,uint256)", "burn(address,uint256)"];
 
