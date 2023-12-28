@@ -3063,9 +3063,9 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@venusprotocol/oracle@npm:1.8.0-dev.12":
-  version: 1.8.0-dev.12
-  resolution: "@venusprotocol/oracle@npm:1.8.0-dev.12"
+"@venusprotocol/oracle@npm:1.8.0":
+  version: 1.8.0
+  resolution: "@venusprotocol/oracle@npm:1.8.0"
   dependencies:
     "@chainlink/contracts": ^0.5.1
     "@defi-wonderland/smock": ^2.3.4
@@ -3079,7 +3079,7 @@ __metadata:
     hardhat-deploy: ^0.11.14
     module-alias: ^2.2.2
     solidity-docgen: ^0.6.0-beta.29
-  checksum: 066f9407aec1eb46a13a62c99f5a703a37a3ce8e31d0b7f11171098c2a2bc58ab0c16f323f2a363947f6a283d675adc632d0822d13e9ff090a9f7008ec7bf108
+  checksum: 3ea02a9686e80ce0b378aa5197fd46b2c02b089bd5512afe673d6d45e3091e280dbf04788400ea47bee4151182b4b39c981207e1d42fbe2b970161b29abcfee1
   languageName: node
   linkType: hard
 
@@ -3142,7 +3142,7 @@ __metadata:
     "@typescript-eslint/eslint-plugin": ^5.27.1
     "@typescript-eslint/parser": ^5.27.1
     "@venusprotocol/governance-contracts": ^1.4.0
-    "@venusprotocol/oracle": 1.8.0-dev.12
+    "@venusprotocol/oracle": 1.8.0
     "@venusprotocol/solidity-utilities": 1.1.0
     bignumber.js: 9.0.0
     chai: ^4.3.6
