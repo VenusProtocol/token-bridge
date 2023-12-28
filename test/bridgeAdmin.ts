@@ -109,6 +109,92 @@ describe("Bridge Admin: ", function () {
     await loadFixture(grantPermissionsFixture);
   });
 
+  it("Revert when inputs length mismatch in function registry", async function () {
+    const functionregistry = [
+      "setOracle(address)",
+      "setMaxSingleTransactionLimit(uint16,uint256)",
+      "setMaxDailyLimit(uint16,uint256)",
+      "setMaxSingleReceiveTransactionLimit(uint16,uint256)",
+      "setMaxDailyReceiveLimit(uint16,uint256)",
+      "pause()",
+      "unpause()",
+      "setWhitelist(address,bool)",
+      "setConfig(uint16,uint16,uint256,bytes)",
+      "setSendVersion(uint16)",
+      "setReceiveVersion(uint16)",
+      "forceResumeReceive(uint16,bytes)",
+      "setTrustedRemote(uint16,bytes)",
+      "setTrustedRemoteAddress(uint16,bytes)",
+      "setPrecrime(address)",
+      "setMinDstGas(uint16,uint16,uint256)",
+      "setPayloadSizeLimit(uint16,uint256)",
+      "setUseCustomAdapterParams(bool)",
+    ];
+    const activeArray = new Array(functionregistry.length - 1).fill(true);
+
+    await expect(bridgeAdmin.upsertSignature(functionregistry, activeArray)).to.be.revertedWith(
+      "Input arrays must have the same length",
+    );
+  });
+
+  it("Deletes from function registry", async function () {
+    const functionregistry = [
+      "setOracle(address)",
+      "setMaxSingleTransactionLimit(uint16,uint256)",
+      "setMaxDailyLimit(uint16,uint256)",
+      "setMaxSingleReceiveTransactionLimit(uint16,uint256)",
+      "setMaxDailyReceiveLimit(uint16,uint256)",
+      "pause()",
+      "unpause()",
+      "setWhitelist(address,bool)",
+      "setConfig(uint16,uint16,uint256,bytes)",
+      "setSendVersion(uint16)",
+      "setReceiveVersion(uint16)",
+      "forceResumeReceive(uint16,bytes)",
+      "setTrustedRemote(uint16,bytes)",
+      "setTrustedRemoteAddress(uint16,bytes)",
+      "setPrecrime(address)",
+      "setMinDstGas(uint16,uint16,uint256)",
+      "setPayloadSizeLimit(uint16,uint256)",
+      "setUseCustomAdapterParams(bool)",
+      "fakeFunction(uint256)",
+    ];
+    const activeArray = new Array(functionregistry.length).fill(true);
+    await bridgeAdmin.upsertSignature(functionregistry, activeArray);
+    await expect(bridgeAdmin.upsertSignature(["fakeFunction(uint256)"], [false])).to.emit(
+      bridgeAdmin,
+      "FunctionRegistryChanged",
+    );
+  });
+
+  it("Reverts when non owner calls upsert signature", async function () {
+    const functionregistry = [
+      "setOracle(address)",
+      "setMaxSingleTransactionLimit(uint16,uint256)",
+      "setMaxDailyLimit(uint16,uint256)",
+      "setMaxSingleReceiveTransactionLimit(uint16,uint256)",
+      "setMaxDailyReceiveLimit(uint16,uint256)",
+      "pause()",
+      "unpause()",
+      "setWhitelist(address,bool)",
+      "setConfig(uint16,uint16,uint256,bytes)",
+      "setSendVersion(uint16)",
+      "setReceiveVersion(uint16)",
+      "forceResumeReceive(uint16,bytes)",
+      "setTrustedRemote(uint16,bytes)",
+      "setTrustedRemoteAddress(uint16,bytes)",
+      "setPrecrime(address)",
+      "setMinDstGas(uint16,uint16,uint256)",
+      "setPayloadSizeLimit(uint16,uint256)",
+      "setUseCustomAdapterParams(bool)",
+    ];
+    const activeArray = new Array(functionregistry.length - 1).fill(true);
+
+    await expect(bridgeAdmin.connect(acc2).upsertSignature(functionregistry, activeArray)).to.be.revertedWith(
+      "Ownable: caller is not the owner",
+    );
+  });
+
   it("Revert if EOA called owner function of bridge", async function () {
     await expect(remoteOFT.connect(acc1).setTrustedRemote(localChainId, remotePath)).to.be.revertedWith(
       "Ownable: caller is not the owner",
@@ -162,7 +248,6 @@ describe("Bridge Admin: ", function () {
       }),
     ).to.revertedWithCustomError(bridgeAdmin, "Unauthorized");
   });
-
   it("Success if permissions are granted to call owner functions of bridge", async function () {
     let data = remoteOFT.interface.encodeFunctionData("setMaxDailyLimit", [localChainId, maxDailyTransactionLimit]);
     await acc2.sendTransaction({
