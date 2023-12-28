@@ -28,6 +28,10 @@ contract XVSProxyOFTSrc is BaseXVSProxyOFT {
      * @notice Emits when stored message dropped without successful retrying.
      */
     event DropFailedMessage(uint16 srcChainId, bytes indexed srcAddress, uint64 nonce);
+    /**
+     * @notice Event emitted when tokens are forcefully locked.
+     */
+    event FallbackDeposit(address indexed from, uint256 amount_);
 
     constructor(
         address tokenAddress_,
@@ -51,6 +55,25 @@ contract XVSProxyOFTSrc is BaseXVSProxyOFT {
         }
         _transferFrom(address(this), to_, amount_);
         emit FallbackWithdraw(to_, amount_);
+    }
+
+    /**
+     * @notice Forces the lock of tokens by increasing outbound amount and transferring tokens from the sender to the contract.
+     * @param amount_ The amount of tokens to lock.
+     * @param depositor_ Address of the depositor.
+     * @custom:access Only owner.
+     * @custom:event Emits FallbackDeposit, once done with transfer.
+     */
+    function fallbackDeposit(address depositor_, uint256 amount_) external onlyOwner {
+        (uint256 actualAmount, ) = _removeDust(amount_);
+
+        outboundAmount += actualAmount;
+        uint256 cap = _sd2ld(type(uint64).max);
+        require(cap >= outboundAmount, "ProxyOFT: outboundAmount overflow");
+
+        _transferFrom(depositor_, address(this), actualAmount);
+
+        emit FallbackDeposit(depositor_, actualAmount);
     }
 
     /**
@@ -91,7 +114,11 @@ contract XVSProxyOFTSrc is BaseXVSProxyOFT {
         _isEligibleToSend(from_, dstChainId_, amount_);
 
         uint256 amount = _transferFrom(from_, address(this), amount_);
+
         outboundAmount += amount;
+        uint256 cap = _sd2ld(type(uint64).max);
+        require(cap >= outboundAmount, "ProxyOFT: outboundAmount overflow");
+
         return amount;
     }
 

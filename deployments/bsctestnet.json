@@ -3,7 +3,7 @@
   "chainId": "97",
   "contracts": {
     "DefaultProxyAdmin": {
-      "address": "0x43fd9F2DAcB36853dBfBa269A7539706e787cFce",
+      "address": "0xef480a5654b231ff7d80A0681F938f3Db71a6Ca6",
       "abi": [
         {
           "inputs": [
@@ -168,7 +168,7 @@
       ]
     },
     "XVSBridgeAdmin": {
-      "address": "0x5D08D49A2e43aC4c72C60754d1550BA12e846d66",
+      "address": "0xB164Cb262328Ca44a806bA9e3d4094931E658513",
       "abi": [
         {
           "anonymous": false,
@@ -629,7 +629,7 @@
       ]
     },
     "XVSBridgeAdmin_Implementation": {
-      "address": "0x8a4C5090d972C83C44E8132a1Fc2Ff3E948E9A71",
+      "address": "0x0923693522F43743Af28bb61632fD680dbb4f9bA",
       "abi": [
         {
           "inputs": [
@@ -961,7 +961,7 @@
       ]
     },
     "XVSBridgeAdmin_Proxy": {
-      "address": "0x5D08D49A2e43aC4c72C60754d1550BA12e846d66",
+      "address": "0xB164Cb262328Ca44a806bA9e3d4094931E658513",
       "abi": [
         {
           "inputs": [
@@ -1110,7 +1110,7 @@
       ]
     },
     "XVSProxyOFTSrc": {
-      "address": "0x963cAbDC5bb51C1479ec94Df44DE2EC1a49439E3",
+      "address": "0x0E132cd94fd70298b747d2b4D977db8d086e5fD0",
       "abi": [
         {
           "inputs": [
@@ -1137,6 +1137,22 @@
           ],
           "stateMutability": "nonpayable",
           "type": "constructor"
+        },
+        {
+          "inputs": [
+            {
+              "internalType": "uint256",
+              "name": "sweepAmount",
+              "type": "uint256"
+            },
+            {
+              "internalType": "uint256",
+              "name": "balance",
+              "type": "uint256"
+            }
+          ],
+          "name": "InsufficientBalance",
+          "type": "error"
         },
         {
           "inputs": [],
@@ -1197,6 +1213,19 @@
             }
           ],
           "name": "DropFailedMessage",
+          "type": "event"
+        },
+        {
+          "anonymous": false,
+          "inputs": [
+            {
+              "indexed": false,
+              "internalType": "uint256",
+              "name": "amount_",
+              "type": "uint256"
+            }
+          ],
+          "name": "FallbackDeposit",
           "type": "event"
         },
         {
@@ -1618,6 +1647,31 @@
           "anonymous": false,
           "inputs": [
             {
+              "indexed": true,
+              "internalType": "address",
+              "name": "token",
+              "type": "address"
+            },
+            {
+              "indexed": true,
+              "internalType": "address",
+              "name": "to",
+              "type": "address"
+            },
+            {
+              "indexed": false,
+              "internalType": "uint256",
+              "name": "sweepAmount",
+              "type": "uint256"
+            }
+          ],
+          "name": "SweepToken",
+          "type": "event"
+        },
+        {
+          "anonymous": false,
+          "inputs": [
+            {
               "indexed": false,
               "internalType": "uint16",
               "name": "chainId",
@@ -1638,6 +1692,19 @@
             }
           ],
           "name": "Unpaused",
+          "type": "event"
+        },
+        {
+          "anonymous": false,
+          "inputs": [
+            {
+              "indexed": true,
+              "internalType": "bool",
+              "name": "enabled",
+              "type": "bool"
+            }
+          ],
+          "name": "UpdateSendAndCallEnabled",
           "type": "event"
         },
         {
@@ -2087,6 +2154,19 @@
         {
           "inputs": [
             {
+              "internalType": "uint256",
+              "name": "amount_",
+              "type": "uint256"
+            }
+          ],
+          "name": "fallbackDeposit",
+          "outputs": [],
+          "stateMutability": "nonpayable",
+          "type": "function"
+        },
+        {
+          "inputs": [
+            {
               "internalType": "address",
               "name": "to_",
               "type": "address"
@@ -2168,6 +2248,65 @@
               "internalType": "bytes",
               "name": "",
               "type": "bytes"
+            }
+          ],
+          "stateMutability": "view",
+          "type": "function"
+        },
+        {
+          "inputs": [
+            {
+              "internalType": "address",
+              "name": "from_",
+              "type": "address"
+            },
+            {
+              "internalType": "uint16",
+              "name": "dstChainId_",
+              "type": "uint16"
+            },
+            {
+              "internalType": "uint256",
+              "name": "amount_",
+              "type": "uint256"
+            }
+          ],
+          "name": "isEligibleToSend",
+          "outputs": [
+            {
+              "internalType": "bool",
+              "name": "eligibleToSend",
+              "type": "bool"
+            },
+            {
+              "internalType": "uint256",
+              "name": "maxSingleTransactionLimit",
+              "type": "uint256"
+            },
+            {
+              "internalType": "uint256",
+              "name": "maxDailyLimit",
+              "type": "uint256"
+            },
+            {
+              "internalType": "uint256",
+              "name": "amountInUsd",
+              "type": "uint256"
+            },
+            {
+              "internalType": "uint256",
+              "name": "transferredInWindow",
+              "type": "uint256"
+            },
+            {
+              "internalType": "uint256",
+              "name": "last24HourWindowStart",
+              "type": "uint256"
+            },
+            {
+              "internalType": "bool",
+              "name": "isWhiteListedUser",
+              "type": "bool"
             }
           ],
           "stateMutability": "view",
@@ -2433,32 +2572,32 @@
           "inputs": [
             {
               "internalType": "address",
-              "name": "_from",
+              "name": "from_",
               "type": "address"
             },
             {
               "internalType": "uint16",
-              "name": "_dstChainId",
+              "name": "dstChainId_",
               "type": "uint16"
             },
             {
               "internalType": "bytes32",
-              "name": "_toAddress",
+              "name": "toAddress_",
               "type": "bytes32"
             },
             {
               "internalType": "uint256",
-              "name": "_amount",
+              "name": "amount_",
               "type": "uint256"
             },
             {
               "internalType": "bytes",
-              "name": "_payload",
+              "name": "payload_",
               "type": "bytes"
             },
             {
               "internalType": "uint64",
-              "name": "_dstGasForCall",
+              "name": "dstGasForCall_",
               "type": "uint64"
             },
             {
@@ -2480,13 +2619,26 @@
                 }
               ],
               "internalType": "struct ICommonOFT.LzCallParams",
-              "name": "_callParams",
+              "name": "callparams_",
               "type": "tuple"
             }
           ],
           "name": "sendAndCall",
           "outputs": [],
           "stateMutability": "payable",
+          "type": "function"
+        },
+        {
+          "inputs": [],
+          "name": "sendAndCallEnabled",
+          "outputs": [
+            {
+              "internalType": "bool",
+              "name": "",
+              "type": "bool"
+            }
+          ],
+          "stateMutability": "view",
           "type": "function"
         },
         {
@@ -2819,6 +2971,29 @@
           "type": "function"
         },
         {
+          "inputs": [
+            {
+              "internalType": "contract IERC20",
+              "name": "token_",
+              "type": "address"
+            },
+            {
+              "internalType": "address",
+              "name": "to_",
+              "type": "address"
+            },
+            {
+              "internalType": "uint256",
+              "name": "amount_",
+              "type": "uint256"
+            }
+          ],
+          "name": "sweepToken",
+          "outputs": [],
+          "stateMutability": "nonpayable",
+          "type": "function"
+        },
+        {
           "inputs": [],
           "name": "token",
           "outputs": [
@@ -2866,6 +3041,19 @@
         {
           "inputs": [],
           "name": "unpause",
+          "outputs": [],
+          "stateMutability": "nonpayable",
+          "type": "function"
+        },
+        {
+          "inputs": [
+            {
+              "internalType": "bool",
+              "name": "enabled_",
+              "type": "bool"
+            }
+          ],
+          "name": "updateSendAndCallEnabled",
           "outputs": [],
           "stateMutability": "nonpayable",
           "type": "function"

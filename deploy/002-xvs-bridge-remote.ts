@@ -4,10 +4,11 @@ import { DeployFunction } from "hardhat-deploy/types";
 import { HardhatRuntimeEnvironment } from "hardhat/types";
 
 import {
-  bridgeAdminMethods,
+  XVSBridgeAdminMethods,
+  XVSTokenDestMethods,
   bridgeConfig,
   getPreConfiguredAddresses,
-  xvsBridgeMethods,
+  xvsBridgeMethodsDest,
   xvsTokenPermissions,
 } from "../helpers/deploymentConfig";
 import { toAddress } from "../helpers/utils";
@@ -129,8 +130,8 @@ const func: DeployFunction = async function (hre: HardhatRuntimeEnvironment) {
 
   await executeBridgeCommands(bridge, hre, deployer);
 
-  const removeArray = new Array(xvsBridgeMethods.length).fill(true);
-  let tx = await bridgeAdmin.upsertSignature(xvsBridgeMethods, removeArray);
+  const removeArray = new Array(xvsBridgeMethodsDest.length).fill(true);
+  let tx = await bridgeAdmin.upsertSignature(xvsBridgeMethodsDest, removeArray);
   await tx.wait();
 
   tx = await xvs.transferOwnership(preconfiguredAddresses.NormalTimelock);
@@ -147,7 +148,7 @@ const func: DeployFunction = async function (hre: HardhatRuntimeEnvironment) {
 
   const commands = [
     ...(await configureAccessControls(
-      xvsBridgeMethods,
+      xvsBridgeMethodsDest,
       accessControlManager.address,
       preconfiguredAddresses.NormalTimelock,
       XVSBridgeAdmin.address,
@@ -163,18 +164,18 @@ const func: DeployFunction = async function (hre: HardhatRuntimeEnvironment) {
     )),
 
     ...(await configureAccessControls(
-      ["setMintCap(address,uint256)"],
+      XVSBridgeAdminMethods,
       accessControlManager.address,
       preconfiguredAddresses.NormalTimelock,
-      XVS.address,
+      XVSBridgeAdmin.address,
       hre,
     )),
 
     ...(await configureAccessControls(
-      bridgeAdminMethods,
+      XVSTokenDestMethods,
       accessControlManager.address,
       preconfiguredAddresses.NormalTimelock,
-      XVSBridgeAdmin.address,
+      XVS.address,
       hre,
     )),
 
