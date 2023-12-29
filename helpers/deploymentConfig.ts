@@ -8,6 +8,7 @@ interface BridgeConfig {
 
 const SEPOLIA_MULTISIG = "0x94fa6078b6b8a26f0b6edffbe6501b22a10470fb";
 const OPBNB_TESTNET_MULTISIG = "0xb15f6EfEbC276A3b9805df81b5FB3D50C2A62BDf";
+const OPBNB_MAINNET_MULTISIG = "0xC46796a21a3A9FAB6546aF3434F2eBfFd0604207";
 
 export const preconfiguredAddresses = {
   bsctestnet: {
@@ -32,6 +33,13 @@ export const preconfiguredAddresses = {
     LzEndpoint: "0x83c73Da98cf733B03315aFa8758834b36a195b87",
     LzVirtualChainId: "10202",
     NormalTimelock: OPBNB_TESTNET_MULTISIG,
+  },
+  opbnbmainnet: {
+    NormalTimelock: OPBNB_MAINNET_MULTISIG,
+    FastTrackTimelock: OPBNB_MAINNET_MULTISIG,
+    CriticalTimelock: OPBNB_MAINNET_MULTISIG,
+    LzEndpoint: "0xb6319cC6c8c27A8F5dAF0dD3DF91EA35C4720dd7",
+    LzVirtualChainId: "202",
   },
 };
 
@@ -130,6 +138,15 @@ export const bridgeConfig: BridgeConfig = {
       { method: "setMaxSingleReceiveTransactionLimit(uint16,uint256)", args: [10102, "10000000000000000000"] },
     ],
   },
+  opbnbmainnet: {
+    methods: [
+      { method: "setMinDstGas(uint16,uint16,uint256)", args: [102, 0, "300000"] },
+      { method: "setMaxDailyLimit(uint16,uint256)", args: [102, "50000000000000000000000"] },
+      { method: "setMaxSingleTransactionLimit(uint16,uint256)", args: [102, "10000000000000000000000"] },
+      { method: "setMaxDailyReceiveLimit(uint16,uint256)", args: [102, "50000000000000000000000"] },
+      { method: "setMaxSingleReceiveTransactionLimit(uint16,uint256)", args: [102, "10000000000000000000000"] },
+    ],
+  },
 };
 
 export async function getPreConfiguredAddresses(networkName: string): Promise<PreconfiguredAddresses> {
@@ -144,6 +161,8 @@ export async function getPreConfiguredAddresses(networkName: string): Promise<Pr
       return preconfiguredAddresses.ethereum;
     case "opbnbtestnet":
       return preconfiguredAddresses.opbnbtestnet;
+    case "opbnbmainnet":
+      return preconfiguredAddresses.opbnbmainnet;
     default:
       throw new Error(`config for network ${networkName} is not available.`);
   }
