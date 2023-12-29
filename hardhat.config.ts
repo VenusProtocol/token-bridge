@@ -41,6 +41,10 @@ extendConfig((config: HardhatConfig) => {
           "node_modules/@venusprotocol/governance-contracts/deployments/opbnbtestnet",
           "node_modules/@venusprotocol/oracle/deployments/opbnbtestnet",
         ],
+        ethereum: [
+          "node_modules/@venusprotocol/governance-contracts/deployments/ethereum",
+          "node_modules/@venusprotocol/oracle/deployments/ethereum",
+        ],
       },
     };
   }
