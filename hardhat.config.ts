@@ -41,6 +41,10 @@ extendConfig((config: HardhatConfig) => {
           "node_modules/@venusprotocol/governance-contracts/deployments/opbnbtestnet",
           "node_modules/@venusprotocol/oracle/deployments/opbnbtestnet",
         ],
+        opbnbmainnet: [
+          "node_modules/@venusprotocol/governance-contracts/deployments/opbnbmainnet",
+          "node_modules/@venusprotocol/oracle/deployments/opbnbmainnet",
+        ],
         ethereum: [
           "node_modules/@venusprotocol/governance-contracts/deployments/ethereum",
           "node_modules/@venusprotocol/oracle/deployments/ethereum",
@@ -130,7 +134,10 @@ const config: HardhatUserConfig = {
       url: process.env.ARCHIVE_NODE_opbnbmainnet || "https://opbnb-mainnet-rpc.bnbchain.org",
       chainId: 204,
       live: true,
-      accounts: DEPLOYER_PRIVATE_KEY ? [`0x${DEPLOYER_PRIVATE_KEY}`] : [],
+      gasPrice: parseUnits("0.03", "gwei").toNumber(),
+      accounts: {
+        mnemonic: process.env.MNEMONIC || "",
+      },
     },
   },
   gasReporter: {
