@@ -8,6 +8,7 @@ interface BridgeConfig {
 
 const SEPOLIA_MULTISIG = "0x94fa6078b6b8a26f0b6edffbe6501b22a10470fb";
 const OPBNB_TESTNET_MULTISIG = "0xb15f6EfEbC276A3b9805df81b5FB3D50C2A62BDf";
+const ETHEREUM_MULTISIG = "0x285960C5B22fD66A736C7136967A3eB15e93CC67";
 
 export const preconfiguredAddresses = {
   bsctestnet: {
@@ -26,7 +27,11 @@ export const preconfiguredAddresses = {
     LzVirtualChainId: "10161",
   },
   ethereum: {
-    // TODO
+    NormalTimelock: ETHEREUM_MULTISIG,
+    FastTrackTimelock: ETHEREUM_MULTISIG,
+    CriticalTimelock: ETHEREUM_MULTISIG,
+    LzEndpoint: "0x66A71Dcef29A0fFBDBE3c6a460a3B5BC225Cd675",
+    LzVirtualChainId: "101",
   },
   opbnbtestnet: {
     LzEndpoint: "0x83c73Da98cf733B03315aFa8758834b36a195b87",
@@ -47,9 +52,9 @@ export const xvsBridgeMethodsSrc = [
   "pause()",
   "unpause()",
   "removeTrustedRemote(uint16)",
-  "dropFailedMessage(uint16,bytes)",
+  "dropFailedMessage(uint16,bytes,uint64)",
   "fallbackWithdraw(address,uint256)",
-  "fallbackDeposit(uint256)",
+  "fallbackDeposit(address,uint256)",
   "setPrecrime(address)",
   "setMinDstGas(uint16,uint16,uint256)",
   "setPayloadSizeLimit(uint16,uint256)",
@@ -71,7 +76,7 @@ export const xvsBridgeMethodsDest = [
   "pause()",
   "unpause()",
   "removeTrustedRemote(uint16)",
-  "dropFailedMessage(uint16,bytes)",
+  "dropFailedMessage(uint16,bytes,uint64)",
   "setPrecrime(address)",
   "setMinDstGas(uint16,uint16,uint256)",
   "setPayloadSizeLimit(uint16,uint256)",
@@ -106,10 +111,10 @@ export const bridgeConfig: BridgeConfig = {
   bscmainnet: {
     methods: [
       { method: "setMinDstGas(uint16,uint16,uint256)", args: [101, 0, "300000"] },
-      { method: "setMaxDailyLimit(uint16,uint256)", args: [101, "500000000000000000000"] },
-      { method: "setMaxSingleTransactionLimit(uint16,uint256)", args: [101, "10000000000000000000"] },
-      { method: "setMaxDailyReceiveLimit(uint16,uint256)", args: [101, "500000000000000000000"] },
-      { method: "setMaxSingleReceiveTransactionLimit(uint16,uint256)", args: [101, "10000000000000000000"] },
+      { method: "setMaxDailyLimit(uint16,uint256)", args: [101, "50000000000000000000000"] },
+      { method: "setMaxSingleTransactionLimit(uint16,uint256)", args: [101, "10000000000000000000000"] },
+      { method: "setMaxDailyReceiveLimit(uint16,uint256)", args: [101, "50000000000000000000000"] },
+      { method: "setMaxSingleReceiveTransactionLimit(uint16,uint256)", args: [101, "10000000000000000000000"] },
     ],
   },
   sepolia: {
@@ -119,6 +124,15 @@ export const bridgeConfig: BridgeConfig = {
       { method: "setMaxSingleTransactionLimit(uint16,uint256)", args: [10102, "10000000000000000000"] },
       { method: "setMaxDailyReceiveLimit(uint16,uint256)", args: [10102, "500000000000000000000"] },
       { method: "setMaxSingleReceiveTransactionLimit(uint16,uint256)", args: [10102, "10000000000000000000"] },
+    ],
+  },
+  ethereum: {
+    methods: [
+      { method: "setMinDstGas(uint16,uint16,uint256)", args: [102, 0, "300000"] },
+      { method: "setMaxDailyLimit(uint16,uint256)", args: [102, "50000000000000000000000"] },
+      { method: "setMaxSingleTransactionLimit(uint16,uint256)", args: [102, "10000000000000000000000"] },
+      { method: "setMaxDailyReceiveLimit(uint16,uint256)", args: [102, "50000000000000000000000"] },
+      { method: "setMaxSingleReceiveTransactionLimit(uint16,uint256)", args: [102, "10000000000000000000000"] },
     ],
   },
   opbnbtestnet: {

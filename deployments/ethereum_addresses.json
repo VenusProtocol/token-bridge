@@ -1,5 +1,12 @@
 {
   "name": "ethereum",
   "chainId": "1",
-  "addresses": {}
+  "addresses": {
+    "DefaultProxyAdmin": "0x567e4cc5e085d09f66f836fa8279f38b4e5866b9",
+    "XVS": "0xd3CC9d8f3689B83c91b7B59cAB4946B063EB894A",
+    "XVSBridgeAdmin": "0x9C6C95632A8FB3A74f2fB4B7FfC50B003c992b96",
+    "XVSBridgeAdmin_Implementation": "0x83aBB808bb291FED8593e953c6489d29aFa0c5Ca",
+    "XVSBridgeAdmin_Proxy": "0x9C6C95632A8FB3A74f2fB4B7FfC50B003c992b96",
+    "XVSProxyOFTDest": "0x888E317606b4c590BBAD88653863e8B345702633"
+  }
 }
