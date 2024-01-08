@@ -168,7 +168,7 @@
       ]
     },
     "XVS": {
-      "address": "0xFD9B071168bC27DBE16406eC3Aba050Ce8Eb22FA",
+      "address": "0x3E2e61F1c075881F3fB8dd568043d8c221fd5c61",
       "abi": [
         {
           "inputs": [
@@ -887,7 +887,7 @@
       ]
     },
     "XVSBridgeAdmin": {
-      "address": "0x888E317606b4c590BBAD88653863e8B345702633",
+      "address": "0x52fcE05aDbf6103d71ed2BA8Be7A317282731831",
       "abi": [
         {
           "anonymous": false,
@@ -1348,7 +1348,7 @@
       ]
     },
     "XVSBridgeAdmin_Implementation": {
-      "address": "0xd3CC9d8f3689B83c91b7B59cAB4946B063EB894A",
+      "address": "0x0f0be7BAf4B9E394F91e5B8a17Fc9579f5d3c072",
       "abi": [
         {
           "inputs": [
@@ -1680,7 +1680,7 @@
       ]
     },
     "XVSBridgeAdmin_Proxy": {
-      "address": "0x888E317606b4c590BBAD88653863e8B345702633",
+      "address": "0x52fcE05aDbf6103d71ed2BA8Be7A317282731831",
       "abi": [
         {
           "inputs": [
@@ -1829,7 +1829,7 @@
       ]
     },
     "XVSProxyOFTDest": {
-      "address": "0x0087D695b4131A455bF399DD8cfC8aE07d893fD4",
+      "address": "0x100D331C1B5Dcd41eACB1eCeD0e83DCEbf3498B2",
       "abi": [
         {
           "inputs": [
