@@ -21,6 +21,29 @@ describe("Bridge Admin: ", function () {
   const singleTransactionLimit = convertToUnit(10, 18);
   const maxDailyTransactionLimit = convertToUnit(100, 18);
 
+  const functionregistry = [
+    "setOracle(address)",
+    "setMaxSingleTransactionLimit(uint16,uint256)",
+    "setMaxDailyLimit(uint16,uint256)",
+    "setMaxSingleReceiveTransactionLimit(uint16,uint256)",
+    "setMaxDailyReceiveLimit(uint16,uint256)",
+    "pause()",
+    "unpause()",
+    "setWhitelist(address,bool)",
+    "setConfig(uint16,uint16,uint256,bytes)",
+    "setSendVersion(uint16)",
+    "setReceiveVersion(uint16)",
+    "forceResumeReceive(uint16,bytes)",
+    "setTrustedRemoteAddress(uint16,bytes)",
+    "setPrecrime(address)",
+    "setMinDstGas(uint16,uint16,uint256)",
+    "setPayloadSizeLimit(uint16,uint256)",
+    "removeTrustedRemote(uint16)",
+    "updateSendAndCallEnabled(bool)",
+    "sweepToken(address,address,uint256)",
+    "dropFailedMessage(uint16,bytes,uint64)",
+  ];
+
   let LZEndpointMock: LZEndpointMock__factory,
     ProxyOFTV2Dest: XVSProxyOFTDest__factory,
     RemoteTokenFactory: XVS__factory,
@@ -84,29 +107,36 @@ describe("Bridge Admin: ", function () {
     await remoteOFT.transferOwnership(bridgeAdmin.address);
 
     remotePath = ethers.utils.solidityPack(["address", "address"], [AddressOne, remoteOFT.address]);
-    const functionregistry = [
-      "setOracle(address)",
-      "setMaxSingleTransactionLimit(uint16,uint256)",
-      "setMaxDailyLimit(uint16,uint256)",
-      "setMaxSingleReceiveTransactionLimit(uint16,uint256)",
-      "setMaxDailyReceiveLimit(uint16,uint256)",
-      "pause()",
-      "unpause()",
-      "setWhitelist(address,bool)",
-      "setConfig(uint16,uint16,uint256,bytes)",
-      "setSendVersion(uint16)",
-      "setReceiveVersion(uint16)",
-      "forceResumeReceive(uint16,bytes)",
-      "setTrustedRemote(uint16,bytes)",
-      "setTrustedRemoteAddress(uint16,bytes)",
-      "setPrecrime(address)",
-      "setMinDstGas(uint16,uint16,uint256)",
-      "setPayloadSizeLimit(uint16,uint256)",
-      "setUseCustomAdapterParams(bool)",
-    ];
+
     const activeArray = new Array(functionregistry.length).fill(true);
     await bridgeAdmin.upsertSignature(functionregistry, activeArray);
     await loadFixture(grantPermissionsFixture);
+  });
+
+  it("Revert when inputs length mismatch in function registry", async function () {
+    const activeArray = new Array(functionregistry.length - 1).fill(true);
+
+    await expect(bridgeAdmin.upsertSignature(functionregistry, activeArray)).to.be.revertedWith(
+      "Input arrays must have the same length",
+    );
+  });
+
+  it("Deletes from function registry", async function () {
+    const activeArray = new Array(functionregistry.length).fill(true);
+    await bridgeAdmin.upsertSignature(functionregistry, activeArray);
+    await bridgeAdmin.upsertSignature(["fakeFunction(uint256)"], [true]);
+    await expect(bridgeAdmin.upsertSignature(["fakeFunction(uint256)"], [false])).to.emit(
+      bridgeAdmin,
+      "FunctionRegistryChanged",
+    );
+  });
+
+  it("Reverts when non owner calls upsert signature", async function () {
+    const activeArray = new Array(functionregistry.length - 1).fill(true);
+
+    await expect(bridgeAdmin.connect(acc2).upsertSignature(functionregistry, activeArray)).to.be.revertedWith(
+      "Ownable: caller is not the owner",
+    );
   });
 
   it("Revert if EOA called owner function of bridge", async function () {
@@ -116,7 +146,7 @@ describe("Bridge Admin: ", function () {
   });
 
   it("Revert if permissions are not granted to call owner functions of bridge", async function () {
-    let data = remoteOFT.interface.encodeFunctionData("setTrustedRemote", [localChainId, remotePath]);
+    let data = remoteOFT.interface.encodeFunctionData("setTrustedRemoteAddress", [localChainId, remotePath]);
     await expect(
       acc1.sendTransaction({
         to: bridgeAdmin.address,
@@ -162,7 +192,6 @@ describe("Bridge Admin: ", function () {
       }),
     ).to.revertedWithCustomError(bridgeAdmin, "Unauthorized");
   });
-
   it("Success if permissions are granted to call owner functions of bridge", async function () {
     let data = remoteOFT.interface.encodeFunctionData("setMaxDailyLimit", [localChainId, maxDailyTransactionLimit]);
     await acc2.sendTransaction({
