@@ -161,7 +161,6 @@ describe("Proxy OFTV2: ", function () {
       "setPrecrime(address)",
       "setMinDstGas(uint16,uint16,uint256)",
       "setPayloadSizeLimit(uint16,uint256)",
-      "setUseCustomAdapterParams(bool)",
       "removeTrustedRemote(uint16)",
       "updateSendAndCallEnabled(bool)",
       "fallbackWithdraw(address,uint256)",

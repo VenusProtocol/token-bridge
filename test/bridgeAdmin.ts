@@ -34,12 +34,14 @@ describe("Bridge Admin: ", function () {
     "setSendVersion(uint16)",
     "setReceiveVersion(uint16)",
     "forceResumeReceive(uint16,bytes)",
-    "setTrustedRemote(uint16,bytes)",
     "setTrustedRemoteAddress(uint16,bytes)",
     "setPrecrime(address)",
     "setMinDstGas(uint16,uint16,uint256)",
     "setPayloadSizeLimit(uint16,uint256)",
-    "setUseCustomAdapterParams(bool)",
+    "removeTrustedRemote(uint16)",
+    "updateSendAndCallEnabled(bool)",
+    "sweepToken(address,address,uint256)",
+    "dropFailedMessage(uint16,bytes,uint64)",
   ];
 
   let LZEndpointMock: LZEndpointMock__factory,
@@ -144,7 +146,7 @@ describe("Bridge Admin: ", function () {
   });
 
   it("Revert if permissions are not granted to call owner functions of bridge", async function () {
-    let data = remoteOFT.interface.encodeFunctionData("setTrustedRemote", [localChainId, remotePath]);
+    let data = remoteOFT.interface.encodeFunctionData("setTrustedRemoteAddress", [localChainId, remotePath]);
     await expect(
       acc1.sendTransaction({
         to: bridgeAdmin.address,
