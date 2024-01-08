@@ -3063,7 +3063,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@venusprotocol/oracle@npm:1.8.0":
+"@venusprotocol/oracle@npm:^1.8.0":
   version: 1.8.0
   resolution: "@venusprotocol/oracle@npm:1.8.0"
   dependencies:
@@ -3142,7 +3142,7 @@ __metadata:
     "@typescript-eslint/eslint-plugin": ^5.27.1
     "@typescript-eslint/parser": ^5.27.1
     "@venusprotocol/governance-contracts": ^1.4.0
-    "@venusprotocol/oracle": 1.8.0
+    "@venusprotocol/oracle": ^1.8.0
     "@venusprotocol/solidity-utilities": 1.1.0
     bignumber.js: 9.0.0
     chai: ^4.3.6
