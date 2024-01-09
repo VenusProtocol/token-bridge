@@ -1,0 +1,11 @@
+{
+  "name": "bscmainnet",
+  "chainId": "56",
+  "addresses": {
+    "DefaultProxyAdmin": "0x1BB765b741A5f3C2A338369DAb539385534E3343",
+    "XVSBridgeAdmin": "0x70d644877b7b73800E9073BCFCE981eAaB6Dbc21",
+    "XVSBridgeAdmin_Implementation": "0xb085926fa310b4af85B499162B96e30E5c0E6fAC",
+    "XVSBridgeAdmin_Proxy": "0x70d644877b7b73800E9073BCFCE981eAaB6Dbc21",
+    "XVSProxyOFTSrc": "0xf8F46791E3dB29a029Ec6c9d946226f3c613e854"
+  }
+}
