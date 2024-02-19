@@ -6,14 +6,18 @@ import { ERC20 } from "@openzeppelin/contracts/token/ERC20/ERC20.sol";
 import { TokenController } from "./utils/TokenController.sol";
 
 /**
- * @title XVS
+ * @title MultichainToken
  * @author Venus
- * @notice XVS contract serves as a customized ERC-20 token with additional minting and burning functionality.
+ * @notice MultichainToken contract serves as a customized ERC-20 token with additional minting and burning functionality.
  *  It also incorporates access control features provided by the "TokenController" contract to ensure proper governance and restrictions on minting and burning operations.
  */
 
-contract XVS is ERC20, TokenController {
-    constructor(address accessControlManager_) ERC20("Venus XVS", "XVS") TokenController(accessControlManager_) {}
+contract MultichainToken is ERC20, TokenController {
+    constructor(
+        address accessControlManager_,
+        string memory name_,
+        string memory symbol_
+    ) ERC20(name_, symbol_) TokenController(accessControlManager_) {}
 
     /**
      * @notice Creates `amount_` tokens and assigns them to `account_`, increasing
