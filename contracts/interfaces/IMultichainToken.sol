@@ -4,7 +4,7 @@ pragma solidity 0.8.13;
 /**
  * @title IMultichainToken
  * @author Venus
- * @notice Interface implemented by `BridgeToken` token.
+ * @notice Interface implemented by `MultichainToken`.
  */
 interface IMultichainToken {
     function mint(address to, uint256 amount) external;

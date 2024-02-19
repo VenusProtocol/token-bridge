@@ -34,6 +34,7 @@ contract TokenControllerSrc is TokenController {
      */
     function mint(address account_, uint256 amount_) external whenNotPaused {
         _ensureAllowed("mint(address,uint256)");
+        _beforeTokenTransfer(msg.sender, account_);
         _isEligibleToMint(msg.sender, account_, amount_);
         INNER_TOKEN.mint(account_, amount_);
     }
@@ -48,7 +49,24 @@ contract TokenControllerSrc is TokenController {
      */
     function burn(address account_, uint256 amount_) external whenNotPaused {
         _ensureAllowed("burn(address,uint256)");
+        _beforeTokenTransfer(msg.sender, account_);
         INNER_TOKEN.burn(account_, amount_);
         _increaseMintLimit(msg.sender, amount_);
+    }
+
+        /**
+     * @notice Hook that is called before any transfer of tokens. This includes
+     * minting and burning.
+     * @param from_ Address of account from which tokens are to be transferred.
+     * @param to_ Address of the account to which tokens are to be transferred.
+     * @custom:error AccountBlacklisted is thrown when either `from` or `to` address is blacklisted.
+     */
+    function _beforeTokenTransfer(address from_, address to_) internal view whenNotPaused {
+        if (_blacklist[to_]) {
+            revert AccountBlacklisted(to_);
+        }
+        if (_blacklist[from_]) {
+            revert AccountBlacklisted(from_);
+        }
     }
 }
