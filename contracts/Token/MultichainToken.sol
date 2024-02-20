@@ -3,21 +3,22 @@ pragma solidity 0.8.13;
 
 import { ERC20 } from "@openzeppelin/contracts/token/ERC20/ERC20.sol";
 
-import { TokenController } from "./utils/TokenController.sol";
+import { MultichainTokenController } from "./utils/MultichainTokenController.sol";
 
 /**
  * @title MultichainToken
  * @author Venus
  * @notice MultichainToken contract serves as a customized ERC-20 token with additional minting and burning functionality.
- *  It also incorporates access control features provided by the "TokenController" contract to ensure proper governance and restrictions on minting and burning operations.
+ *  It also incorporates access control features provided by the "MultichainTokenController" contract to ensure proper governance and
+ *  restrictions on minting and burning operations.
  */
 
-contract MultichainToken is ERC20, TokenController {
+contract MultichainToken is ERC20, MultichainTokenController {
     constructor(
         address accessControlManager_,
         string memory name_,
         string memory symbol_
-    ) ERC20(name_, symbol_) TokenController(accessControlManager_) {}
+    ) ERC20(name_, symbol_) MultichainTokenController(accessControlManager_) {}
 
     /**
      * @notice Creates `amount_` tokens and assigns them to `account_`, increasing
@@ -30,7 +31,7 @@ contract MultichainToken is ERC20, TokenController {
      */
     function mint(address account_, uint256 amount_) external whenNotPaused {
         _ensureAllowed("mint(address,uint256)");
-        _isEligibleToMint(msg.sender, account_, amount_);
+        _isEligibleToMint(msg.sender, amount_);
         _mint(account_, amount_);
     }
 

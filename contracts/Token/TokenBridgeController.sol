@@ -2,23 +2,23 @@
 pragma solidity 0.8.13;
 
 import { IMultichainToken } from "./../interfaces/IMultichainToken.sol";
-import { TokenController } from "./utils/TokenController.sol";
+import { MultichainTokenController } from "./utils/MultichainTokenController.sol";
 import { ensureNonzeroAddress } from "@venusprotocol/solidity-utilities/contracts/validators.sol";
 
 /**
- * @title TokenControllerSrc
+ * @title TokenBridgeController
  * @author Venus
- * @notice TokenControllerSrc contract serves as a intermidiary contract between bridge and token. It controls the mint and burn operation via bridge contract.
+ * @notice TokenBridgeController contract serves as a intermidiary contract between bridge and token. It controls the mint and burn operation via bridge contract.
  *  It also incorporates access control features provided by the "TokenController" contract to ensure proper governance and restrictions on minting and burning operations.
  */
 
-contract TokenControllerSrc is TokenController {
+contract TokenBridgeController is MultichainTokenController {
     /**
      * @notice Address of the token which is controlled by this contract.
      */
     IMultichainToken public immutable INNER_TOKEN;
 
-    constructor(address accessControlManager_, address innerToken_) TokenController(accessControlManager_) {
+    constructor(address accessControlManager_, address innerToken_) MultichainTokenController(accessControlManager_) {
         ensureNonzeroAddress(innerToken_);
         INNER_TOKEN = IMultichainToken(innerToken_);
     }
@@ -35,7 +35,7 @@ contract TokenControllerSrc is TokenController {
     function mint(address account_, uint256 amount_) external whenNotPaused {
         _ensureAllowed("mint(address,uint256)");
         _beforeTokenTransfer(msg.sender, account_);
-        _isEligibleToMint(msg.sender, account_, amount_);
+        _isEligibleToMint(msg.sender, amount_);
         INNER_TOKEN.mint(account_, amount_);
     }
 
