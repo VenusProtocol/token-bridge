@@ -54,7 +54,7 @@ contract TokenControllerSrc is TokenController {
         _increaseMintLimit(msg.sender, amount_);
     }
 
-        /**
+    /**
      * @notice Hook that is called before any transfer of tokens. This includes
      * minting and burning.
      * @param from_ Address of account from which tokens are to be transferred.

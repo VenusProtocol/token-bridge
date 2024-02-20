@@ -5,16 +5,19 @@ import { IMultichainToken } from "./../interfaces/IMultichainToken.sol";
 import { BaseTokenProxyOFT } from "./BaseTokenProxyOFT.sol";
 import { ensureNonzeroAddress } from "@venusprotocol/solidity-utilities/contracts/validators.sol";
 
-
 /**
- * @title TokenProxyOFTDest
+ * @title TokenProxyOFT
  * @author Venus
- * @notice TokenProxyOFTDest contract builds upon the functionality of its parent contract, BaseTokenProxyOFT,
- * and focuses on managing token transfers to the destination chain.
+ * @notice TokenProxyOFT contract builds upon the functionality of its parent contract, BaseTokenProxyOFT,
+ * and focuses on managing token transfers to the chain where token is mintable and burnable.
  * It provides functions to check eligibility and perform the actual token transfers while maintaining strict access controls and pausing mechanisms.
  */
 
-contract TokenProxyOFTDest is BaseTokenProxyOFT {
+contract TokenProxyOFT is BaseTokenProxyOFT {
+    /**
+     * @notice Regulates the force minting; It should be true only if the token manage by this Bridge contract can be mintable on both source and destination chains.
+     */
+    bool public immutable isForceMintActive;
     /**
      * @notice Emits when stored message dropped without successful retrying.
      */
@@ -28,8 +31,11 @@ contract TokenProxyOFTDest is BaseTokenProxyOFT {
         address tokenAddress_,
         uint8 sharedDecimals_,
         address lzEndpoint_,
-        address oracle_
-    ) BaseTokenProxyOFT(tokenAddress_, sharedDecimals_, lzEndpoint_, oracle_) {}
+        address oracle_,
+        bool isForceMintActive_
+    ) BaseTokenProxyOFT(tokenAddress_, sharedDecimals_, lzEndpoint_, oracle_) {
+        isForceMintActive = isForceMintActive_;
+    }
 
     /**
      * @notice Clear failed messages from the storage.
@@ -54,6 +60,7 @@ contract TokenProxyOFTDest is BaseTokenProxyOFT {
      * @custom:event Emits forceMint, once done with transfer.
      */
     function forceMint(uint16 srcChainId_, address to_, uint256 amount_) external onlyOwner {
+        require(isForceMintActive, "ProxyOFT: Force mint of token is not allowed on this chain");
         ensureNonzeroAddress(to_);
         _creditTo(srcChainId_, to_, amount_);
         emit ForceMint(srcChainId_, to_, amount_);
