@@ -2,11 +2,11 @@
 pragma solidity 0.8.13;
 
 /**
- * @title ITokenProxyOFT
+ * @title ITokenBridge
  * @author Venus
  * @notice Interface implemented by `TokenProxyOFT`.
  */
-interface ITokenProxyOFT {
+interface ITokenBridge {
     function transferOwnership(address addr) external;
 
     function setTrustedRemoteAddress(uint16 remoteChainId, bytes calldata srcAddress) external;

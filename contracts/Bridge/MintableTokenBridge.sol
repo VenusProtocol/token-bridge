@@ -2,18 +2,18 @@
 pragma solidity 0.8.13;
 
 import { IMultichainToken } from "./../interfaces/IMultichainToken.sol";
-import { BaseTokenProxyOFT } from "./BaseTokenProxyOFT.sol";
+import { BaseTokenBridge } from "./BaseTokenBridge.sol";
 import { ensureNonzeroAddress } from "@venusprotocol/solidity-utilities/contracts/validators.sol";
 
 /**
- * @title TokenProxyOFT
+ * @title MintableTokenBridge
  * @author Venus
- * @notice TokenProxyOFT contract builds upon the functionality of its parent contract, BaseTokenProxyOFT,
+ * @notice MintableTokenBridge contract builds upon the functionality of its parent contract, BaseTokenBridge,
  * and focuses on managing token transfers to the chain where token is mintable and burnable.
  * It provides functions to check eligibility and perform the actual token transfers while maintaining strict access controls and pausing mechanisms.
  */
 
-contract TokenProxyOFT is BaseTokenProxyOFT {
+contract MintableTokenBridge is BaseTokenBridge {
     /**
      * @notice Regulates the force minting; It should be true only if the token manage by this Bridge contract can be mintable on both source and destination chains.
      */
@@ -33,7 +33,7 @@ contract TokenProxyOFT is BaseTokenProxyOFT {
         address lzEndpoint_,
         address oracle_,
         bool isForceMintActive_
-    ) BaseTokenProxyOFT(tokenAddress_, sharedDecimals_, lzEndpoint_, oracle_) {
+    ) BaseTokenBridge(tokenAddress_, sharedDecimals_, lzEndpoint_, oracle_) {
         isForceMintActive = isForceMintActive_;
     }
 

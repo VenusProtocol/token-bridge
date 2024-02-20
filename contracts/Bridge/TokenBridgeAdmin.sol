@@ -4,7 +4,7 @@ pragma solidity 0.8.13;
 
 import { AccessControlledV8 } from "@venusprotocol/governance-contracts/contracts/Governance/AccessControlledV8.sol";
 import { ensureNonzeroAddress } from "@venusprotocol/solidity-utilities/contracts/validators.sol";
-import { ITokenProxyOFT } from "./../interfaces/ITokenProxyOFT.sol";
+import { ITokenBridge } from "./../interfaces/ITokenBridge.sol";
 
 /**
  * @title TokenBridgeAdmin
@@ -15,7 +15,7 @@ import { ITokenProxyOFT } from "./../interfaces/ITokenProxyOFT.sol";
  */
 contract TokenBridgeAdmin is AccessControlledV8 {
     /// @custom:oz-upgrades-unsafe-allow state-variable-immutable
-    ITokenProxyOFT public immutable tokenBridge;
+    ITokenBridge public immutable tokenBridge;
     /**
      * @notice A mapping keeps track of function signature associated with function name string.
      */
@@ -29,7 +29,7 @@ contract TokenBridgeAdmin is AccessControlledV8 {
     /// @custom:oz-upgrades-unsafe-allow constructor
     constructor(address TokenBridge_) {
         ensureNonzeroAddress(TokenBridge_);
-        tokenBridge = ITokenProxyOFT(TokenBridge_);
+        tokenBridge = ITokenBridge(TokenBridge_);
         _disableInitializers();
     }
 

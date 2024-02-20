@@ -9,9 +9,9 @@ import { ensureNonzeroAddress } from "@venusprotocol/solidity-utilities/contract
 import { ExponentialNoError } from "@venusprotocol/solidity-utilities/contracts/ExponentialNoError.sol";
 
 /**
- * @title BaseTokenProxyOFT
+ * @title BaseTokenBridge
  * @author Venus
- * @notice The BaseTokenProxyOFT contract is tailored for facilitating cross-chain transactions with an ERC20 token.
+ * @notice The BaseTokenBridge contract is tailored for facilitating cross-chain transactions with an ERC20 token.
  * It manages transaction limits of a single and daily transactions.
  * This contract inherits key functionalities from other contracts, including pausing capabilities and error handling.
  * It holds state variables for the inner token and maps for tracking transaction limits and statistics across various chains and addresses.
@@ -19,7 +19,7 @@ import { ExponentialNoError } from "@venusprotocol/solidity-utilities/contracts/
  * Internal functions conduct eligibility check of transactions, making the contract a fundamental component for cross-chain token management.
  */
 
-abstract contract BaseTokenProxyOFT is Pausable, ExponentialNoError, BaseOFTV2 {
+abstract contract BaseTokenBridge is Pausable, ExponentialNoError, BaseOFTV2 {
     using SafeERC20 for IERC20;
     IERC20 internal immutable innerToken;
     uint256 internal immutable ld2sdRate;
