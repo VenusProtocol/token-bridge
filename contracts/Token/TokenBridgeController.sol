@@ -54,7 +54,11 @@ contract TokenBridgeController is MultichainTokenController {
         _increaseMintLimit(msg.sender, amount_);
     }
 
-    function decimals() external view returns (uint8) {
+    /**
+     * @notice Returns number of decimals of token
+     * @return Number of decimals of token
+     */
+    function decimals() public view returns (uint8) {
         return INNER_TOKEN.decimals();
     }
 
