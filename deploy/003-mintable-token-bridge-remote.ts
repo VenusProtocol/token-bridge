@@ -187,7 +187,7 @@ const func: DeployFunction = async function (hre: HardhatRuntimeEnvironment) {
     },
 
     {
-      contract: MintableTokenBridge.address,
+      contract: TokenBridgeAdmin.address,
       signature: "setTrustedRemoteAddress(uint16,bytes)",
       parameters: [preconfiguredAddresses.LzVirtualChainIdL, "0xDestAddress"],
       value: 0,

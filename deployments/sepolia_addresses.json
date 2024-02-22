@@ -4,10 +4,10 @@
   "addresses": {
     "DefaultProxyAdmin": "0x01435866babd91311b1355cf3af488cca36db68e",
     "MintableTokenBridgeDestVAI": "0xFA62BC6C0E20A507E3Ad0dF4F6b89E71953161fa",
-    "MultichainToken": "0x9414b9d8fbC128799B896A50c8927C369AA553CB",
     "TokenBridgeAdminDestVAI": "0x296349C4E86C7C3dd1fC9e5b30Ca47cf31162486",
     "TokenBridgeAdminDestVAI_Implementation": "0x210a2216529A5d0f1DAAB91dE89B594c7287E8B2",
     "TokenBridgeAdminDestVAI_Proxy": "0x296349C4E86C7C3dd1fC9e5b30Ca47cf31162486",
+    "VAI": "0x9414b9d8fbC128799B896A50c8927C369AA553CB",
     "XVS": "0x66ebd019E86e0af5f228a0439EBB33f045CBe63E",
     "XVSBridgeAdmin": "0xd3c6bdeeadB2359F726aD4cF42EAa8B7102DAd9B",
     "XVSBridgeAdmin_Implementation": "0x46958617CeB3A1b61B5C69FecfFE7e54831430B4",
