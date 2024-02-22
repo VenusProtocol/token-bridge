@@ -55,7 +55,7 @@ const configureMultichainTokenMintCapCommands = async (
       contract: token,
       signature: "setMintCap(address,uint256)",
       argTypes: ["address", "uint256"],
-      parameters: [minterAddress, "100000000000000000000"],
+      parameters: [minterAddress, "100000000000000000000000"],
       value: 0,
     },
   ];
@@ -130,8 +130,8 @@ const func: DeployFunction = async function (hre: HardhatRuntimeEnvironment) {
 
   await executeBridgeCommands(bridge, hre, deployer);
 
-  const removeArray = new Array(multichainTokenMethods.length).fill(true);
-  let tx = await bridgeAdmin.upsertSignature(multichainTokenMethods, removeArray);
+  const removeArray = new Array(mintableTokenBridgeMethods.length).fill(true);
+  let tx = await bridgeAdmin.upsertSignature(mintableTokenBridgeMethods, removeArray);
   await tx.wait();
 
   tx = await bridge.transferOwnership(TokenBridgeAdmin.address);
@@ -185,7 +185,7 @@ const func: DeployFunction = async function (hre: HardhatRuntimeEnvironment) {
     },
 
     {
-      contract: MintableTokenBridge.address,
+      contract: TokenBridgeAdmin.address,
       signature: "setTrustedRemoteAddress(uint16,bytes)",
       parameters: [preconfiguredAddresses.LzVirtualChainIdL, "0xDestAddress"],
       value: 0,

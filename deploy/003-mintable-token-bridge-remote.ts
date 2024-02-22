@@ -55,7 +55,7 @@ const configureMultichainTokenMintCapCommands = async (
       contract: token,
       signature: "setMintCap(address,uint256)",
       argTypes: ["address", "uint256"],
-      parameters: [minterAddress, "100000000000000000000"],
+      parameters: [minterAddress, "100000000000000000000000"],
       value: 0,
     },
   ];
@@ -126,12 +126,12 @@ const func: DeployFunction = async function (hre: HardhatRuntimeEnvironment) {
 
   const bridge = await ethers.getContract<MintableTokenBridge>("MintableTokenBridgeDestVAI");
   const bridgeAdmin = await ethers.getContract("TokenBridgeAdminDestVAI");
-  const token = await ethers.getContract("MultichainToken");
+  const token = await ethers.getContract("VAI");
 
   await executeBridgeCommands(bridge, hre, deployer);
 
-  const removeArray = new Array(multichainTokenMethods.length).fill(true);
-  let tx = await bridgeAdmin.upsertSignature(multichainTokenMethods, removeArray);
+  const removeArray = new Array(mintableTokenBridgeMethods.length).fill(true);
+  let tx = await bridgeAdmin.upsertSignature(mintableTokenBridgeMethods, removeArray);
   await tx.wait();
 
   tx = await token.transferOwnership(preconfiguredAddresses.NormalTimelock);
