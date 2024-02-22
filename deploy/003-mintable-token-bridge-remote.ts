@@ -91,7 +91,7 @@ const func: DeployFunction = async function (hre: HardhatRuntimeEnvironment) {
   const accessControlManager = await ethers.getContract("AccessControlManager");
   const resilientOracle = await ethers.getContract("ResilientOracle");
 
-  const MultichainToken = await deploy("MultichainToken", {
+  const MultichainToken = await deploy("VAI", {
     from: deployer,
     contract: "MultichainToken",
     args: [accessControlManager.address, "Venus VAI", "VAI"],
