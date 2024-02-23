@@ -6,7 +6,7 @@ import { SignerWithAddress } from "hardhat-deploy-ethers/signers";
 
 import { AccessControlManager, MultichainToken, MultichainToken__factory } from "../typechain";
 
-describe("Token Controller: ", function () {
+describe("Multichain Token Controller: ", function () {
   let tokenFactory: MultichainToken__factory,
     token: MultichainToken,
     acc2: SignerWithAddress,
@@ -17,7 +17,7 @@ describe("Token Controller: ", function () {
     accessControlManager = await smock.fake<AccessControlManager>("AccessControlManager");
     accessControlManager.isAllowedToCall.returns(true);
     tokenFactory = await ethers.getContractFactory("MultichainToken");
-    token = await tokenFactory.deploy(accessControlManager.address, "VAI StableCoin", "VAI");
+    token = await tokenFactory.deploy(accessControlManager.address, "MultichainToken", "MT");
     acc1 = (await ethers.getSigners())[0];
     acc2 = (await ethers.getSigners())[1];
   };

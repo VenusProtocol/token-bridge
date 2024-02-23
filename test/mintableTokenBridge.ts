@@ -21,11 +21,11 @@ import {
   TokenBridgeController__factory,
 } from "../typechain";
 
-describe("VAI Bridge:", function () {
+describe("Multichain Bridge:", function () {
   const localChainId = 1;
   const remoteChainId = 2;
-  const name = "VAI stablecoin";
-  const symbol = "VAI";
+  const name = "MultichainToken";
+  const symbol = "MT";
   const sharedDecimals = 8;
   const singleTransactionLimit = convertToUnit(10, 18);
   const maxDailyTransactionLimit = convertToUnit(100, 18);

@@ -15,7 +15,7 @@ import {
   TokenBridgeAdmin,
 } from "../typechain";
 
-describe("Token Bridge Admin: ", function () {
+describe("Multichain Token Bridge Admin: ", function () {
   const localChainId = 1;
   const remoteChainId = 2;
   const singleTransactionLimit = convertToUnit(10, 18);
@@ -99,7 +99,7 @@ describe("Token Bridge Admin: ", function () {
     RemoteTokenFactory = await ethers.getContractFactory("MultichainToken");
 
     accessControlManager = await accessControlManagerFactory.deploy();
-    remoteToken = await RemoteTokenFactory.deploy(accessControlManager.address, "VAI StableCoin", "VAI");
+    remoteToken = await RemoteTokenFactory.deploy(accessControlManager.address, "MultichainToken", "MT");
     remoteEndpoint = await LZEndpointMock.deploy(remoteChainId);
     remoteOFT = await ProxyOFTV2Dest.deploy(remoteToken.address, 8, remoteEndpoint.address, AddressOne, true);
 
