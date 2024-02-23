@@ -479,6 +479,51 @@ describe("VAI Bridge:", function () {
     });
     expect(await localToken.balanceOf(acc3.address)).to.be.equal(amount);
   });
+  it("Reverts when force mint is not active", async function () {
+    const localOFT2 = await ProxyOFTV2Src.deploy(
+      tokenBridgeController.address,
+      sharedDecimals,
+      localEndpoint.address,
+      oracle.address,
+      false,
+    );
+    await localOFT2.transferOwnership(bridgeAdminLocal.address);
+    await tokenBridgeController.setMintCap(localOFT2.address, convertToUnit("100000", 18));
+
+    await remoteToken.setMintCap(remoteOFT.address, convertToUnit(9, 18));
+
+    await mintOnSrc(acc2, amount);
+    const acc3AddressBytes32 = ethers.utils.defaultAbiCoder.encode(["address"], [acc3.address]);
+    const nativeFee = (
+      await localOFT.estimateSendFee(remoteChainId, acc3AddressBytes32, amount, false, defaultAdapterParams)
+    ).nativeFee;
+
+    await localOFT
+      .connect(acc2)
+      .sendFrom(
+        acc2.address,
+        remoteChainId,
+        acc3AddressBytes32,
+        amount,
+        [acc2.address, ethers.constants.AddressZero, defaultAdapterParams],
+        { value: nativeFee },
+      );
+
+    expect(await remoteToken.balanceOf(acc3.address)).not.to.be.equal(amount);
+    await remoteToken.setMintCap(remoteOFT.address, convertToUnit(100, 18));
+    let data = remoteOFT.interface.encodeFunctionData("dropFailedMessage", [localChainId, localPath, 1]);
+    await acc1.sendTransaction({
+      to: bridgeAdminRemote.address,
+      data: data,
+    });
+    data = localOFT2.interface.encodeFunctionData("forceMint", [localChainId, acc3.address, amount]);
+    await expect(
+      acc1.sendTransaction({
+        to: bridgeAdminLocal.address,
+        data: data,
+      }),
+    ).to.be.reverted;
+  });
   it("Reverts when single transaction limit exceeds daily limit", async function () {
     const data = remoteOFT.interface.encodeFunctionData("setMaxSingleTransactionLimit", [
       localChainId,
