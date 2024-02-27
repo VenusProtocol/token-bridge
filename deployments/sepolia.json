@@ -168,7 +168,7 @@
       ]
     },
     "MintableTokenBridgeDestVAI": {
-      "address": "0xD08843bd56a2415A49a1A8E87F3e528Eb281710B",
+      "address": "0x69fFBFCe81c105a07916d3a8fCA205Ed1758B826",
       "abi": [
         {
           "inputs": [
@@ -2060,6 +2060,19 @@
           "type": "function"
         },
         {
+          "inputs": [],
+          "name": "tokenBridgeController",
+          "outputs": [
+            {
+              "internalType": "address",
+              "name": "",
+              "type": "address"
+            }
+          ],
+          "stateMutability": "view",
+          "type": "function"
+        },
+        {
           "inputs": [
             {
               "internalType": "address",
@@ -2133,7 +2146,7 @@
       ]
     },
     "TokenBridgeAdminDestVAI": {
-      "address": "0xb5F2bbC3eFa4A3C81dd888A56d3E96F06effe384",
+      "address": "0x71a6c67C9394c3D64593B5A527a11980D1C0cDEB",
       "abi": [
         {
           "anonymous": false,
@@ -2594,7 +2607,7 @@
       ]
     },
     "TokenBridgeAdminDestVAI_Implementation": {
-      "address": "0xce124Ac8D4C0C910af05ce030273dd6Deb9b3B7C",
+      "address": "0x721A6E98aD61bae0f1E2a779FeaFC9EfE4cfcCeE",
       "abi": [
         {
           "inputs": [
@@ -2926,7 +2939,7 @@
       ]
     },
     "TokenBridgeAdminDestVAI_Proxy": {
-      "address": "0xb5F2bbC3eFa4A3C81dd888A56d3E96F06effe384",
+      "address": "0x71a6c67C9394c3D64593B5A527a11980D1C0cDEB",
       "abi": [
         {
           "inputs": [
