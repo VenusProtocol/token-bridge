@@ -90,6 +90,7 @@ describe("Multichain Bridge:", function () {
 
     tokenBridgeController = await tokenBridgeControllerFactory.deploy(accessControlManager.address, localToken.address);
     localOFT = await ProxyOFTV2Src.deploy(
+      localToken.address,
       tokenBridgeController.address,
       sharedDecimals,
       localEndpoint.address,
@@ -98,6 +99,7 @@ describe("Multichain Bridge:", function () {
     );
     remoteOFT = await ProxyOFTV2Dest.deploy(
       remoteToken.address,
+      ethers.constants.AddressZero,
       sharedDecimals,
       remoteEndpoint.address,
       oracle.address,
@@ -448,25 +450,7 @@ describe("Multichain Bridge:", function () {
     expect(await remoteToken.balanceOf(acc3.address)).not.to.be.equal(amount);
     await tokenBridgeController.setMintCap(localOFT.address, convertToUnit(10, 18));
 
-    let data = localOFT.interface.encodeFunctionData("setMaxDailyReceiveLimit", [
-      localChainId,
-      maxDailyTransactionLimit,
-    ]);
-    await acc1.sendTransaction({
-      to: bridgeAdminLocal.address,
-      data: data,
-    });
-
-    data = localOFT.interface.encodeFunctionData("setMaxSingleReceiveTransactionLimit", [
-      localChainId,
-      singleTransactionLimit,
-    ]);
-    await acc1.sendTransaction({
-      to: bridgeAdminLocal.address,
-      data: data,
-    });
-
-    data = remoteOFT.interface.encodeFunctionData("dropFailedMessage", [localChainId, localPath, 1]);
+    let data = remoteOFT.interface.encodeFunctionData("dropFailedMessage", [localChainId, localPath, 1]);
     await acc1.sendTransaction({
       to: bridgeAdminRemote.address,
       data: data,
@@ -481,13 +465,19 @@ describe("Multichain Bridge:", function () {
   });
   it("Reverts when force mint is not active", async function () {
     const localOFT2 = await ProxyOFTV2Src.deploy(
+      localToken.address,
       tokenBridgeController.address,
       sharedDecimals,
       localEndpoint.address,
       oracle.address,
       false,
     );
-    await localOFT2.transferOwnership(bridgeAdminLocal.address);
+    const bridgeAdminFactory = await ethers.getContractFactory("TokenBridgeAdmin");
+    const bridgeAdminLocal2 = await upgrades.deployProxy(bridgeAdminFactory, [accessControlManager.address], {
+      constructorArgs: [localOFT.address],
+      initializer: "initialize",
+    });
+    await localOFT2.transferOwnership(bridgeAdminLocal2.address);
     await tokenBridgeController.setMintCap(localOFT2.address, convertToUnit("100000", 18));
 
     await remoteToken.setMintCap(remoteOFT.address, convertToUnit(9, 18));
@@ -519,7 +509,7 @@ describe("Multichain Bridge:", function () {
     data = localOFT2.interface.encodeFunctionData("forceMint", [localChainId, acc3.address, amount]);
     await expect(
       acc1.sendTransaction({
-        to: bridgeAdminLocal.address,
+        to: bridgeAdminLocal2.address,
         data: data,
       }),
     ).to.be.reverted;

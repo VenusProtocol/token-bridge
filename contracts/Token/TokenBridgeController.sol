@@ -55,14 +55,6 @@ contract TokenBridgeController is MultichainTokenController {
     }
 
     /**
-     * @notice Returns number of decimals of token
-     * @return Number of decimals of token
-     */
-    function decimals() public view returns (uint8) {
-        return INNER_TOKEN.decimals();
-    }
-
-    /**
      * @notice Hook that is called before any transfer of tokens. This includes
      * minting and burning.
      * @param from_ Address of account from which tokens are to be transferred.

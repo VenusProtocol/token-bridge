@@ -101,7 +101,14 @@ describe("Multichain Token Bridge Admin: ", function () {
     accessControlManager = await accessControlManagerFactory.deploy();
     remoteToken = await RemoteTokenFactory.deploy(accessControlManager.address, "MultichainToken", "MT");
     remoteEndpoint = await LZEndpointMock.deploy(remoteChainId);
-    remoteOFT = await ProxyOFTV2Dest.deploy(remoteToken.address, 8, remoteEndpoint.address, AddressOne, true);
+    remoteOFT = await ProxyOFTV2Dest.deploy(
+      remoteToken.address,
+      ethers.constants.AddressZero,
+      8,
+      remoteEndpoint.address,
+      AddressOne,
+      true,
+    );
 
     const bridgeAdminFactory = await ethers.getContractFactory("TokenBridgeAdmin");
     bridgeAdmin = await upgrades.deployProxy(bridgeAdminFactory, [accessControlManager.address], {

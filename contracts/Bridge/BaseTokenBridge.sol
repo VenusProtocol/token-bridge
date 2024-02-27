@@ -22,8 +22,9 @@ import { ExponentialNoError } from "@venusprotocol/solidity-utilities/contracts/
 abstract contract BaseTokenBridge is Pausable, ExponentialNoError, BaseOFTV2 {
     using SafeERC20 for IERC20;
     IERC20 internal immutable innerToken;
-    uint256 internal immutable ld2sdRate;
+    address internal immutable tokenBridgeController;
     bool public sendAndCallEnabled;
+    uint256 internal immutable ld2sdRate;
 
     /**
      * @notice The address of ResilientOracle contract wrapped in its interface.
@@ -124,6 +125,7 @@ abstract contract BaseTokenBridge is Pausable, ExponentialNoError, BaseOFTV2 {
      */
     constructor(
         address tokenAddress_,
+        address tokenBridgeController_,
         uint8 sharedDecimals_,
         address lzEndpoint_,
         address oracle_
@@ -133,6 +135,7 @@ abstract contract BaseTokenBridge is Pausable, ExponentialNoError, BaseOFTV2 {
         ensureNonzeroAddress(oracle_);
 
         innerToken = IERC20(tokenAddress_);
+        tokenBridgeController = tokenBridgeController_;
 
         (bool success, bytes memory data) = tokenAddress_.staticcall(abi.encodeWithSignature("decimals()"));
         require(success, "ProxyOFT: failed to get token decimals");
@@ -482,27 +485,6 @@ abstract contract BaseTokenBridge is Pausable, ExponentialNoError, BaseOFTV2 {
 
         // Update the received amount for the 24-hour window
         chainIdToLast24HourReceived[srcChainId_] = receivedInWindow;
-    }
-
-    /**
-     * @notice Transfer tokens from sender to receiver account.
-     * @param from_ Address from which token has to be transferred(Sender).
-     * @param to_ Address on which token will be tranferred(Receiver).
-     * @param amount_ Amount of token to be transferred.
-     * @return Actual balance difference.
-     */
-    function _transferFrom(
-        address from_,
-        address to_,
-        uint256 amount_
-    ) internal override whenNotPaused returns (uint256) {
-        uint256 before = innerToken.balanceOf(to_);
-        if (from_ == address(this)) {
-            innerToken.safeTransfer(to_, amount_);
-        } else {
-            innerToken.safeTransferFrom(from_, to_, amount_);
-        }
-        return innerToken.balanceOf(to_) - before;
     }
 
     /**
