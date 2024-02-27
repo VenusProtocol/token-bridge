@@ -22,7 +22,6 @@ import { ExponentialNoError } from "@venusprotocol/solidity-utilities/contracts/
 abstract contract BaseTokenBridge is Pausable, ExponentialNoError, BaseOFTV2 {
     using SafeERC20 for IERC20;
     IERC20 internal immutable innerToken;
-    address internal immutable tokenBridgeController;
     bool public sendAndCallEnabled;
     uint256 internal immutable ld2sdRate;
 
@@ -125,7 +124,6 @@ abstract contract BaseTokenBridge is Pausable, ExponentialNoError, BaseOFTV2 {
      */
     constructor(
         address tokenAddress_,
-        address tokenBridgeController_,
         uint8 sharedDecimals_,
         address lzEndpoint_,
         address oracle_
@@ -135,7 +133,6 @@ abstract contract BaseTokenBridge is Pausable, ExponentialNoError, BaseOFTV2 {
         ensureNonzeroAddress(oracle_);
 
         innerToken = IERC20(tokenAddress_);
-        tokenBridgeController = tokenBridgeController_;
 
         (bool success, bytes memory data) = tokenAddress_.staticcall(abi.encodeWithSignature("decimals()"));
         require(success, "ProxyOFT: failed to get token decimals");

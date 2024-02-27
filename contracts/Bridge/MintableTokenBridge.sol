@@ -20,6 +20,11 @@ contract MintableTokenBridge is BaseTokenBridge {
     bool public immutable isForceMintActive;
 
     /**
+     * @notice Address of Token Bridge Controller. It can be zero address when token can be directly accessed.
+     */
+    address public immutable tokenBridgeController;
+
+    /**
      * @notice Emits when stored message dropped without successful retrying.
      */
     event DropFailedMessage(uint16 srcChainId, bytes indexed srcAddress, uint64 nonce);
@@ -35,8 +40,9 @@ contract MintableTokenBridge is BaseTokenBridge {
         address lzEndpoint_,
         address oracle_,
         bool isForceMintActive_
-    ) BaseTokenBridge(tokenAddress_, tokenBridgeController_, sharedDecimals_, lzEndpoint_, oracle_) {
+    ) BaseTokenBridge(tokenAddress_, sharedDecimals_, lzEndpoint_, oracle_) {
         isForceMintActive = isForceMintActive_;
+        tokenBridgeController = tokenBridgeController_;
     }
 
     /**
@@ -65,6 +71,8 @@ contract MintableTokenBridge is BaseTokenBridge {
         require(isForceMintActive, "ProxyOFT: Force mint of token is not allowed on this chain");
 
         ensureNonzeroAddress(to_);
+
+        // When controller is used to interact with token
         if (tokenBridgeController != address(0)) {
             IMultichainToken(tokenBridgeController).mint(to_, amount_);
         } else {
@@ -96,6 +104,8 @@ contract MintableTokenBridge is BaseTokenBridge {
     ) internal override whenNotPaused returns (uint256) {
         require(from_ == _msgSender(), "ProxyOFT: owner is not send caller");
         _isEligibleToSend(from_, dstChainId_, amount_);
+
+        // When controller is used to interact with token
         if (tokenBridgeController != address(0)) {
             IMultichainToken(tokenBridgeController).burn(from_, amount_);
         } else {
@@ -117,6 +127,8 @@ contract MintableTokenBridge is BaseTokenBridge {
         uint256 amount_
     ) internal override whenNotPaused returns (uint256) {
         _isEligibleToReceive(toAddress_, srcChainId_, amount_);
+
+        // When controller is used to interact with token
         if (tokenBridgeController != address(0)) {
             IMultichainToken(tokenBridgeController).mint(toAddress_, amount_);
         } else {
@@ -125,5 +137,5 @@ contract MintableTokenBridge is BaseTokenBridge {
         return amount_;
     }
 
-    function _transferFrom(address _from, address _to, uint _amount) internal virtual override returns (uint) {}
+    function _transferFrom(address from_, address to_, uint256 amount_) internal override returns (uint256) {}
 }
