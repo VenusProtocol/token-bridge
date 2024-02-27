@@ -8,8 +8,9 @@ import { ensureNonzeroAddress } from "@venusprotocol/solidity-utilities/contract
 /**
  * @title TokenBridgeController
  * @author Venus
- * @notice TokenBridgeController contract serves as a intermidiary contract between bridge and token. It controls the mint and burn operation via bridge contract.
- *  It also incorporates access control features provided by the "TokenController" contract to ensure proper governance and restrictions on minting and burning operations.
+ * @notice TokenBridgeController contract serves as a intermediary contract between bridge and token. It controls the mint and burn operations via bridge contract.
+ *  It also incorporates access control features provided by the "MultichainTokenController" contract to ensure proper governance and restrictions on minting and
+ *  burning operations.
  */
 
 contract TokenBridgeController is MultichainTokenController {
