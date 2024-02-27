@@ -102,7 +102,14 @@ const func: DeployFunction = async function (hre: HardhatRuntimeEnvironment) {
   const MintableTokenBridge = await deploy("MintableTokenBridgeDestVAI", {
     from: deployer,
     contract: "MintableTokenBridge",
-    args: [MultichainToken.address, 8, preconfiguredAddresses.LzEndpoint, resilientOracle.address, true],
+    args: [
+      MultichainToken.address,
+      ethers.constants.AddressZero,
+      8,
+      preconfiguredAddresses.LzEndpoint,
+      resilientOracle.address,
+      true,
+    ],
     autoMine: true,
     log: true,
   });
