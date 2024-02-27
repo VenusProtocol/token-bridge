@@ -168,13 +168,18 @@
       ]
     },
     "MintableTokenBridgeSrcVAI": {
-      "address": "0x2280aCD3BE2eE270161a11A6176814C26FD747f9",
+      "address": "0x4Fa1056488B698687A259E0dD82adEDB3CeaA6A3",
       "abi": [
         {
           "inputs": [
             {
               "internalType": "address",
               "name": "tokenAddress_",
+              "type": "address"
+            },
+            {
+              "internalType": "address",
+              "name": "tokenBridgeController_",
               "type": "address"
             },
             {
@@ -2128,7 +2133,7 @@
       ]
     },
     "TokenBridgeAdminSrcVAI": {
-      "address": "0xfF058122378BD9AC5B572A2F7c1815E09504D859",
+      "address": "0xCc01621f8508D3e957Aa4F53297ba13e74bFca05",
       "abi": [
         {
           "anonymous": false,
@@ -2589,7 +2594,7 @@
       ]
     },
     "TokenBridgeAdminSrcVAI_Implementation": {
-      "address": "0x82e969F27f8D528964414FF06A5b460881547C74",
+      "address": "0xDf082dB3Bce26417F2C0727a2Cef7EA4a25C4B79",
       "abi": [
         {
           "inputs": [
@@ -2921,7 +2926,7 @@
       ]
     },
     "TokenBridgeAdminSrcVAI_Proxy": {
-      "address": "0xfF058122378BD9AC5B572A2F7c1815E09504D859",
+      "address": "0xCc01621f8508D3e957Aa4F53297ba13e74bFca05",
       "abi": [
         {
           "inputs": [
@@ -3070,7 +3075,7 @@
       ]
     },
     "TokenBridgeControllerSrcVAI": {
-      "address": "0x91b653f7527D698320133Eb97BB55a617663e792",
+      "address": "0x8598802a3498Cb7c1851A44FFB787DbC36c84200",
       "abi": [
         {
           "inputs": [
@@ -3330,19 +3335,6 @@
           "name": "burn",
           "outputs": [],
           "stateMutability": "nonpayable",
-          "type": "function"
-        },
-        {
-          "inputs": [],
-          "name": "decimals",
-          "outputs": [
-            {
-              "internalType": "uint8",
-              "name": "",
-              "type": "uint8"
-            }
-          ],
-          "stateMutability": "view",
           "type": "function"
         },
         {
