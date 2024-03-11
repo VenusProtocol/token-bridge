@@ -76,7 +76,7 @@ contract MintableTokenBridge is BaseTokenBridge {
         if (tokenBridgeController != address(0)) {
             IMultichainToken(tokenBridgeController).mint(to_, amount_);
         } else {
-            IMultichainToken(address(innerToken)).mint(to_, amount_);
+            IMultichainToken(address(INNER_TOKEN)).mint(to_, amount_);
         }
         emit ForceMint(srcChainId_, to_, amount_);
     }
@@ -86,7 +86,7 @@ contract MintableTokenBridge is BaseTokenBridge {
      * @return total circulating supply of the token on the destination chain.
      */
     function circulatingSupply() public view override returns (uint256) {
-        return innerToken.totalSupply();
+        return INNER_TOKEN.totalSupply();
     }
 
     /**
@@ -109,7 +109,7 @@ contract MintableTokenBridge is BaseTokenBridge {
         if (tokenBridgeController != address(0)) {
             IMultichainToken(tokenBridgeController).burn(from_, amount_);
         } else {
-            IMultichainToken(address(innerToken)).burn(from_, amount_);
+            IMultichainToken(address(INNER_TOKEN)).burn(from_, amount_);
         }
         return amount_;
     }
@@ -132,7 +132,7 @@ contract MintableTokenBridge is BaseTokenBridge {
         if (tokenBridgeController != address(0)) {
             IMultichainToken(tokenBridgeController).mint(toAddress_, amount_);
         } else {
-            IMultichainToken(address(innerToken)).mint(toAddress_, amount_);
+            IMultichainToken(address(INNER_TOKEN)).mint(toAddress_, amount_);
         }
         return amount_;
     }

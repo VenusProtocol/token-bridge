@@ -21,9 +21,18 @@ import { ExponentialNoError } from "@venusprotocol/solidity-utilities/contracts/
 
 abstract contract BaseTokenBridge is Pausable, ExponentialNoError, BaseOFTV2 {
     using SafeERC20 for IERC20;
-    IERC20 internal immutable innerToken;
+    /**
+     * @dev Address of the token, associate with this Bridge.
+     */
+    IERC20 internal immutable INNER_TOKEN;
+    /**
+     * @dev LayerZero decimal to Shared decimal rate.
+     */
+    uint256 internal immutable LD_2_SD_RATE;
+    /**
+     * @notice Boolean flag indicating whether the ability to send tokens via bridge and call a further contract is enabled or not.
+     */
     bool public sendAndCallEnabled;
-    uint256 internal immutable ld2sdRate;
 
     /**
      * @notice The address of ResilientOracle contract wrapped in its interface.
@@ -132,14 +141,14 @@ abstract contract BaseTokenBridge is Pausable, ExponentialNoError, BaseOFTV2 {
         ensureNonzeroAddress(lzEndpoint_);
         ensureNonzeroAddress(oracle_);
 
-        innerToken = IERC20(tokenAddress_);
+        INNER_TOKEN = IERC20(tokenAddress_);
 
         (bool success, bytes memory data) = tokenAddress_.staticcall(abi.encodeWithSignature("decimals()"));
         require(success, "ProxyOFT: failed to get token decimals");
         uint8 decimals = abi.decode(data, (uint8));
 
         require(sharedDecimals_ <= decimals, "ProxyOFT: sharedDecimals must be <= decimals");
-        ld2sdRate = 10 ** (decimals - sharedDecimals_);
+        LD_2_SD_RATE = 10 ** (decimals - sharedDecimals_);
 
         emit InnerTokenAdded(tokenAddress_);
         emit OracleChanged(address(0), oracle_);
@@ -365,21 +374,29 @@ abstract contract BaseTokenBridge is Pausable, ExponentialNoError, BaseOFTV2 {
         super.sendAndCall(from_, dstChainId_, toAddress_, amount_, payload_, dstGasForCall_, callparams_);
     }
 
+    /**
+     * @notice Retry a message that failed previously.
+     * @param srcChainId_ The Layer Zero ID of the chain from which the message originated.
+     * @param srcAddress_ The address of the UA from which the message originated.
+     * @param nonce_ The nonce used to identify the failed message.
+     * @param payload_ The payload that was stored during the unsuccessful reception.
+     */
+
     function retryMessage(
-        uint16 _srcChainId,
-        bytes calldata _srcAddress,
-        uint64 _nonce,
-        bytes calldata _payload
+        uint16 srcChainId_,
+        bytes calldata srcAddress_,
+        uint64 nonce_,
+        bytes calldata payload_
     ) public payable override {
-        bytes memory trustedRemote = trustedRemoteLookup[_srcChainId];
+        bytes memory trustedRemote = trustedRemoteLookup[srcChainId_];
         // it will still block the message pathway from (srcChainId, srcAddress). should not receive message from untrusted remote.
         require(
-            _srcAddress.length == trustedRemote.length &&
+            srcAddress_.length == trustedRemote.length &&
                 trustedRemote.length > 0 &&
-                keccak256(_srcAddress) == keccak256(trustedRemote),
+                keccak256(srcAddress_) == keccak256(trustedRemote),
             "LzApp: invalid source sending contract"
         );
-        super.retryMessage(_srcChainId, _srcAddress, _nonce, _payload);
+        super.retryMessage(srcChainId_, srcAddress_, nonce_, payload_);
     }
 
     /**
@@ -392,7 +409,7 @@ abstract contract BaseTokenBridge is Pausable, ExponentialNoError, BaseOFTV2 {
      * @return Address of the inner token of this bridge.
      */
     function token() public view override returns (address) {
-        return address(innerToken);
+        return address(INNER_TOKEN);
     }
 
     /**
@@ -489,6 +506,6 @@ abstract contract BaseTokenBridge is Pausable, ExponentialNoError, BaseOFTV2 {
      * @return Conversion rate factor.
      */
     function _ld2sdRate() internal view override returns (uint256) {
-        return ld2sdRate;
+        return LD_2_SD_RATE;
     }
 }
