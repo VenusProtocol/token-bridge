@@ -106,14 +106,49 @@ export const XVSTokenDestMethods = [
 
 export const xvsTokenPermissions = ["mint(address,uint256)", "burn(address,uint256)"];
 
+export const mintableTokenBridgeMethods = [
+  "setSendVersion(uint16)",
+  "setReceiveVersion(uint16)",
+  "forceResumeReceive(uint16,bytes)",
+  "setOracle(address)",
+  "setMaxSingleTransactionLimit(uint16,uint256)",
+  "setMaxDailyLimit(uint16,uint256)",
+  "setMaxSingleReceiveTransactionLimit(uint16,uint256)",
+  "setMaxDailyReceiveLimit(uint16,uint256)",
+  "pause()",
+  "unpause()",
+  "removeTrustedRemote(uint16)",
+  "dropFailedMessage(uint16,bytes,uint64)",
+  "setPrecrime(address)",
+  "setMinDstGas(uint16,uint16,uint256)",
+  "setPayloadSizeLimit(uint16,uint256)",
+  "setWhitelist(address,bool)",
+  "setConfig(uint16,uint16,uint256,bytes)",
+  "sweepToken(address,address,uint256)",
+  "updateSendAndCallEnabled(bool)",
+  "forceMint(uint16,address,uint256)",
+];
+
+export const tokenBridgeAdminMethods = ["setTrustedRemoteAddress(uint16,bytes)", "transferBridgeOwnership(address)"];
+
+export const tokenControllerMethods = [
+  "migrateMinterTokens(address,address)",
+  "setMintCap(address,uint256)",
+  "updateBlacklist(address,bool)",
+  "pause()",
+  "unpause()",
+];
+
+export const multichainTokenMethods = ["mint(address,uint256)", "burn(address,uint256)"];
+
 export const bridgeConfig: BridgeConfig = {
   bsctestnet: {
     methods: [
       { method: "setMinDstGas(uint16,uint16,uint256)", args: [10161, 0, "300000"] },
-      { method: "setMaxDailyLimit(uint16,uint256)", args: [10161, "500000000000000000000"] },
-      { method: "setMaxSingleTransactionLimit(uint16,uint256)", args: [10161, "10000000000000000000"] },
-      { method: "setMaxDailyReceiveLimit(uint16,uint256)", args: [10161, "500000000000000000000"] },
-      { method: "setMaxSingleReceiveTransactionLimit(uint16,uint256)", args: [10161, "10000000000000000000"] },
+      { method: "setMaxDailyLimit(uint16,uint256)", args: [10161, "50000000000000000000000"] },
+      { method: "setMaxSingleTransactionLimit(uint16,uint256)", args: [10161, "10000000000000000000000"] },
+      { method: "setMaxDailyReceiveLimit(uint16,uint256)", args: [10161, "50000000000000000000000"] },
+      { method: "setMaxSingleReceiveTransactionLimit(uint16,uint256)", args: [10161, "10000000000000000000000"] },
     ],
   },
   bscmainnet: {
@@ -128,10 +163,10 @@ export const bridgeConfig: BridgeConfig = {
   sepolia: {
     methods: [
       { method: "setMinDstGas(uint16,uint16,uint256)", args: [10102, 0, "300000"] },
-      { method: "setMaxDailyLimit(uint16,uint256)", args: [10102, "500000000000000000000"] },
-      { method: "setMaxSingleTransactionLimit(uint16,uint256)", args: [10102, "10000000000000000000"] },
-      { method: "setMaxDailyReceiveLimit(uint16,uint256)", args: [10102, "500000000000000000000"] },
-      { method: "setMaxSingleReceiveTransactionLimit(uint16,uint256)", args: [10102, "10000000000000000000"] },
+      { method: "setMaxDailyLimit(uint16,uint256)", args: [10102, "50000000000000000000000"] },
+      { method: "setMaxSingleTransactionLimit(uint16,uint256)", args: [10102, "10000000000000000000000"] },
+      { method: "setMaxDailyReceiveLimit(uint16,uint256)", args: [10102, "50000000000000000000000"] },
+      { method: "setMaxSingleReceiveTransactionLimit(uint16,uint256)", args: [10102, "10000000000000000000000"] },
     ],
   },
   ethereum: {
