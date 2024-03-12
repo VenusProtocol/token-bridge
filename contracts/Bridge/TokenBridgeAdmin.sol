@@ -15,7 +15,7 @@ import { ITokenBridge } from "./../interfaces/ITokenBridge.sol";
  */
 contract TokenBridgeAdmin is AccessControlledV8 {
     /// @custom:oz-upgrades-unsafe-allow state-variable-immutable
-    ITokenBridge public immutable tokenBridge;
+    ITokenBridge public immutable TOKEN_BRIDGE;
     /**
      * @notice A mapping keeps track of function signature associated with function name string.
      */
@@ -29,7 +29,7 @@ contract TokenBridgeAdmin is AccessControlledV8 {
     /// @custom:oz-upgrades-unsafe-allow constructor
     constructor(address TokenBridge_) {
         ensureNonzeroAddress(TokenBridge_);
-        tokenBridge = ITokenBridge(TokenBridge_);
+        TOKEN_BRIDGE = ITokenBridge(TokenBridge_);
         _disableInitializers();
     }
 
@@ -49,7 +49,7 @@ contract TokenBridgeAdmin is AccessControlledV8 {
         string memory fun = _getFunctionName(msg.sig);
         require(bytes(fun).length != 0, "Function not found");
         _checkAccessAllowed(fun);
-        (bool ok, bytes memory res) = address(tokenBridge).call(data);
+        (bool ok, bytes memory res) = address(TOKEN_BRIDGE).call(data);
         require(ok, "call failed");
         return res;
     }
@@ -65,7 +65,7 @@ contract TokenBridgeAdmin is AccessControlledV8 {
         _checkAccessAllowed("setTrustedRemoteAddress(uint16,bytes)");
         require(remoteChainId_ != 0, "ChainId must not be zero");
         ensureNonzeroAddress(bytesToAddress(remoteAddress_));
-        tokenBridge.setTrustedRemoteAddress(remoteChainId_, remoteAddress_);
+        TOKEN_BRIDGE.setTrustedRemoteAddress(remoteChainId_, remoteAddress_);
     }
 
     /**
@@ -101,7 +101,7 @@ contract TokenBridgeAdmin is AccessControlledV8 {
      */
     function transferBridgeOwnership(address newOwner_) external {
         _checkAccessAllowed("transferBridgeOwnership(address)");
-        tokenBridge.transferOwnership(newOwner_);
+        TOKEN_BRIDGE.transferOwnership(newOwner_);
     }
 
     /**
@@ -114,7 +114,7 @@ contract TokenBridgeAdmin is AccessControlledV8 {
     function isTrustedRemote(uint16 remoteChainId_, bytes calldata remoteAddress_) external returns (bool) {
         require(remoteChainId_ != 0, "ChainId must not be zero");
         ensureNonzeroAddress(bytesToAddress(remoteAddress_));
-        return tokenBridge.isTrustedRemote(remoteChainId_, remoteAddress_);
+        return TOKEN_BRIDGE.isTrustedRemote(remoteChainId_, remoteAddress_);
     }
 
     /**

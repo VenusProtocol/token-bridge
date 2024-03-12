@@ -17,12 +17,12 @@ contract MintableTokenBridge is BaseTokenBridge {
     /**
      * @notice Regulates the force minting; It should be true only if the token manage by this Bridge contract can be mintable on both source and destination chains.
      */
-    bool public immutable isForceMintActive;
+    bool public immutable IS_FORCE_MINT_ACTIVE;
 
     /**
      * @notice Address of Token Bridge Controller. It can be zero address when token can be directly accessed.
      */
-    address public immutable tokenBridgeController;
+    address public immutable TOKEN_BRIDGE_CONTROLLER;
 
     /**
      * @notice Emits when stored message dropped without successful retrying.
@@ -41,8 +41,8 @@ contract MintableTokenBridge is BaseTokenBridge {
         address oracle_,
         bool isForceMintActive_
     ) BaseTokenBridge(tokenAddress_, sharedDecimals_, lzEndpoint_, oracle_) {
-        isForceMintActive = isForceMintActive_;
-        tokenBridgeController = tokenBridgeController_;
+        IS_FORCE_MINT_ACTIVE = isForceMintActive_;
+        TOKEN_BRIDGE_CONTROLLER = tokenBridgeController_;
     }
 
     /**
@@ -68,13 +68,13 @@ contract MintableTokenBridge is BaseTokenBridge {
      * @custom:event Emits forceMint, once done with transfer.
      */
     function forceMint(uint16 srcChainId_, address to_, uint256 amount_) external onlyOwner {
-        require(isForceMintActive, "ProxyOFT: Force mint of token is not allowed on this chain");
+        require(IS_FORCE_MINT_ACTIVE, "ProxyOFT: Force mint of token is not allowed on this chain");
 
         ensureNonzeroAddress(to_);
 
         // When controller is used to interact with token
-        if (tokenBridgeController != address(0)) {
-            IMultichainToken(tokenBridgeController).mint(to_, amount_);
+        if (TOKEN_BRIDGE_CONTROLLER != address(0)) {
+            IMultichainToken(TOKEN_BRIDGE_CONTROLLER).mint(to_, amount_);
         } else {
             IMultichainToken(address(INNER_TOKEN)).mint(to_, amount_);
         }
@@ -106,8 +106,8 @@ contract MintableTokenBridge is BaseTokenBridge {
         _isEligibleToSend(from_, dstChainId_, amount_);
 
         // When controller is used to interact with token
-        if (tokenBridgeController != address(0)) {
-            IMultichainToken(tokenBridgeController).burn(from_, amount_);
+        if (TOKEN_BRIDGE_CONTROLLER != address(0)) {
+            IMultichainToken(TOKEN_BRIDGE_CONTROLLER).burn(from_, amount_);
         } else {
             IMultichainToken(address(INNER_TOKEN)).burn(from_, amount_);
         }
@@ -129,8 +129,8 @@ contract MintableTokenBridge is BaseTokenBridge {
         _isEligibleToReceive(toAddress_, srcChainId_, amount_);
 
         // When controller is used to interact with token
-        if (tokenBridgeController != address(0)) {
-            IMultichainToken(tokenBridgeController).mint(toAddress_, amount_);
+        if (TOKEN_BRIDGE_CONTROLLER != address(0)) {
+            IMultichainToken(TOKEN_BRIDGE_CONTROLLER).mint(toAddress_, amount_);
         } else {
             IMultichainToken(address(INNER_TOKEN)).mint(toAddress_, amount_);
         }
