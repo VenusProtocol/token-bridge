@@ -179,20 +179,20 @@ export const bridgeConfig: BridgeConfig = {
   },
   arbitrumsepolia: {
     methods: [
-      { method: "setMinDstGas(uint16,uint16,uint256)", args: [10231, 0, "300000"] },
-      { method: "setMaxDailyLimit(uint16,uint256)", args: [10231, "50000000000000000000000"] },
-      { method: "setMaxSingleTransactionLimit(uint16,uint256)", args: [10231, "10000000000000000000000"] },
-      { method: "setMaxDailyReceiveLimit(uint16,uint256)", args: [10231, "50000000000000000000000"] },
-      { method: "setMaxSingleReceiveTransactionLimit(uint16,uint256)", args: [10231, "10000000000000000000000"] },
+      { method: "setMinDstGas(uint16,uint16,uint256)", args: [10102, 0, "300000"] },
+      { method: "setMaxDailyLimit(uint16,uint256)", args: [10102, "50000000000000000000000"] },
+      { method: "setMaxSingleTransactionLimit(uint16,uint256)", args: [10102, "10000000000000000000000"] },
+      { method: "setMaxDailyReceiveLimit(uint16,uint256)", args: [10102, "50000000000000000000000"] },
+      { method: "setMaxSingleReceiveTransactionLimit(uint16,uint256)", args: [10102, "10000000000000000000000"] },
     ],
   },
   arbitrumone: {
     methods: [
-      { method: "setMinDstGas(uint16,uint16,uint256)", args: [110, 0, "300000"] },
-      { method: "setMaxDailyLimit(uint16,uint256)", args: [110, "50000000000000000000000"] },
-      { method: "setMaxSingleTransactionLimit(uint16,uint256)", args: [110, "10000000000000000000000"] },
-      { method: "setMaxDailyReceiveLimit(uint16,uint256)", args: [110, "50000000000000000000000"] },
-      { method: "setMaxSingleReceiveTransactionLimit(uint16,uint256)", args: [110, "10000000000000000000000"] },
+      { method: "setMinDstGas(uint16,uint16,uint256)", args: [102, 0, "300000"] },
+      { method: "setMaxDailyLimit(uint16,uint256)", args: [102, "50000000000000000000000"] },
+      { method: "setMaxSingleTransactionLimit(uint16,uint256)", args: [102, "10000000000000000000000"] },
+      { method: "setMaxDailyReceiveLimit(uint16,uint256)", args: [102, "50000000000000000000000"] },
+      { method: "setMaxSingleReceiveTransactionLimit(uint16,uint256)", args: [102, "10000000000000000000000"] },
     ],
   },
 };
