@@ -1,0 +1,12 @@
+{
+  "name": "arbitrumsepolia",
+  "chainId": "421614",
+  "addresses": {
+    "DefaultProxyAdmin": "0xA78A1Df376c3CEeBC5Fab574fe6EdDbbF76fd03e",
+    "XVS": "0x47fA6E9F717c9eB081c4734FfB5a1EcD70508891",
+    "XVSBridgeAdmin": "0x0DC3d6717727FD5a023e41bA8134640ca18f3E48",
+    "XVSBridgeAdmin_Implementation": "0xd2048bD9e1D9A515cc57E270D0928B1127348ae1",
+    "XVSBridgeAdmin_Proxy": "0x0DC3d6717727FD5a023e41bA8134640ca18f3E48",
+    "XVSProxyOFTDest": "0xE9B66800E63888DE29c4c9131faadbDbDCfae917"
+  }
+}
