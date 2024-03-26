@@ -10,6 +10,8 @@ const SEPOLIA_MULTISIG = "0x94fa6078b6b8a26f0b6edffbe6501b22a10470fb";
 const OPBNB_TESTNET_MULTISIG = "0xb15f6EfEbC276A3b9805df81b5FB3D50C2A62BDf";
 const OPBNB_MAINNET_MULTISIG = "0xC46796a21a3A9FAB6546aF3434F2eBfFd0604207";
 const ETHEREUM_MULTISIG = "0x285960C5B22fD66A736C7136967A3eB15e93CC67";
+const ARBITRUM_SEPOLIA_MULTISIG = "0x1426A5Ae009c4443188DA8793751024E358A61C2";
+const ARBITRUM_ONE_MULTISIG = "0x14e0E151b33f9802b3e75b621c1457afc44DcAA0";
 
 export const preconfiguredAddresses = {
   bsctestnet: {
@@ -45,6 +47,20 @@ export const preconfiguredAddresses = {
     CriticalTimelock: OPBNB_MAINNET_MULTISIG,
     LzEndpoint: "0xb6319cC6c8c27A8F5dAF0dD3DF91EA35C4720dd7",
     LzVirtualChainId: "202",
+  },
+  arbitrumsepolia: {
+    NormalTimelock: ARBITRUM_SEPOLIA_MULTISIG,
+    FastTrackTimelock: ARBITRUM_SEPOLIA_MULTISIG,
+    CriticalTimelock: ARBITRUM_SEPOLIA_MULTISIG,
+    LzEndpoint: "0x6098e96a28E02f27B1e6BD381f870F1C8Bd169d3",
+    LzVirtualChainId: "10231",
+  },
+  arbitrumone: {
+    NormalTimelock: ARBITRUM_ONE_MULTISIG,
+    FastTrackTimelock: ARBITRUM_ONE_MULTISIG,
+    CriticalTimelock: ARBITRUM_ONE_MULTISIG,
+    LzEndpoint: "0x3c2269811836af69497E5F486A85D7316753cf62",
+    LzVirtualChainId: "110",
   },
 };
 
@@ -161,6 +177,24 @@ export const bridgeConfig: BridgeConfig = {
       { method: "setMaxSingleReceiveTransactionLimit(uint16,uint256)", args: [102, "10000000000000000000000"] },
     ],
   },
+  arbitrumsepolia: {
+    methods: [
+      { method: "setMinDstGas(uint16,uint16,uint256)", args: [10231, 0, "300000"] },
+      { method: "setMaxDailyLimit(uint16,uint256)", args: [10231, "50000000000000000000000"] },
+      { method: "setMaxSingleTransactionLimit(uint16,uint256)", args: [10231, "10000000000000000000000"] },
+      { method: "setMaxDailyReceiveLimit(uint16,uint256)", args: [10231, "50000000000000000000000"] },
+      { method: "setMaxSingleReceiveTransactionLimit(uint16,uint256)", args: [10231, "10000000000000000000000"] },
+    ],
+  },
+  arbitrumone: {
+    methods: [
+      { method: "setMinDstGas(uint16,uint16,uint256)", args: [110, 0, "300000"] },
+      { method: "setMaxDailyLimit(uint16,uint256)", args: [110, "50000000000000000000000"] },
+      { method: "setMaxSingleTransactionLimit(uint16,uint256)", args: [110, "10000000000000000000000"] },
+      { method: "setMaxDailyReceiveLimit(uint16,uint256)", args: [110, "50000000000000000000000"] },
+      { method: "setMaxSingleReceiveTransactionLimit(uint16,uint256)", args: [110, "10000000000000000000000"] },
+    ],
+  },
 };
 
 export async function getPreConfiguredAddresses(networkName: string): Promise<PreconfiguredAddresses> {
@@ -177,6 +211,10 @@ export async function getPreConfiguredAddresses(networkName: string): Promise<Pr
       return preconfiguredAddresses.opbnbtestnet;
     case "opbnbmainnet":
       return preconfiguredAddresses.opbnbmainnet;
+    case "arbitrumsepolia":
+      return preconfiguredAddresses.arbitrumsepolia;
+    case "arbitrumone":
+      return preconfiguredAddresses.arbitrumone;
     default:
       throw new Error(`config for network ${networkName} is not available.`);
   }
