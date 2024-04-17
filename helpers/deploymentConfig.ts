@@ -1,3 +1,6 @@
+import { BigNumber } from "ethers";
+import { parseUnits } from "ethers/lib/utils";
+
 export type PreconfiguredAddresses = { [contract: string]: string };
 
 interface BridgeConfig {
@@ -5,6 +8,11 @@ interface BridgeConfig {
     methods: { method: string; args: any[] }[];
   };
 }
+
+type MethodEntry = {
+  method: string;
+  args: (BigNumber | number)[];
+};
 
 const SEPOLIA_MULTISIG = "0x94fa6078b6b8a26f0b6edffbe6501b22a10470fb";
 const OPBNB_TESTNET_MULTISIG = "0xb15f6EfEbC276A3b9805df81b5FB3D50C2A62BDf";
@@ -124,76 +132,28 @@ export const xvsTokenPermissions = ["mint(address,uint256)", "burn(address,uint2
 
 export const bridgeConfig: BridgeConfig = {
   bsctestnet: {
-    methods: [
-      { method: "setMinDstGas(uint16,uint16,uint256)", args: [10161, 0, "300000"] },
-      { method: "setMaxDailyLimit(uint16,uint256)", args: [10161, "50000000000000000000000"] },
-      { method: "setMaxSingleTransactionLimit(uint16,uint256)", args: [10161, "10000000000000000000000"] },
-      { method: "setMaxDailyReceiveLimit(uint16,uint256)", args: [10161, "50000000000000000000000"] },
-      { method: "setMaxSingleReceiveTransactionLimit(uint16,uint256)", args: [10161, "10000000000000000000000"] },
-    ],
+    methods: [...createMethodEntries(10161), ...createMethodEntries(10202), ...createMethodEntries(10231)],
   },
   bscmainnet: {
-    methods: [
-      { method: "setMinDstGas(uint16,uint16,uint256)", args: [101, 0, "300000"] },
-      { method: "setMaxDailyLimit(uint16,uint256)", args: [101, "50000000000000000000000"] },
-      { method: "setMaxSingleTransactionLimit(uint16,uint256)", args: [101, "10000000000000000000000"] },
-      { method: "setMaxDailyReceiveLimit(uint16,uint256)", args: [101, "50000000000000000000000"] },
-      { method: "setMaxSingleReceiveTransactionLimit(uint16,uint256)", args: [101, "10000000000000000000000"] },
-    ],
+    methods: [...createMethodEntries(101), ...createMethodEntries(202), ...createMethodEntries(110)],
   },
   sepolia: {
-    methods: [
-      { method: "setMinDstGas(uint16,uint16,uint256)", args: [10102, 0, "300000"] },
-      { method: "setMaxDailyLimit(uint16,uint256)", args: [10102, "50000000000000000000000"] },
-      { method: "setMaxSingleTransactionLimit(uint16,uint256)", args: [10102, "10000000000000000000000"] },
-      { method: "setMaxDailyReceiveLimit(uint16,uint256)", args: [10102, "50000000000000000000000"] },
-      { method: "setMaxSingleReceiveTransactionLimit(uint16,uint256)", args: [10102, "10000000000000000000000"] },
-    ],
+    methods: [...createMethodEntries(10102), ...createMethodEntries(10202), ...createMethodEntries(10231)],
   },
   ethereum: {
-    methods: [
-      { method: "setMinDstGas(uint16,uint16,uint256)", args: [102, 0, "300000"] },
-      { method: "setMaxDailyLimit(uint16,uint256)", args: [102, "50000000000000000000000"] },
-      { method: "setMaxSingleTransactionLimit(uint16,uint256)", args: [102, "10000000000000000000000"] },
-      { method: "setMaxDailyReceiveLimit(uint16,uint256)", args: [102, "50000000000000000000000"] },
-      { method: "setMaxSingleReceiveTransactionLimit(uint16,uint256)", args: [102, "10000000000000000000000"] },
-    ],
+    methods: [...createMethodEntries(102), ...createMethodEntries(202), ...createMethodEntries(110)],
   },
   opbnbtestnet: {
-    methods: [
-      { method: "setMinDstGas(uint16,uint16,uint256)", args: [10102, 0, "300000"] },
-      { method: "setMaxDailyLimit(uint16,uint256)", args: [10102, "50000000000000000000000"] },
-      { method: "setMaxSingleTransactionLimit(uint16,uint256)", args: [10102, "10000000000000000000000"] },
-      { method: "setMaxDailyReceiveLimit(uint16,uint256)", args: [10102, "50000000000000000000000"] },
-      { method: "setMaxSingleReceiveTransactionLimit(uint16,uint256)", args: [10102, "10000000000000000000000"] },
-    ],
+    methods: [...createMethodEntries(10102), ...createMethodEntries(10161), ...createMethodEntries(10231)],
   },
   opbnbmainnet: {
-    methods: [
-      { method: "setMinDstGas(uint16,uint16,uint256)", args: [102, 0, "300000"] },
-      { method: "setMaxDailyLimit(uint16,uint256)", args: [102, "50000000000000000000000"] },
-      { method: "setMaxSingleTransactionLimit(uint16,uint256)", args: [102, "10000000000000000000000"] },
-      { method: "setMaxDailyReceiveLimit(uint16,uint256)", args: [102, "50000000000000000000000"] },
-      { method: "setMaxSingleReceiveTransactionLimit(uint16,uint256)", args: [102, "10000000000000000000000"] },
-    ],
+    methods: [...createMethodEntries(102), ...createMethodEntries(101), ...createMethodEntries(110)],
   },
   arbitrumsepolia: {
-    methods: [
-      { method: "setMinDstGas(uint16,uint16,uint256)", args: [10102, 0, "300000"] },
-      { method: "setMaxDailyLimit(uint16,uint256)", args: [10102, "50000000000000000000000"] },
-      { method: "setMaxSingleTransactionLimit(uint16,uint256)", args: [10102, "10000000000000000000000"] },
-      { method: "setMaxDailyReceiveLimit(uint16,uint256)", args: [10102, "50000000000000000000000"] },
-      { method: "setMaxSingleReceiveTransactionLimit(uint16,uint256)", args: [10102, "10000000000000000000000"] },
-    ],
+    methods: [...createMethodEntries(10102), ...createMethodEntries(10202), ...createMethodEntries(10231)],
   },
   arbitrumone: {
-    methods: [
-      { method: "setMinDstGas(uint16,uint16,uint256)", args: [102, 0, "300000"] },
-      { method: "setMaxDailyLimit(uint16,uint256)", args: [102, "50000000000000000000000"] },
-      { method: "setMaxSingleTransactionLimit(uint16,uint256)", args: [102, "10000000000000000000000"] },
-      { method: "setMaxDailyReceiveLimit(uint16,uint256)", args: [102, "50000000000000000000000"] },
-      { method: "setMaxSingleReceiveTransactionLimit(uint16,uint256)", args: [102, "10000000000000000000000"] },
-    ],
+    methods: [...createMethodEntries(102), ...createMethodEntries(101), ...createMethodEntries(202)],
   },
 };
 
@@ -218,4 +178,24 @@ export async function getPreConfiguredAddresses(networkName: string): Promise<Pr
     default:
       throw new Error(`config for network ${networkName} is not available.`);
   }
+}
+
+function createMethodEntries(
+  chainId: number,
+  minDstGas: number = 300000,
+  maxDailyLimit: BigNumber = parseUnits("50000", 18),
+  maxSingleTransactionLimit: BigNumber = parseUnits("10000", 18),
+  maxDailyReceiveLimit: BigNumber = parseUnits("50000", 18),
+  maxSingleReceiveTransactionLimit: BigNumber = parseUnits("10000", 18),
+): MethodEntry[] {
+  return [
+    { method: "setMinDstGas(uint16,uint16,uint256)", args: [chainId, 0, minDstGas] },
+    { method: "setMaxDailyLimit(uint16,uint256)", args: [chainId, maxDailyLimit] },
+    { method: "setMaxSingleTransactionLimit(uint16,uint256)", args: [chainId, maxSingleTransactionLimit] },
+    { method: "setMaxDailyReceiveLimit(uint16,uint256)", args: [chainId, maxDailyReceiveLimit] },
+    {
+      method: "setMaxSingleReceiveTransactionLimit(uint16,uint256)",
+      args: [chainId, maxSingleReceiveTransactionLimit],
+    },
+  ];
 }
