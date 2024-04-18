@@ -150,7 +150,7 @@ export const bridgeConfig: BridgeConfig = {
     methods: [...createMethodEntries(102), ...createMethodEntries(101), ...createMethodEntries(110)],
   },
   arbitrumsepolia: {
-    methods: [...createMethodEntries(10102), ...createMethodEntries(10202), ...createMethodEntries(10231)],
+    methods: [...createMethodEntries(10102), ...createMethodEntries(10202), ...createMethodEntries(10161)],
   },
   arbitrumone: {
     methods: [...createMethodEntries(102), ...createMethodEntries(101), ...createMethodEntries(202)],
