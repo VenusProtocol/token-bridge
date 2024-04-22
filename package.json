@@ -1,6 +1,6 @@
 {
   "name": "@venusprotocol/token-bridge",
-  "version": "2.0.0-dev.1",
+  "version": "2.0.0-dev.2",
   "description": "Contracts to bridge tokens using LayerZero technology and applying some rules on top of it",
   "files": [
     "artifacts",
