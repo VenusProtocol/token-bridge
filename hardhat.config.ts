@@ -49,6 +49,10 @@ extendConfig((config: HardhatConfig) => {
           "node_modules/@venusprotocol/governance-contracts/deployments/ethereum",
           "node_modules/@venusprotocol/oracle/deployments/ethereum",
         ],
+        arbitrumsepolia: [
+          "node_modules/@venusprotocol/governance-contracts/deployments/arbitrumsepolia",
+          "node_modules/@venusprotocol/oracle/deployments/arbitrumsepolia",
+        ],
       },
     };
   }
