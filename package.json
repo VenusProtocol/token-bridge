@@ -1,6 +1,6 @@
 {
   "name": "@venusprotocol/token-bridge",
-  "version": "1.1.0",
+  "version": "2.0.0-dev.1",
   "description": "Contracts to bridge tokens using LayerZero technology and applying some rules on top of it",
   "files": [
     "artifacts",
@@ -60,9 +60,9 @@
     "@types/node": "^12.20.50",
     "@typescript-eslint/eslint-plugin": "^5.27.1",
     "@typescript-eslint/parser": "^5.27.1",
-    "@venusprotocol/governance-contracts": "^1.4.0",
-    "@venusprotocol/oracle": "^1.8.0",
-    "@venusprotocol/solidity-utilities": "1.1.0",
+    "@venusprotocol/governance-contracts": "^2.0.0",
+    "@venusprotocol/oracle": "^2.0.0",
+    "@venusprotocol/solidity-utilities": "2.0.0",
     "bignumber.js": "9.0.0",
     "chai": "^4.3.6",
     "dotenv": "^10.0.0",
