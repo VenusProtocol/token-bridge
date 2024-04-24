@@ -185,8 +185,8 @@ function createMethodEntries(
   minDstGas: number = 300000,
   maxDailyLimit: BigNumber = parseUnits("50000", 18),
   maxSingleTransactionLimit: BigNumber = parseUnits("10000", 18),
-  maxDailyReceiveLimit: BigNumber = parseUnits("50000", 18),
-  maxSingleReceiveTransactionLimit: BigNumber = parseUnits("10000", 18),
+  maxDailyReceiveLimit: BigNumber = parseUnits("51000", 18),
+  maxSingleReceiveTransactionLimit: BigNumber = parseUnits("10200", 18),
 ): MethodEntry[] {
   return [
     { method: "setMinDstGas(uint16,uint16,uint256)", args: [chainId, 0, minDstGas] },
