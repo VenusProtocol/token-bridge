@@ -1,3 +1,6 @@
+import { BigNumber } from "ethers";
+import { parseUnits } from "ethers/lib/utils";
+
 export type PreconfiguredAddresses = { [contract: string]: string };
 
 interface BridgeConfig {
@@ -6,10 +9,17 @@ interface BridgeConfig {
   };
 }
 
+type MethodEntry = {
+  method: string;
+  args: (BigNumber | number)[];
+};
+
 const SEPOLIA_MULTISIG = "0x94fa6078b6b8a26f0b6edffbe6501b22a10470fb";
 const OPBNB_TESTNET_MULTISIG = "0xb15f6EfEbC276A3b9805df81b5FB3D50C2A62BDf";
 const OPBNB_MAINNET_MULTISIG = "0xC46796a21a3A9FAB6546aF3434F2eBfFd0604207";
 const ETHEREUM_MULTISIG = "0x285960C5B22fD66A736C7136967A3eB15e93CC67";
+const ARBITRUM_SEPOLIA_MULTISIG = "0x1426A5Ae009c4443188DA8793751024E358A61C2";
+const ARBITRUM_ONE_MULTISIG = "0x14e0E151b33f9802b3e75b621c1457afc44DcAA0";
 
 export const preconfiguredAddresses = {
   bsctestnet: {
@@ -45,6 +55,20 @@ export const preconfiguredAddresses = {
     CriticalTimelock: OPBNB_MAINNET_MULTISIG,
     LzEndpoint: "0xb6319cC6c8c27A8F5dAF0dD3DF91EA35C4720dd7",
     LzVirtualChainId: "202",
+  },
+  arbitrumsepolia: {
+    NormalTimelock: ARBITRUM_SEPOLIA_MULTISIG,
+    FastTrackTimelock: ARBITRUM_SEPOLIA_MULTISIG,
+    CriticalTimelock: ARBITRUM_SEPOLIA_MULTISIG,
+    LzEndpoint: "0x6098e96a28E02f27B1e6BD381f870F1C8Bd169d3",
+    LzVirtualChainId: "10231",
+  },
+  arbitrumone: {
+    NormalTimelock: ARBITRUM_ONE_MULTISIG,
+    FastTrackTimelock: ARBITRUM_ONE_MULTISIG,
+    CriticalTimelock: ARBITRUM_ONE_MULTISIG,
+    LzEndpoint: "0x3c2269811836af69497E5F486A85D7316753cf62",
+    LzVirtualChainId: "110",
   },
 };
 
@@ -108,58 +132,28 @@ export const xvsTokenPermissions = ["mint(address,uint256)", "burn(address,uint2
 
 export const bridgeConfig: BridgeConfig = {
   bsctestnet: {
-    methods: [
-      { method: "setMinDstGas(uint16,uint16,uint256)", args: [10161, 0, "300000"] },
-      { method: "setMaxDailyLimit(uint16,uint256)", args: [10161, "500000000000000000000"] },
-      { method: "setMaxSingleTransactionLimit(uint16,uint256)", args: [10161, "10000000000000000000"] },
-      { method: "setMaxDailyReceiveLimit(uint16,uint256)", args: [10161, "500000000000000000000"] },
-      { method: "setMaxSingleReceiveTransactionLimit(uint16,uint256)", args: [10161, "10000000000000000000"] },
-    ],
+    methods: [...createMethodEntries(10161), ...createMethodEntries(10202), ...createMethodEntries(10231)],
   },
   bscmainnet: {
-    methods: [
-      { method: "setMinDstGas(uint16,uint16,uint256)", args: [101, 0, "300000"] },
-      { method: "setMaxDailyLimit(uint16,uint256)", args: [101, "50000000000000000000000"] },
-      { method: "setMaxSingleTransactionLimit(uint16,uint256)", args: [101, "10000000000000000000000"] },
-      { method: "setMaxDailyReceiveLimit(uint16,uint256)", args: [101, "50000000000000000000000"] },
-      { method: "setMaxSingleReceiveTransactionLimit(uint16,uint256)", args: [101, "10000000000000000000000"] },
-    ],
+    methods: [...createMethodEntries(101), ...createMethodEntries(202), ...createMethodEntries(110)],
   },
   sepolia: {
-    methods: [
-      { method: "setMinDstGas(uint16,uint16,uint256)", args: [10102, 0, "300000"] },
-      { method: "setMaxDailyLimit(uint16,uint256)", args: [10102, "500000000000000000000"] },
-      { method: "setMaxSingleTransactionLimit(uint16,uint256)", args: [10102, "10000000000000000000"] },
-      { method: "setMaxDailyReceiveLimit(uint16,uint256)", args: [10102, "500000000000000000000"] },
-      { method: "setMaxSingleReceiveTransactionLimit(uint16,uint256)", args: [10102, "10000000000000000000"] },
-    ],
+    methods: [...createMethodEntries(10102), ...createMethodEntries(10202), ...createMethodEntries(10231)],
   },
   ethereum: {
-    methods: [
-      { method: "setMinDstGas(uint16,uint16,uint256)", args: [102, 0, "300000"] },
-      { method: "setMaxDailyLimit(uint16,uint256)", args: [102, "50000000000000000000000"] },
-      { method: "setMaxSingleTransactionLimit(uint16,uint256)", args: [102, "10000000000000000000000"] },
-      { method: "setMaxDailyReceiveLimit(uint16,uint256)", args: [102, "50000000000000000000000"] },
-      { method: "setMaxSingleReceiveTransactionLimit(uint16,uint256)", args: [102, "10000000000000000000000"] },
-    ],
+    methods: [...createMethodEntries(102), ...createMethodEntries(202), ...createMethodEntries(110)],
   },
   opbnbtestnet: {
-    methods: [
-      { method: "setMinDstGas(uint16,uint16,uint256)", args: [10102, 0, "300000"] },
-      { method: "setMaxDailyLimit(uint16,uint256)", args: [10102, "500000000000000000000"] },
-      { method: "setMaxSingleTransactionLimit(uint16,uint256)", args: [10102, "10000000000000000000"] },
-      { method: "setMaxDailyReceiveLimit(uint16,uint256)", args: [10102, "500000000000000000000"] },
-      { method: "setMaxSingleReceiveTransactionLimit(uint16,uint256)", args: [10102, "10000000000000000000"] },
-    ],
+    methods: [...createMethodEntries(10102), ...createMethodEntries(10161), ...createMethodEntries(10231)],
   },
   opbnbmainnet: {
-    methods: [
-      { method: "setMinDstGas(uint16,uint16,uint256)", args: [102, 0, "300000"] },
-      { method: "setMaxDailyLimit(uint16,uint256)", args: [102, "50000000000000000000000"] },
-      { method: "setMaxSingleTransactionLimit(uint16,uint256)", args: [102, "10000000000000000000000"] },
-      { method: "setMaxDailyReceiveLimit(uint16,uint256)", args: [102, "50000000000000000000000"] },
-      { method: "setMaxSingleReceiveTransactionLimit(uint16,uint256)", args: [102, "10000000000000000000000"] },
-    ],
+    methods: [...createMethodEntries(102), ...createMethodEntries(101), ...createMethodEntries(110)],
+  },
+  arbitrumsepolia: {
+    methods: [...createMethodEntries(10102), ...createMethodEntries(10202), ...createMethodEntries(10161)],
+  },
+  arbitrumone: {
+    methods: [...createMethodEntries(102), ...createMethodEntries(101), ...createMethodEntries(202)],
   },
 };
 
@@ -177,7 +171,31 @@ export async function getPreConfiguredAddresses(networkName: string): Promise<Pr
       return preconfiguredAddresses.opbnbtestnet;
     case "opbnbmainnet":
       return preconfiguredAddresses.opbnbmainnet;
+    case "arbitrumsepolia":
+      return preconfiguredAddresses.arbitrumsepolia;
+    case "arbitrumone":
+      return preconfiguredAddresses.arbitrumone;
     default:
       throw new Error(`config for network ${networkName} is not available.`);
   }
+}
+
+function createMethodEntries(
+  chainId: number,
+  minDstGas: number = 300000,
+  maxDailyLimit: BigNumber = parseUnits("50000", 18),
+  maxSingleTransactionLimit: BigNumber = parseUnits("10000", 18),
+  maxDailyReceiveLimit: BigNumber = parseUnits("51000", 18),
+  maxSingleReceiveTransactionLimit: BigNumber = parseUnits("10200", 18),
+): MethodEntry[] {
+  return [
+    { method: "setMinDstGas(uint16,uint16,uint256)", args: [chainId, 0, minDstGas] },
+    { method: "setMaxDailyLimit(uint16,uint256)", args: [chainId, maxDailyLimit] },
+    { method: "setMaxSingleTransactionLimit(uint16,uint256)", args: [chainId, maxSingleTransactionLimit] },
+    { method: "setMaxDailyReceiveLimit(uint16,uint256)", args: [chainId, maxDailyReceiveLimit] },
+    {
+      method: "setMaxSingleReceiveTransactionLimit(uint16,uint256)",
+      args: [chainId, maxSingleReceiveTransactionLimit],
+    },
+  ];
 }
