@@ -1,0 +1,1123 @@
+{
+  "address": "0xc1Eb7689147C81aC840d4FF0D298489fc7986d52",
+  "abi": [
+    {
+      "inputs": [
+        {
+          "internalType": "address",
+          "name": "accessControlManager_",
+          "type": "address"
+        }
+      ],
+      "stateMutability": "nonpayable",
+      "type": "constructor"
+    },
+    {
+      "inputs": [
+        {
+          "internalType": "address",
+          "name": "user",
+          "type": "address"
+        }
+      ],
+      "name": "AccountBlacklisted",
+      "type": "error"
+    },
+    {
+      "inputs": [],
+      "name": "AddressesMustDiffer",
+      "type": "error"
+    },
+    {
+      "inputs": [],
+      "name": "MintLimitExceed",
+      "type": "error"
+    },
+    {
+      "inputs": [],
+      "name": "MintedAmountExceed",
+      "type": "error"
+    },
+    {
+      "inputs": [],
+      "name": "NewCapNotGreaterThanMintedTokens",
+      "type": "error"
+    },
+    {
+      "inputs": [],
+      "name": "Unauthorized",
+      "type": "error"
+    },
+    {
+      "inputs": [],
+      "name": "ZeroAddressNotAllowed",
+      "type": "error"
+    },
+    {
+      "anonymous": false,
+      "inputs": [
+        {
+          "indexed": true,
+          "internalType": "address",
+          "name": "owner",
+          "type": "address"
+        },
+        {
+          "indexed": true,
+          "internalType": "address",
+          "name": "spender",
+          "type": "address"
+        },
+        {
+          "indexed": false,
+          "internalType": "uint256",
+          "name": "value",
+          "type": "uint256"
+        }
+      ],
+      "name": "Approval",
+      "type": "event"
+    },
+    {
+      "anonymous": false,
+      "inputs": [
+        {
+          "indexed": true,
+          "internalType": "address",
+          "name": "user",
+          "type": "address"
+        },
+        {
+          "indexed": false,
+          "internalType": "bool",
+          "name": "value",
+          "type": "bool"
+        }
+      ],
+      "name": "BlacklistUpdated",
+      "type": "event"
+    },
+    {
+      "anonymous": false,
+      "inputs": [
+        {
+          "indexed": true,
+          "internalType": "address",
+          "name": "minter",
+          "type": "address"
+        },
+        {
+          "indexed": false,
+          "internalType": "uint256",
+          "name": "amount",
+          "type": "uint256"
+        }
+      ],
+      "name": "MintCapChanged",
+      "type": "event"
+    },
+    {
+      "anonymous": false,
+      "inputs": [
+        {
+          "indexed": true,
+          "internalType": "address",
+          "name": "minter",
+          "type": "address"
+        },
+        {
+          "indexed": false,
+          "internalType": "uint256",
+          "name": "newLimit",
+          "type": "uint256"
+        }
+      ],
+      "name": "MintLimitDecreased",
+      "type": "event"
+    },
+    {
+      "anonymous": false,
+      "inputs": [
+        {
+          "indexed": true,
+          "internalType": "address",
+          "name": "minter",
+          "type": "address"
+        },
+        {
+          "indexed": false,
+          "internalType": "uint256",
+          "name": "newLimit",
+          "type": "uint256"
+        }
+      ],
+      "name": "MintLimitIncreased",
+      "type": "event"
+    },
+    {
+      "anonymous": false,
+      "inputs": [
+        {
+          "indexed": true,
+          "internalType": "address",
+          "name": "source",
+          "type": "address"
+        },
+        {
+          "indexed": true,
+          "internalType": "address",
+          "name": "destination",
+          "type": "address"
+        }
+      ],
+      "name": "MintedTokensMigrated",
+      "type": "event"
+    },
+    {
+      "anonymous": false,
+      "inputs": [
+        {
+          "indexed": true,
+          "internalType": "address",
+          "name": "oldAccessControlManager",
+          "type": "address"
+        },
+        {
+          "indexed": true,
+          "internalType": "address",
+          "name": "newAccessControlManager",
+          "type": "address"
+        }
+      ],
+      "name": "NewAccessControlManager",
+      "type": "event"
+    },
+    {
+      "anonymous": false,
+      "inputs": [
+        {
+          "indexed": true,
+          "internalType": "address",
+          "name": "previousOwner",
+          "type": "address"
+        },
+        {
+          "indexed": true,
+          "internalType": "address",
+          "name": "newOwner",
+          "type": "address"
+        }
+      ],
+      "name": "OwnershipTransferred",
+      "type": "event"
+    },
+    {
+      "anonymous": false,
+      "inputs": [
+        {
+          "indexed": false,
+          "internalType": "address",
+          "name": "account",
+          "type": "address"
+        }
+      ],
+      "name": "Paused",
+      "type": "event"
+    },
+    {
+      "anonymous": false,
+      "inputs": [
+        {
+          "indexed": true,
+          "internalType": "address",
+          "name": "from",
+          "type": "address"
+        },
+        {
+          "indexed": true,
+          "internalType": "address",
+          "name": "to",
+          "type": "address"
+        },
+        {
+          "indexed": false,
+          "internalType": "uint256",
+          "name": "value",
+          "type": "uint256"
+        }
+      ],
+      "name": "Transfer",
+      "type": "event"
+    },
+    {
+      "anonymous": false,
+      "inputs": [
+        {
+          "indexed": false,
+          "internalType": "address",
+          "name": "account",
+          "type": "address"
+        }
+      ],
+      "name": "Unpaused",
+      "type": "event"
+    },
+    {
+      "inputs": [],
+      "name": "accessControlManager",
+      "outputs": [
+        {
+          "internalType": "address",
+          "name": "",
+          "type": "address"
+        }
+      ],
+      "stateMutability": "view",
+      "type": "function"
+    },
+    {
+      "inputs": [
+        {
+          "internalType": "address",
+          "name": "owner",
+          "type": "address"
+        },
+        {
+          "internalType": "address",
+          "name": "spender",
+          "type": "address"
+        }
+      ],
+      "name": "allowance",
+      "outputs": [
+        {
+          "internalType": "uint256",
+          "name": "",
+          "type": "uint256"
+        }
+      ],
+      "stateMutability": "view",
+      "type": "function"
+    },
+    {
+      "inputs": [
+        {
+          "internalType": "address",
+          "name": "spender",
+          "type": "address"
+        },
+        {
+          "internalType": "uint256",
+          "name": "amount",
+          "type": "uint256"
+        }
+      ],
+      "name": "approve",
+      "outputs": [
+        {
+          "internalType": "bool",
+          "name": "",
+          "type": "bool"
+        }
+      ],
+      "stateMutability": "nonpayable",
+      "type": "function"
+    },
+    {
+      "inputs": [
+        {
+          "internalType": "address",
+          "name": "account",
+          "type": "address"
+        }
+      ],
+      "name": "balanceOf",
+      "outputs": [
+        {
+          "internalType": "uint256",
+          "name": "",
+          "type": "uint256"
+        }
+      ],
+      "stateMutability": "view",
+      "type": "function"
+    },
+    {
+      "inputs": [
+        {
+          "internalType": "address",
+          "name": "account_",
+          "type": "address"
+        },
+        {
+          "internalType": "uint256",
+          "name": "amount_",
+          "type": "uint256"
+        }
+      ],
+      "name": "burn",
+      "outputs": [],
+      "stateMutability": "nonpayable",
+      "type": "function"
+    },
+    {
+      "inputs": [],
+      "name": "decimals",
+      "outputs": [
+        {
+          "internalType": "uint8",
+          "name": "",
+          "type": "uint8"
+        }
+      ],
+      "stateMutability": "view",
+      "type": "function"
+    },
+    {
+      "inputs": [
+        {
+          "internalType": "address",
+          "name": "spender",
+          "type": "address"
+        },
+        {
+          "internalType": "uint256",
+          "name": "subtractedValue",
+          "type": "uint256"
+        }
+      ],
+      "name": "decreaseAllowance",
+      "outputs": [
+        {
+          "internalType": "bool",
+          "name": "",
+          "type": "bool"
+        }
+      ],
+      "stateMutability": "nonpayable",
+      "type": "function"
+    },
+    {
+      "inputs": [
+        {
+          "internalType": "address",
+          "name": "spender",
+          "type": "address"
+        },
+        {
+          "internalType": "uint256",
+          "name": "addedValue",
+          "type": "uint256"
+        }
+      ],
+      "name": "increaseAllowance",
+      "outputs": [
+        {
+          "internalType": "bool",
+          "name": "",
+          "type": "bool"
+        }
+      ],
+      "stateMutability": "nonpayable",
+      "type": "function"
+    },
+    {
+      "inputs": [
+        {
+          "internalType": "address",
+          "name": "user_",
+          "type": "address"
+        }
+      ],
+      "name": "isBlackListed",
+      "outputs": [
+        {
+          "internalType": "bool",
+          "name": "",
+          "type": "bool"
+        }
+      ],
+      "stateMutability": "view",
+      "type": "function"
+    },
+    {
+      "inputs": [
+        {
+          "internalType": "address",
+          "name": "source_",
+          "type": "address"
+        },
+        {
+          "internalType": "address",
+          "name": "destination_",
+          "type": "address"
+        }
+      ],
+      "name": "migrateMinterTokens",
+      "outputs": [],
+      "stateMutability": "nonpayable",
+      "type": "function"
+    },
+    {
+      "inputs": [
+        {
+          "internalType": "address",
+          "name": "account_",
+          "type": "address"
+        },
+        {
+          "internalType": "uint256",
+          "name": "amount_",
+          "type": "uint256"
+        }
+      ],
+      "name": "mint",
+      "outputs": [],
+      "stateMutability": "nonpayable",
+      "type": "function"
+    },
+    {
+      "inputs": [
+        {
+          "internalType": "address",
+          "name": "",
+          "type": "address"
+        }
+      ],
+      "name": "minterToCap",
+      "outputs": [
+        {
+          "internalType": "uint256",
+          "name": "",
+          "type": "uint256"
+        }
+      ],
+      "stateMutability": "view",
+      "type": "function"
+    },
+    {
+      "inputs": [
+        {
+          "internalType": "address",
+          "name": "",
+          "type": "address"
+        }
+      ],
+      "name": "minterToMintedAmount",
+      "outputs": [
+        {
+          "internalType": "uint256",
+          "name": "",
+          "type": "uint256"
+        }
+      ],
+      "stateMutability": "view",
+      "type": "function"
+    },
+    {
+      "inputs": [],
+      "name": "name",
+      "outputs": [
+        {
+          "internalType": "string",
+          "name": "",
+          "type": "string"
+        }
+      ],
+      "stateMutability": "view",
+      "type": "function"
+    },
+    {
+      "inputs": [],
+      "name": "owner",
+      "outputs": [
+        {
+          "internalType": "address",
+          "name": "",
+          "type": "address"
+        }
+      ],
+      "stateMutability": "view",
+      "type": "function"
+    },
+    {
+      "inputs": [],
+      "name": "pause",
+      "outputs": [],
+      "stateMutability": "nonpayable",
+      "type": "function"
+    },
+    {
+      "inputs": [],
+      "name": "paused",
+      "outputs": [
+        {
+          "internalType": "bool",
+          "name": "",
+          "type": "bool"
+        }
+      ],
+      "stateMutability": "view",
+      "type": "function"
+    },
+    {
+      "inputs": [],
+      "name": "renounceOwnership",
+      "outputs": [],
+      "stateMutability": "nonpayable",
+      "type": "function"
+    },
+    {
+      "inputs": [
+        {
+          "internalType": "address",
+          "name": "newAccessControlAddress_",
+          "type": "address"
+        }
+      ],
+      "name": "setAccessControlManager",
+      "outputs": [],
+      "stateMutability": "nonpayable",
+      "type": "function"
+    },
+    {
+      "inputs": [
+        {
+          "internalType": "address",
+          "name": "minter_",
+          "type": "address"
+        },
+        {
+          "internalType": "uint256",
+          "name": "amount_",
+          "type": "uint256"
+        }
+      ],
+      "name": "setMintCap",
+      "outputs": [],
+      "stateMutability": "nonpayable",
+      "type": "function"
+    },
+    {
+      "inputs": [],
+      "name": "symbol",
+      "outputs": [
+        {
+          "internalType": "string",
+          "name": "",
+          "type": "string"
+        }
+      ],
+      "stateMutability": "view",
+      "type": "function"
+    },
+    {
+      "inputs": [],
+      "name": "totalSupply",
+      "outputs": [
+        {
+          "internalType": "uint256",
+          "name": "",
+          "type": "uint256"
+        }
+      ],
+      "stateMutability": "view",
+      "type": "function"
+    },
+    {
+      "inputs": [
+        {
+          "internalType": "address",
+          "name": "to",
+          "type": "address"
+        },
+        {
+          "internalType": "uint256",
+          "name": "amount",
+          "type": "uint256"
+        }
+      ],
+      "name": "transfer",
+      "outputs": [
+        {
+          "internalType": "bool",
+          "name": "",
+          "type": "bool"
+        }
+      ],
+      "stateMutability": "nonpayable",
+      "type": "function"
+    },
+    {
+      "inputs": [
+        {
+          "internalType": "address",
+          "name": "from",
+          "type": "address"
+        },
+        {
+          "internalType": "address",
+          "name": "to",
+          "type": "address"
+        },
+        {
+          "internalType": "uint256",
+          "name": "amount",
+          "type": "uint256"
+        }
+      ],
+      "name": "transferFrom",
+      "outputs": [
+        {
+          "internalType": "bool",
+          "name": "",
+          "type": "bool"
+        }
+      ],
+      "stateMutability": "nonpayable",
+      "type": "function"
+    },
+    {
+      "inputs": [
+        {
+          "internalType": "address",
+          "name": "newOwner",
+          "type": "address"
+        }
+      ],
+      "name": "transferOwnership",
+      "outputs": [],
+      "stateMutability": "nonpayable",
+      "type": "function"
+    },
+    {
+      "inputs": [],
+      "name": "unpause",
+      "outputs": [],
+      "stateMutability": "nonpayable",
+      "type": "function"
+    },
+    {
+      "inputs": [
+        {
+          "internalType": "address",
+          "name": "user_",
+          "type": "address"
+        },
+        {
+          "internalType": "bool",
+          "name": "value_",
+          "type": "bool"
+        }
+      ],
+      "name": "updateBlacklist",
+      "outputs": [],
+      "stateMutability": "nonpayable",
+      "type": "function"
+    }
+  ],
+  "transactionHash": "0xfa3932b845e55d5d15f47ab523f4069657f0997baed68b16957da92f220d5b1e",
+  "receipt": {
+    "to": null,
+    "from": "0x2A94EAb15be8557e6dDAE87eCeCf69ba58aAE2AD",
+    "contractAddress": "0xc1Eb7689147C81aC840d4FF0D298489fc7986d52",
+    "transactionIndex": 3,
+    "gasUsed": "2018203",
+    "logsBloom": "0x00000000000000000000000000000004000000000000000000800000000000000000000000000100000000000000000000000000000000000000000000000000000000000000000040000000000000000001000000000000000000000000000000000000020000000000000000000800000000000000000000000010000000400000000000000000000000000000000000000000000080000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000020000000000000000000000000000000000000000000000000000000000001000000",
+    "blockHash": "0xae732c29527e2f743c23b4d62db44a82dacc361c5ddc93d8cf91ef7b79bec8f7",
+    "transactionHash": "0xfa3932b845e55d5d15f47ab523f4069657f0997baed68b16957da92f220d5b1e",
+    "logs": [
+      {
+        "transactionIndex": 3,
+        "blockNumber": 214497751,
+        "transactionHash": "0xfa3932b845e55d5d15f47ab523f4069657f0997baed68b16957da92f220d5b1e",
+        "address": "0xc1Eb7689147C81aC840d4FF0D298489fc7986d52",
+        "topics": [
+          "0x8be0079c531659141344cd1fd0a4f28419497f9722a3daafe3b4186f6b6457e0",
+          "0x0000000000000000000000000000000000000000000000000000000000000000",
+          "0x0000000000000000000000002a94eab15be8557e6ddae87ececf69ba58aae2ad"
+        ],
+        "data": "0x",
+        "logIndex": 4,
+        "blockHash": "0xae732c29527e2f743c23b4d62db44a82dacc361c5ddc93d8cf91ef7b79bec8f7"
+      }
+    ],
+    "blockNumber": 214497751,
+    "cumulativeGasUsed": "2310664",
+    "status": 1,
+    "byzantium": true
+  },
+  "args": ["0xD9dD18EB0cf10CbA837677f28A8F9Bda4bc2b157"],
+  "numDeployments": 1,
+  "solcInputHash": "add176c0d8e5d7028a4127767eceb0a9",
+  "metadata": "{\"compiler\":{\"version\":\"0.8.25+commit.b61c2a91\"},\"language\":\"Solidity\",\"output\":{\"abi\":[{\"inputs\":[{\"internalType\":\"address\",\"name\":\"accessControlManager_\",\"type\":\"address\"}],\"stateMutability\":\"nonpayable\",\"type\":\"constructor\"},{\"inputs\":[{\"internalType\":\"address\",\"name\":\"user\",\"type\":\"address\"}],\"name\":\"AccountBlacklisted\",\"type\":\"error\"},{\"inputs\":[],\"name\":\"AddressesMustDiffer\",\"type\":\"error\"},{\"inputs\":[],\"name\":\"MintLimitExceed\",\"type\":\"error\"},{\"inputs\":[],\"name\":\"MintedAmountExceed\",\"type\":\"error\"},{\"inputs\":[],\"name\":\"NewCapNotGreaterThanMintedTokens\",\"type\":\"error\"},{\"inputs\":[],\"name\":\"Unauthorized\",\"type\":\"error\"},{\"inputs\":[],\"name\":\"ZeroAddressNotAllowed\",\"type\":\"error\"},{\"anonymous\":false,\"inputs\":[{\"indexed\":true,\"internalType\":\"address\",\"name\":\"owner\",\"type\":\"address\"},{\"indexed\":true,\"internalType\":\"address\",\"name\":\"spender\",\"type\":\"address\"},{\"indexed\":false,\"internalType\":\"uint256\",\"name\":\"value\",\"type\":\"uint256\"}],\"name\":\"Approval\",\"type\":\"event\"},{\"anonymous\":false,\"inputs\":[{\"indexed\":true,\"internalType\":\"address\",\"name\":\"user\",\"type\":\"address\"},{\"indexed\":false,\"internalType\":\"bool\",\"name\":\"value\",\"type\":\"bool\"}],\"name\":\"BlacklistUpdated\",\"type\":\"event\"},{\"anonymous\":false,\"inputs\":[{\"indexed\":true,\"internalType\":\"address\",\"name\":\"minter\",\"type\":\"address\"},{\"indexed\":false,\"internalType\":\"uint256\",\"name\":\"amount\",\"type\":\"uint256\"}],\"name\":\"MintCapChanged\",\"type\":\"event\"},{\"anonymous\":false,\"inputs\":[{\"indexed\":true,\"internalType\":\"address\",\"name\":\"minter\",\"type\":\"address\"},{\"indexed\":false,\"internalType\":\"uint256\",\"name\":\"newLimit\",\"type\":\"uint256\"}],\"name\":\"MintLimitDecreased\",\"type\":\"event\"},{\"anonymous\":false,\"inputs\":[{\"indexed\":true,\"internalType\":\"address\",\"name\":\"minter\",\"type\":\"address\"},{\"indexed\":false,\"internalType\":\"uint256\",\"name\":\"newLimit\",\"type\":\"uint256\"}],\"name\":\"MintLimitIncreased\",\"type\":\"event\"},{\"anonymous\":false,\"inputs\":[{\"indexed\":true,\"internalType\":\"address\",\"name\":\"source\",\"type\":\"address\"},{\"indexed\":true,\"internalType\":\"address\",\"name\":\"destination\",\"type\":\"address\"}],\"name\":\"MintedTokensMigrated\",\"type\":\"event\"},{\"anonymous\":false,\"inputs\":[{\"indexed\":true,\"internalType\":\"address\",\"name\":\"oldAccessControlManager\",\"type\":\"address\"},{\"indexed\":true,\"internalType\":\"address\",\"name\":\"newAccessControlManager\",\"type\":\"address\"}],\"name\":\"NewAccessControlManager\",\"type\":\"event\"},{\"anonymous\":false,\"inputs\":[{\"indexed\":true,\"internalType\":\"address\",\"name\":\"previousOwner\",\"type\":\"address\"},{\"indexed\":true,\"internalType\":\"address\",\"name\":\"newOwner\",\"type\":\"address\"}],\"name\":\"OwnershipTransferred\",\"type\":\"event\"},{\"anonymous\":false,\"inputs\":[{\"indexed\":false,\"internalType\":\"address\",\"name\":\"account\",\"type\":\"address\"}],\"name\":\"Paused\",\"type\":\"event\"},{\"anonymous\":false,\"inputs\":[{\"indexed\":true,\"internalType\":\"address\",\"name\":\"from\",\"type\":\"address\"},{\"indexed\":true,\"internalType\":\"address\",\"name\":\"to\",\"type\":\"address\"},{\"indexed\":false,\"internalType\":\"uint256\",\"name\":\"value\",\"type\":\"uint256\"}],\"name\":\"Transfer\",\"type\":\"event\"},{\"anonymous\":false,\"inputs\":[{\"indexed\":false,\"internalType\":\"address\",\"name\":\"account\",\"type\":\"address\"}],\"name\":\"Unpaused\",\"type\":\"event\"},{\"inputs\":[],\"name\":\"accessControlManager\",\"outputs\":[{\"internalType\":\"address\",\"name\":\"\",\"type\":\"address\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"address\",\"name\":\"owner\",\"type\":\"address\"},{\"internalType\":\"address\",\"name\":\"spender\",\"type\":\"address\"}],\"name\":\"allowance\",\"outputs\":[{\"internalType\":\"uint256\",\"name\":\"\",\"type\":\"uint256\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"address\",\"name\":\"spender\",\"type\":\"address\"},{\"internalType\":\"uint256\",\"name\":\"amount\",\"type\":\"uint256\"}],\"name\":\"approve\",\"outputs\":[{\"internalType\":\"bool\",\"name\":\"\",\"type\":\"bool\"}],\"stateMutability\":\"nonpayable\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"address\",\"name\":\"account\",\"type\":\"address\"}],\"name\":\"balanceOf\",\"outputs\":[{\"internalType\":\"uint256\",\"name\":\"\",\"type\":\"uint256\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"address\",\"name\":\"account_\",\"type\":\"address\"},{\"internalType\":\"uint256\",\"name\":\"amount_\",\"type\":\"uint256\"}],\"name\":\"burn\",\"outputs\":[],\"stateMutability\":\"nonpayable\",\"type\":\"function\"},{\"inputs\":[],\"name\":\"decimals\",\"outputs\":[{\"internalType\":\"uint8\",\"name\":\"\",\"type\":\"uint8\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"address\",\"name\":\"spender\",\"type\":\"address\"},{\"internalType\":\"uint256\",\"name\":\"subtractedValue\",\"type\":\"uint256\"}],\"name\":\"decreaseAllowance\",\"outputs\":[{\"internalType\":\"bool\",\"name\":\"\",\"type\":\"bool\"}],\"stateMutability\":\"nonpayable\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"address\",\"name\":\"spender\",\"type\":\"address\"},{\"internalType\":\"uint256\",\"name\":\"addedValue\",\"type\":\"uint256\"}],\"name\":\"increaseAllowance\",\"outputs\":[{\"internalType\":\"bool\",\"name\":\"\",\"type\":\"bool\"}],\"stateMutability\":\"nonpayable\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"address\",\"name\":\"user_\",\"type\":\"address\"}],\"name\":\"isBlackListed\",\"outputs\":[{\"internalType\":\"bool\",\"name\":\"\",\"type\":\"bool\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"address\",\"name\":\"source_\",\"type\":\"address\"},{\"internalType\":\"address\",\"name\":\"destination_\",\"type\":\"address\"}],\"name\":\"migrateMinterTokens\",\"outputs\":[],\"stateMutability\":\"nonpayable\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"address\",\"name\":\"account_\",\"type\":\"address\"},{\"internalType\":\"uint256\",\"name\":\"amount_\",\"type\":\"uint256\"}],\"name\":\"mint\",\"outputs\":[],\"stateMutability\":\"nonpayable\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"address\",\"name\":\"\",\"type\":\"address\"}],\"name\":\"minterToCap\",\"outputs\":[{\"internalType\":\"uint256\",\"name\":\"\",\"type\":\"uint256\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"address\",\"name\":\"\",\"type\":\"address\"}],\"name\":\"minterToMintedAmount\",\"outputs\":[{\"internalType\":\"uint256\",\"name\":\"\",\"type\":\"uint256\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[],\"name\":\"name\",\"outputs\":[{\"internalType\":\"string\",\"name\":\"\",\"type\":\"string\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[],\"name\":\"owner\",\"outputs\":[{\"internalType\":\"address\",\"name\":\"\",\"type\":\"address\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[],\"name\":\"pause\",\"outputs\":[],\"stateMutability\":\"nonpayable\",\"type\":\"function\"},{\"inputs\":[],\"name\":\"paused\",\"outputs\":[{\"internalType\":\"bool\",\"name\":\"\",\"type\":\"bool\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[],\"name\":\"renounceOwnership\",\"outputs\":[],\"stateMutability\":\"nonpayable\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"address\",\"name\":\"newAccessControlAddress_\",\"type\":\"address\"}],\"name\":\"setAccessControlManager\",\"outputs\":[],\"stateMutability\":\"nonpayable\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"address\",\"name\":\"minter_\",\"type\":\"address\"},{\"internalType\":\"uint256\",\"name\":\"amount_\",\"type\":\"uint256\"}],\"name\":\"setMintCap\",\"outputs\":[],\"stateMutability\":\"nonpayable\",\"type\":\"function\"},{\"inputs\":[],\"name\":\"symbol\",\"outputs\":[{\"internalType\":\"string\",\"name\":\"\",\"type\":\"string\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[],\"name\":\"totalSupply\",\"outputs\":[{\"internalType\":\"uint256\",\"name\":\"\",\"type\":\"uint256\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"address\",\"name\":\"to\",\"type\":\"address\"},{\"internalType\":\"uint256\",\"name\":\"amount\",\"type\":\"uint256\"}],\"name\":\"transfer\",\"outputs\":[{\"internalType\":\"bool\",\"name\":\"\",\"type\":\"bool\"}],\"stateMutability\":\"nonpayable\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"address\",\"name\":\"from\",\"type\":\"address\"},{\"internalType\":\"address\",\"name\":\"to\",\"type\":\"address\"},{\"internalType\":\"uint256\",\"name\":\"amount\",\"type\":\"uint256\"}],\"name\":\"transferFrom\",\"outputs\":[{\"internalType\":\"bool\",\"name\":\"\",\"type\":\"bool\"}],\"stateMutability\":\"nonpayable\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"address\",\"name\":\"newOwner\",\"type\":\"address\"}],\"name\":\"transferOwnership\",\"outputs\":[],\"stateMutability\":\"nonpayable\",\"type\":\"function\"},{\"inputs\":[],\"name\":\"unpause\",\"outputs\":[],\"stateMutability\":\"nonpayable\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"address\",\"name\":\"user_\",\"type\":\"address\"},{\"internalType\":\"bool\",\"name\":\"value_\",\"type\":\"bool\"}],\"name\":\"updateBlacklist\",\"outputs\":[],\"stateMutability\":\"nonpayable\",\"type\":\"function\"}],\"devdoc\":{\"author\":\"Venus\",\"events\":{\"Approval(address,address,uint256)\":{\"details\":\"Emitted when the allowance of a `spender` for an `owner` is set by a call to {approve}. `value` is the new allowance.\"},\"Paused(address)\":{\"details\":\"Emitted when the pause is triggered by `account`.\"},\"Transfer(address,address,uint256)\":{\"details\":\"Emitted when `value` tokens are moved from one account (`from`) to another (`to`). Note that `value` may be zero.\"},\"Unpaused(address)\":{\"details\":\"Emitted when the pause is lifted by `account`.\"}},\"kind\":\"dev\",\"methods\":{\"allowance(address,address)\":{\"details\":\"See {IERC20-allowance}.\"},\"approve(address,uint256)\":{\"details\":\"See {IERC20-approve}. NOTE: If `amount` is the maximum `uint256`, the allowance is not updated on `transferFrom`. This is semantically equivalent to an infinite approval. Requirements: - `spender` cannot be the zero address.\"},\"balanceOf(address)\":{\"details\":\"See {IERC20-balanceOf}.\"},\"burn(address,uint256)\":{\"custom:access\":\"Controlled by AccessControlManager.\",\"custom:event\":\"Emits MintLimitIncreased with new available limit.\",\"params\":{\"account_\":\"Address from which tokens be destroyed.\",\"amount_\":\"Amount of tokens to be destroyed.\"}},\"decimals()\":{\"details\":\"Returns the number of decimals used to get its user representation. For example, if `decimals` equals `2`, a balance of `505` tokens should be displayed to a user as `5.05` (`505 / 10 ** 2`). Tokens usually opt for a value of 18, imitating the relationship between Ether and Wei. This is the default value returned by this function, unless it's overridden. NOTE: This information is only used for _display_ purposes: it in no way affects any of the arithmetic of the contract, including {IERC20-balanceOf} and {IERC20-transfer}.\"},\"decreaseAllowance(address,uint256)\":{\"details\":\"Atomically decreases the allowance granted to `spender` by the caller. This is an alternative to {approve} that can be used as a mitigation for problems described in {IERC20-approve}. Emits an {Approval} event indicating the updated allowance. Requirements: - `spender` cannot be the zero address. - `spender` must have allowance for the caller of at least `subtractedValue`.\"},\"increaseAllowance(address,uint256)\":{\"details\":\"Atomically increases the allowance granted to `spender` by the caller. This is an alternative to {approve} that can be used as a mitigation for problems described in {IERC20-approve}. Emits an {Approval} event indicating the updated allowance. Requirements: - `spender` cannot be the zero address.\"},\"isBlackListed(address)\":{\"params\":{\"user_\":\"Address of user to check blacklist status.\"},\"returns\":{\"_0\":\"bool status of blacklist.\"}},\"migrateMinterTokens(address,address)\":{\"custom:access\":\"Controlled by AccessControlManager.\",\"custom:error\":\"MintLimitExceed is thrown when the minting limit exceeds the cap after migration.AddressesMustDiffer is thrown when the source_ and destination_ addresses are the same.\",\"custom:event\":\"Emits MintLimitIncreased and MintLimitDecreased events for 'source' and 'destination'.Emits MintedTokensMigrated.\",\"params\":{\"destination_\":\"Minter address to migrate tokens to.\",\"source_\":\"Minter address to migrate tokens from.\"}},\"mint(address,uint256)\":{\"custom:access\":\"Controlled by AccessControlManager.\",\"custom:error\":\"MintLimitExceed is thrown when minting amount exceeds the maximum cap.\",\"custom:event\":\"Emits MintLimitDecreased with new available limit.\",\"params\":{\"account_\":\"Address to which tokens are assigned.\",\"amount_\":\"Amount of tokens to be assigned.\"}},\"name()\":{\"details\":\"Returns the name of the token.\"},\"owner()\":{\"details\":\"Returns the address of the current owner.\"},\"pause()\":{\"custom:access\":\"Controlled by AccessControlManager.\"},\"paused()\":{\"details\":\"Returns true if the contract is paused, and false otherwise.\"},\"renounceOwnership()\":{\"details\":\"Leaves the contract without owner. It will not be possible to call `onlyOwner` functions. Can only be called by the current owner. NOTE: Renouncing ownership will leave the contract without an owner, thereby disabling any functionality that is only available to the owner.\"},\"setAccessControlManager(address)\":{\"custom:access\":\"Only owner.\",\"custom:error\":\"ZeroAddressNotAllowed is thrown when newAccessControlAddress_ contract address is zero.\",\"custom:event\":\"Emits NewAccessControlManager.\",\"details\":\"Admin function to set the access control address.\",\"params\":{\"newAccessControlAddress_\":\"New address for the access control.\"}},\"setMintCap(address,uint256)\":{\"custom:access\":\"Controlled by AccessControlManager.\",\"custom:event\":\"Emits MintCapChanged.\",\"params\":{\"amount_\":\"Cap for the minter.\",\"minter_\":\"Minter address.\"}},\"symbol()\":{\"details\":\"Returns the symbol of the token, usually a shorter version of the name.\"},\"totalSupply()\":{\"details\":\"See {IERC20-totalSupply}.\"},\"transfer(address,uint256)\":{\"details\":\"See {IERC20-transfer}. Requirements: - `to` cannot be the zero address. - the caller must have a balance of at least `amount`.\"},\"transferFrom(address,address,uint256)\":{\"details\":\"See {IERC20-transferFrom}. Emits an {Approval} event indicating the updated allowance. This is not required by the EIP. See the note at the beginning of {ERC20}. NOTE: Does not update the allowance if the current allowance is the maximum `uint256`. Requirements: - `from` and `to` cannot be the zero address. - `from` must have a balance of at least `amount`. - the caller must have allowance for ``from``'s tokens of at least `amount`.\"},\"transferOwnership(address)\":{\"details\":\"Transfers ownership of the contract to a new account (`newOwner`). Can only be called by the current owner.\"},\"unpause()\":{\"custom:access\":\"Controlled by AccessControlManager.\"},\"updateBlacklist(address,bool)\":{\"custom:access\":\"Controlled by AccessControlManager.\",\"custom:event\":\"Emits BlacklistUpdated event.\",\"params\":{\"user_\":\"User address to be affected.\",\"value_\":\"Boolean to toggle value.\"}}},\"title\":\"XVS\",\"version\":1},\"userdoc\":{\"errors\":{\"AccountBlacklisted(address)\":[{\"notice\":\"This error is used to indicate that `mint` `burn` and `transfer` actions are not allowed for the user address.\"}],\"AddressesMustDiffer()\":[{\"notice\":\"This error is used to indicate that the addresses must be different.\"}],\"MintLimitExceed()\":[{\"notice\":\"This error is used to indicate that the minting limit has been exceeded. It is typically thrown when a minting operation would surpass the defined cap.\"}],\"MintedAmountExceed()\":[{\"notice\":\"This error is used to indicate that the minter did not mint the required amount of tokens.\"}],\"NewCapNotGreaterThanMintedTokens()\":[{\"notice\":\"This error is used to indicate that the new cap is greater than the previously minted tokens for the minter.\"}],\"Unauthorized()\":[{\"notice\":\"This error is used to indicate that sender is not allowed to perform this action.\"}],\"ZeroAddressNotAllowed()\":[{\"notice\":\"Thrown if the supplied address is a zero address where it is not allowed\"}]},\"events\":{\"BlacklistUpdated(address,bool)\":{\"notice\":\"Emitted when the blacklist status of a user is updated.\"},\"MintCapChanged(address,uint256)\":{\"notice\":\"Emitted when the minting cap for a minter is changed.\"},\"MintLimitDecreased(address,uint256)\":{\"notice\":\"Emitted when the minting limit for a minter is decreased.\"},\"MintLimitIncreased(address,uint256)\":{\"notice\":\"Emitted when the minting limit for a minter is increased.\"},\"MintedTokensMigrated(address,address)\":{\"notice\":\"Emitted when all minted tokens are migrated from one minter to another.\"},\"NewAccessControlManager(address,address)\":{\"notice\":\"Emitted when the address of the access control manager of the contract is updated.\"}},\"kind\":\"user\",\"methods\":{\"accessControlManager()\":{\"notice\":\"Access control manager contract address.\"},\"burn(address,uint256)\":{\"notice\":\"Destroys `amount_` tokens from `account_`, reducing the total supply. Checks access and eligibility.\"},\"isBlackListed(address)\":{\"notice\":\"Returns the blacklist status of the address.\"},\"migrateMinterTokens(address,address)\":{\"notice\":\"Migrates all minted tokens from one minter to another. This function is useful when we want to permanent take down a bridge.\"},\"mint(address,uint256)\":{\"notice\":\"Creates `amount_` tokens and assigns them to `account_`, increasing the total supply. Checks access and eligibility.\"},\"minterToCap(address)\":{\"notice\":\"A mapping is used to keep track of the maximum amount a minter is permitted to mint.\"},\"minterToMintedAmount(address)\":{\"notice\":\"A Mapping used to keep track of the amount i.e already minted by minter.\"},\"pause()\":{\"notice\":\"Pauses Token\"},\"setAccessControlManager(address)\":{\"notice\":\"Sets the address of the access control manager of this contract.\"},\"setMintCap(address,uint256)\":{\"notice\":\"Sets the minting cap for minter.\"},\"unpause()\":{\"notice\":\"Resumes Token\"},\"updateBlacklist(address,bool)\":{\"notice\":\"Function to update blacklist.\"}},\"notice\":\"XVS contract serves as a customized ERC-20 token with additional minting and burning functionality.  It also incorporates access control features provided by the \\\"TokenController\\\" contract to ensure proper governance and restrictions on minting and burning operations.\",\"version\":1}},\"settings\":{\"compilationTarget\":{\"contracts/Bridge/token/XVS.sol\":\"XVS\"},\"evmVersion\":\"paris\",\"libraries\":{},\"metadata\":{\"bytecodeHash\":\"ipfs\",\"useLiteralContent\":true},\"optimizer\":{\"enabled\":true,\"runs\":200},\"remappings\":[]},\"sources\":{\"@openzeppelin/contracts/access/IAccessControl.sol\":{\"content\":\"// SPDX-License-Identifier: MIT\\n// OpenZeppelin Contracts v4.4.1 (access/IAccessControl.sol)\\n\\npragma solidity ^0.8.0;\\n\\n/**\\n * @dev External interface of AccessControl declared to support ERC165 detection.\\n */\\ninterface IAccessControl {\\n    /**\\n     * @dev Emitted when `newAdminRole` is set as ``role``'s admin role, replacing `previousAdminRole`\\n     *\\n     * `DEFAULT_ADMIN_ROLE` is the starting admin for all roles, despite\\n     * {RoleAdminChanged} not being emitted signaling this.\\n     *\\n     * _Available since v3.1._\\n     */\\n    event RoleAdminChanged(bytes32 indexed role, bytes32 indexed previousAdminRole, bytes32 indexed newAdminRole);\\n\\n    /**\\n     * @dev Emitted when `account` is granted `role`.\\n     *\\n     * `sender` is the account that originated the contract call, an admin role\\n     * bearer except when using {AccessControl-_setupRole}.\\n     */\\n    event RoleGranted(bytes32 indexed role, address indexed account, address indexed sender);\\n\\n    /**\\n     * @dev Emitted when `account` is revoked `role`.\\n     *\\n     * `sender` is the account that originated the contract call:\\n     *   - if using `revokeRole`, it is the admin role bearer\\n     *   - if using `renounceRole`, it is the role bearer (i.e. `account`)\\n     */\\n    event RoleRevoked(bytes32 indexed role, address indexed account, address indexed sender);\\n\\n    /**\\n     * @dev Returns `true` if `account` has been granted `role`.\\n     */\\n    function hasRole(bytes32 role, address account) external view returns (bool);\\n\\n    /**\\n     * @dev Returns the admin role that controls `role`. See {grantRole} and\\n     * {revokeRole}.\\n     *\\n     * To change a role's admin, use {AccessControl-_setRoleAdmin}.\\n     */\\n    function getRoleAdmin(bytes32 role) external view returns (bytes32);\\n\\n    /**\\n     * @dev Grants `role` to `account`.\\n     *\\n     * If `account` had not been already granted `role`, emits a {RoleGranted}\\n     * event.\\n     *\\n     * Requirements:\\n     *\\n     * - the caller must have ``role``'s admin role.\\n     */\\n    function grantRole(bytes32 role, address account) external;\\n\\n    /**\\n     * @dev Revokes `role` from `account`.\\n     *\\n     * If `account` had been granted `role`, emits a {RoleRevoked} event.\\n     *\\n     * Requirements:\\n     *\\n     * - the caller must have ``role``'s admin role.\\n     */\\n    function revokeRole(bytes32 role, address account) external;\\n\\n    /**\\n     * @dev Revokes `role` from the calling account.\\n     *\\n     * Roles are often managed via {grantRole} and {revokeRole}: this function's\\n     * purpose is to provide a mechanism for accounts to lose their privileges\\n     * if they are compromised (such as when a trusted device is misplaced).\\n     *\\n     * If the calling account had been granted `role`, emits a {RoleRevoked}\\n     * event.\\n     *\\n     * Requirements:\\n     *\\n     * - the caller must be `account`.\\n     */\\n    function renounceRole(bytes32 role, address account) external;\\n}\\n\",\"keccak256\":\"0x59ce320a585d7e1f163cd70390a0ef2ff9cec832e2aa544293a00692465a7a57\",\"license\":\"MIT\"},\"@openzeppelin/contracts/access/Ownable.sol\":{\"content\":\"// SPDX-License-Identifier: MIT\\n// OpenZeppelin Contracts (last updated v4.9.0) (access/Ownable.sol)\\n\\npragma solidity ^0.8.0;\\n\\nimport \\\"../utils/Context.sol\\\";\\n\\n/**\\n * @dev Contract module which provides a basic access control mechanism, where\\n * there is an account (an owner) that can be granted exclusive access to\\n * specific functions.\\n *\\n * By default, the owner account will be the one that deploys the contract. This\\n * can later be changed with {transferOwnership}.\\n *\\n * This module is used through inheritance. It will make available the modifier\\n * `onlyOwner`, which can be applied to your functions to restrict their use to\\n * the owner.\\n */\\nabstract contract Ownable is Context {\\n    address private _owner;\\n\\n    event OwnershipTransferred(address indexed previousOwner, address indexed newOwner);\\n\\n    /**\\n     * @dev Initializes the contract setting the deployer as the initial owner.\\n     */\\n    constructor() {\\n        _transferOwnership(_msgSender());\\n    }\\n\\n    /**\\n     * @dev Throws if called by any account other than the owner.\\n     */\\n    modifier onlyOwner() {\\n        _checkOwner();\\n        _;\\n    }\\n\\n    /**\\n     * @dev Returns the address of the current owner.\\n     */\\n    function owner() public view virtual returns (address) {\\n        return _owner;\\n    }\\n\\n    /**\\n     * @dev Throws if the sender is not the owner.\\n     */\\n    function _checkOwner() internal view virtual {\\n        require(owner() == _msgSender(), \\\"Ownable: caller is not the owner\\\");\\n    }\\n\\n    /**\\n     * @dev Leaves the contract without owner. It will not be possible to call\\n     * `onlyOwner` functions. Can only be called by the current owner.\\n     *\\n     * NOTE: Renouncing ownership will leave the contract without an owner,\\n     * thereby disabling any functionality that is only available to the owner.\\n     */\\n    function renounceOwnership() public virtual onlyOwner {\\n        _transferOwnership(address(0));\\n    }\\n\\n    /**\\n     * @dev Transfers ownership of the contract to a new account (`newOwner`).\\n     * Can only be called by the current owner.\\n     */\\n    function transferOwnership(address newOwner) public virtual onlyOwner {\\n        require(newOwner != address(0), \\\"Ownable: new owner is the zero address\\\");\\n        _transferOwnership(newOwner);\\n    }\\n\\n    /**\\n     * @dev Transfers ownership of the contract to a new account (`newOwner`).\\n     * Internal function without access restriction.\\n     */\\n    function _transferOwnership(address newOwner) internal virtual {\\n        address oldOwner = _owner;\\n        _owner = newOwner;\\n        emit OwnershipTransferred(oldOwner, newOwner);\\n    }\\n}\\n\",\"keccak256\":\"0xba43b97fba0d32eb4254f6a5a297b39a19a247082a02d6e69349e071e2946218\",\"license\":\"MIT\"},\"@openzeppelin/contracts/security/Pausable.sol\":{\"content\":\"// SPDX-License-Identifier: MIT\\n// OpenZeppelin Contracts (last updated v4.7.0) (security/Pausable.sol)\\n\\npragma solidity ^0.8.0;\\n\\nimport \\\"../utils/Context.sol\\\";\\n\\n/**\\n * @dev Contract module which allows children to implement an emergency stop\\n * mechanism that can be triggered by an authorized account.\\n *\\n * This module is used through inheritance. It will make available the\\n * modifiers `whenNotPaused` and `whenPaused`, which can be applied to\\n * the functions of your contract. Note that they will not be pausable by\\n * simply including this module, only once the modifiers are put in place.\\n */\\nabstract contract Pausable is Context {\\n    /**\\n     * @dev Emitted when the pause is triggered by `account`.\\n     */\\n    event Paused(address account);\\n\\n    /**\\n     * @dev Emitted when the pause is lifted by `account`.\\n     */\\n    event Unpaused(address account);\\n\\n    bool private _paused;\\n\\n    /**\\n     * @dev Initializes the contract in unpaused state.\\n     */\\n    constructor() {\\n        _paused = false;\\n    }\\n\\n    /**\\n     * @dev Modifier to make a function callable only when the contract is not paused.\\n     *\\n     * Requirements:\\n     *\\n     * - The contract must not be paused.\\n     */\\n    modifier whenNotPaused() {\\n        _requireNotPaused();\\n        _;\\n    }\\n\\n    /**\\n     * @dev Modifier to make a function callable only when the contract is paused.\\n     *\\n     * Requirements:\\n     *\\n     * - The contract must be paused.\\n     */\\n    modifier whenPaused() {\\n        _requirePaused();\\n        _;\\n    }\\n\\n    /**\\n     * @dev Returns true if the contract is paused, and false otherwise.\\n     */\\n    function paused() public view virtual returns (bool) {\\n        return _paused;\\n    }\\n\\n    /**\\n     * @dev Throws if the contract is paused.\\n     */\\n    function _requireNotPaused() internal view virtual {\\n        require(!paused(), \\\"Pausable: paused\\\");\\n    }\\n\\n    /**\\n     * @dev Throws if the contract is not paused.\\n     */\\n    function _requirePaused() internal view virtual {\\n        require(paused(), \\\"Pausable: not paused\\\");\\n    }\\n\\n    /**\\n     * @dev Triggers stopped state.\\n     *\\n     * Requirements:\\n     *\\n     * - The contract must not be paused.\\n     */\\n    function _pause() internal virtual whenNotPaused {\\n        _paused = true;\\n        emit Paused(_msgSender());\\n    }\\n\\n    /**\\n     * @dev Returns to normal state.\\n     *\\n     * Requirements:\\n     *\\n     * - The contract must be paused.\\n     */\\n    function _unpause() internal virtual whenPaused {\\n        _paused = false;\\n        emit Unpaused(_msgSender());\\n    }\\n}\\n\",\"keccak256\":\"0x0849d93b16c9940beb286a7864ed02724b248b93e0d80ef6355af5ef15c64773\",\"license\":\"MIT\"},\"@openzeppelin/contracts/token/ERC20/ERC20.sol\":{\"content\":\"// SPDX-License-Identifier: MIT\\n// OpenZeppelin Contracts (last updated v4.9.0) (token/ERC20/ERC20.sol)\\n\\npragma solidity ^0.8.0;\\n\\nimport \\\"./IERC20.sol\\\";\\nimport \\\"./extensions/IERC20Metadata.sol\\\";\\nimport \\\"../../utils/Context.sol\\\";\\n\\n/**\\n * @dev Implementation of the {IERC20} interface.\\n *\\n * This implementation is agnostic to the way tokens are created. This means\\n * that a supply mechanism has to be added in a derived contract using {_mint}.\\n * For a generic mechanism see {ERC20PresetMinterPauser}.\\n *\\n * TIP: For a detailed writeup see our guide\\n * https://forum.openzeppelin.com/t/how-to-implement-erc20-supply-mechanisms/226[How\\n * to implement supply mechanisms].\\n *\\n * The default value of {decimals} is 18. To change this, you should override\\n * this function so it returns a different value.\\n *\\n * We have followed general OpenZeppelin Contracts guidelines: functions revert\\n * instead returning `false` on failure. This behavior is nonetheless\\n * conventional and does not conflict with the expectations of ERC20\\n * applications.\\n *\\n * Additionally, an {Approval} event is emitted on calls to {transferFrom}.\\n * This allows applications to reconstruct the allowance for all accounts just\\n * by listening to said events. Other implementations of the EIP may not emit\\n * these events, as it isn't required by the specification.\\n *\\n * Finally, the non-standard {decreaseAllowance} and {increaseAllowance}\\n * functions have been added to mitigate the well-known issues around setting\\n * allowances. See {IERC20-approve}.\\n */\\ncontract ERC20 is Context, IERC20, IERC20Metadata {\\n    mapping(address => uint256) private _balances;\\n\\n    mapping(address => mapping(address => uint256)) private _allowances;\\n\\n    uint256 private _totalSupply;\\n\\n    string private _name;\\n    string private _symbol;\\n\\n    /**\\n     * @dev Sets the values for {name} and {symbol}.\\n     *\\n     * All two of these values are immutable: they can only be set once during\\n     * construction.\\n     */\\n    constructor(string memory name_, string memory symbol_) {\\n        _name = name_;\\n        _symbol = symbol_;\\n    }\\n\\n    /**\\n     * @dev Returns the name of the token.\\n     */\\n    function name() public view virtual override returns (string memory) {\\n        return _name;\\n    }\\n\\n    /**\\n     * @dev Returns the symbol of the token, usually a shorter version of the\\n     * name.\\n     */\\n    function symbol() public view virtual override returns (string memory) {\\n        return _symbol;\\n    }\\n\\n    /**\\n     * @dev Returns the number of decimals used to get its user representation.\\n     * For example, if `decimals` equals `2`, a balance of `505` tokens should\\n     * be displayed to a user as `5.05` (`505 / 10 ** 2`).\\n     *\\n     * Tokens usually opt for a value of 18, imitating the relationship between\\n     * Ether and Wei. This is the default value returned by this function, unless\\n     * it's overridden.\\n     *\\n     * NOTE: This information is only used for _display_ purposes: it in\\n     * no way affects any of the arithmetic of the contract, including\\n     * {IERC20-balanceOf} and {IERC20-transfer}.\\n     */\\n    function decimals() public view virtual override returns (uint8) {\\n        return 18;\\n    }\\n\\n    /**\\n     * @dev See {IERC20-totalSupply}.\\n     */\\n    function totalSupply() public view virtual override returns (uint256) {\\n        return _totalSupply;\\n    }\\n\\n    /**\\n     * @dev See {IERC20-balanceOf}.\\n     */\\n    function balanceOf(address account) public view virtual override returns (uint256) {\\n        return _balances[account];\\n    }\\n\\n    /**\\n     * @dev See {IERC20-transfer}.\\n     *\\n     * Requirements:\\n     *\\n     * - `to` cannot be the zero address.\\n     * - the caller must have a balance of at least `amount`.\\n     */\\n    function transfer(address to, uint256 amount) public virtual override returns (bool) {\\n        address owner = _msgSender();\\n        _transfer(owner, to, amount);\\n        return true;\\n    }\\n\\n    /**\\n     * @dev See {IERC20-allowance}.\\n     */\\n    function allowance(address owner, address spender) public view virtual override returns (uint256) {\\n        return _allowances[owner][spender];\\n    }\\n\\n    /**\\n     * @dev See {IERC20-approve}.\\n     *\\n     * NOTE: If `amount` is the maximum `uint256`, the allowance is not updated on\\n     * `transferFrom`. This is semantically equivalent to an infinite approval.\\n     *\\n     * Requirements:\\n     *\\n     * - `spender` cannot be the zero address.\\n     */\\n    function approve(address spender, uint256 amount) public virtual override returns (bool) {\\n        address owner = _msgSender();\\n        _approve(owner, spender, amount);\\n        return true;\\n    }\\n\\n    /**\\n     * @dev See {IERC20-transferFrom}.\\n     *\\n     * Emits an {Approval} event indicating the updated allowance. This is not\\n     * required by the EIP. See the note at the beginning of {ERC20}.\\n     *\\n     * NOTE: Does not update the allowance if the current allowance\\n     * is the maximum `uint256`.\\n     *\\n     * Requirements:\\n     *\\n     * - `from` and `to` cannot be the zero address.\\n     * - `from` must have a balance of at least `amount`.\\n     * - the caller must have allowance for ``from``'s tokens of at least\\n     * `amount`.\\n     */\\n    function transferFrom(address from, address to, uint256 amount) public virtual override returns (bool) {\\n        address spender = _msgSender();\\n        _spendAllowance(from, spender, amount);\\n        _transfer(from, to, amount);\\n        return true;\\n    }\\n\\n    /**\\n     * @dev Atomically increases the allowance granted to `spender` by the caller.\\n     *\\n     * This is an alternative to {approve} that can be used as a mitigation for\\n     * problems described in {IERC20-approve}.\\n     *\\n     * Emits an {Approval} event indicating the updated allowance.\\n     *\\n     * Requirements:\\n     *\\n     * - `spender` cannot be the zero address.\\n     */\\n    function increaseAllowance(address spender, uint256 addedValue) public virtual returns (bool) {\\n        address owner = _msgSender();\\n        _approve(owner, spender, allowance(owner, spender) + addedValue);\\n        return true;\\n    }\\n\\n    /**\\n     * @dev Atomically decreases the allowance granted to `spender` by the caller.\\n     *\\n     * This is an alternative to {approve} that can be used as a mitigation for\\n     * problems described in {IERC20-approve}.\\n     *\\n     * Emits an {Approval} event indicating the updated allowance.\\n     *\\n     * Requirements:\\n     *\\n     * - `spender` cannot be the zero address.\\n     * - `spender` must have allowance for the caller of at least\\n     * `subtractedValue`.\\n     */\\n    function decreaseAllowance(address spender, uint256 subtractedValue) public virtual returns (bool) {\\n        address owner = _msgSender();\\n        uint256 currentAllowance = allowance(owner, spender);\\n        require(currentAllowance >= subtractedValue, \\\"ERC20: decreased allowance below zero\\\");\\n        unchecked {\\n            _approve(owner, spender, currentAllowance - subtractedValue);\\n        }\\n\\n        return true;\\n    }\\n\\n    /**\\n     * @dev Moves `amount` of tokens from `from` to `to`.\\n     *\\n     * This internal function is equivalent to {transfer}, and can be used to\\n     * e.g. implement automatic token fees, slashing mechanisms, etc.\\n     *\\n     * Emits a {Transfer} event.\\n     *\\n     * Requirements:\\n     *\\n     * - `from` cannot be the zero address.\\n     * - `to` cannot be the zero address.\\n     * - `from` must have a balance of at least `amount`.\\n     */\\n    function _transfer(address from, address to, uint256 amount) internal virtual {\\n        require(from != address(0), \\\"ERC20: transfer from the zero address\\\");\\n        require(to != address(0), \\\"ERC20: transfer to the zero address\\\");\\n\\n        _beforeTokenTransfer(from, to, amount);\\n\\n        uint256 fromBalance = _balances[from];\\n        require(fromBalance >= amount, \\\"ERC20: transfer amount exceeds balance\\\");\\n        unchecked {\\n            _balances[from] = fromBalance - amount;\\n            // Overflow not possible: the sum of all balances is capped by totalSupply, and the sum is preserved by\\n            // decrementing then incrementing.\\n            _balances[to] += amount;\\n        }\\n\\n        emit Transfer(from, to, amount);\\n\\n        _afterTokenTransfer(from, to, amount);\\n    }\\n\\n    /** @dev Creates `amount` tokens and assigns them to `account`, increasing\\n     * the total supply.\\n     *\\n     * Emits a {Transfer} event with `from` set to the zero address.\\n     *\\n     * Requirements:\\n     *\\n     * - `account` cannot be the zero address.\\n     */\\n    function _mint(address account, uint256 amount) internal virtual {\\n        require(account != address(0), \\\"ERC20: mint to the zero address\\\");\\n\\n        _beforeTokenTransfer(address(0), account, amount);\\n\\n        _totalSupply += amount;\\n        unchecked {\\n            // Overflow not possible: balance + amount is at most totalSupply + amount, which is checked above.\\n            _balances[account] += amount;\\n        }\\n        emit Transfer(address(0), account, amount);\\n\\n        _afterTokenTransfer(address(0), account, amount);\\n    }\\n\\n    /**\\n     * @dev Destroys `amount` tokens from `account`, reducing the\\n     * total supply.\\n     *\\n     * Emits a {Transfer} event with `to` set to the zero address.\\n     *\\n     * Requirements:\\n     *\\n     * - `account` cannot be the zero address.\\n     * - `account` must have at least `amount` tokens.\\n     */\\n    function _burn(address account, uint256 amount) internal virtual {\\n        require(account != address(0), \\\"ERC20: burn from the zero address\\\");\\n\\n        _beforeTokenTransfer(account, address(0), amount);\\n\\n        uint256 accountBalance = _balances[account];\\n        require(accountBalance >= amount, \\\"ERC20: burn amount exceeds balance\\\");\\n        unchecked {\\n            _balances[account] = accountBalance - amount;\\n            // Overflow not possible: amount <= accountBalance <= totalSupply.\\n            _totalSupply -= amount;\\n        }\\n\\n        emit Transfer(account, address(0), amount);\\n\\n        _afterTokenTransfer(account, address(0), amount);\\n    }\\n\\n    /**\\n     * @dev Sets `amount` as the allowance of `spender` over the `owner` s tokens.\\n     *\\n     * This internal function is equivalent to `approve`, and can be used to\\n     * e.g. set automatic allowances for certain subsystems, etc.\\n     *\\n     * Emits an {Approval} event.\\n     *\\n     * Requirements:\\n     *\\n     * - `owner` cannot be the zero address.\\n     * - `spender` cannot be the zero address.\\n     */\\n    function _approve(address owner, address spender, uint256 amount) internal virtual {\\n        require(owner != address(0), \\\"ERC20: approve from the zero address\\\");\\n        require(spender != address(0), \\\"ERC20: approve to the zero address\\\");\\n\\n        _allowances[owner][spender] = amount;\\n        emit Approval(owner, spender, amount);\\n    }\\n\\n    /**\\n     * @dev Updates `owner` s allowance for `spender` based on spent `amount`.\\n     *\\n     * Does not update the allowance amount in case of infinite allowance.\\n     * Revert if not enough allowance is available.\\n     *\\n     * Might emit an {Approval} event.\\n     */\\n    function _spendAllowance(address owner, address spender, uint256 amount) internal virtual {\\n        uint256 currentAllowance = allowance(owner, spender);\\n        if (currentAllowance != type(uint256).max) {\\n            require(currentAllowance >= amount, \\\"ERC20: insufficient allowance\\\");\\n            unchecked {\\n                _approve(owner, spender, currentAllowance - amount);\\n            }\\n        }\\n    }\\n\\n    /**\\n     * @dev Hook that is called before any transfer of tokens. This includes\\n     * minting and burning.\\n     *\\n     * Calling conditions:\\n     *\\n     * - when `from` and `to` are both non-zero, `amount` of ``from``'s tokens\\n     * will be transferred to `to`.\\n     * - when `from` is zero, `amount` tokens will be minted for `to`.\\n     * - when `to` is zero, `amount` of ``from``'s tokens will be burned.\\n     * - `from` and `to` are never both zero.\\n     *\\n     * To learn more about hooks, head to xref:ROOT:extending-contracts.adoc#using-hooks[Using Hooks].\\n     */\\n    function _beforeTokenTransfer(address from, address to, uint256 amount) internal virtual {}\\n\\n    /**\\n     * @dev Hook that is called after any transfer of tokens. This includes\\n     * minting and burning.\\n     *\\n     * Calling conditions:\\n     *\\n     * - when `from` and `to` are both non-zero, `amount` of ``from``'s tokens\\n     * has been transferred to `to`.\\n     * - when `from` is zero, `amount` tokens have been minted for `to`.\\n     * - when `to` is zero, `amount` of ``from``'s tokens have been burned.\\n     * - `from` and `to` are never both zero.\\n     *\\n     * To learn more about hooks, head to xref:ROOT:extending-contracts.adoc#using-hooks[Using Hooks].\\n     */\\n    function _afterTokenTransfer(address from, address to, uint256 amount) internal virtual {}\\n}\\n\",\"keccak256\":\"0xa56ca923f70c1748830700250b19c61b70db9a683516dc5e216694a50445d99c\",\"license\":\"MIT\"},\"@openzeppelin/contracts/token/ERC20/IERC20.sol\":{\"content\":\"// SPDX-License-Identifier: MIT\\n// OpenZeppelin Contracts (last updated v4.9.0) (token/ERC20/IERC20.sol)\\n\\npragma solidity ^0.8.0;\\n\\n/**\\n * @dev Interface of the ERC20 standard as defined in the EIP.\\n */\\ninterface IERC20 {\\n    /**\\n     * @dev Emitted when `value` tokens are moved from one account (`from`) to\\n     * another (`to`).\\n     *\\n     * Note that `value` may be zero.\\n     */\\n    event Transfer(address indexed from, address indexed to, uint256 value);\\n\\n    /**\\n     * @dev Emitted when the allowance of a `spender` for an `owner` is set by\\n     * a call to {approve}. `value` is the new allowance.\\n     */\\n    event Approval(address indexed owner, address indexed spender, uint256 value);\\n\\n    /**\\n     * @dev Returns the amount of tokens in existence.\\n     */\\n    function totalSupply() external view returns (uint256);\\n\\n    /**\\n     * @dev Returns the amount of tokens owned by `account`.\\n     */\\n    function balanceOf(address account) external view returns (uint256);\\n\\n    /**\\n     * @dev Moves `amount` tokens from the caller's account to `to`.\\n     *\\n     * Returns a boolean value indicating whether the operation succeeded.\\n     *\\n     * Emits a {Transfer} event.\\n     */\\n    function transfer(address to, uint256 amount) external returns (bool);\\n\\n    /**\\n     * @dev Returns the remaining number of tokens that `spender` will be\\n     * allowed to spend on behalf of `owner` through {transferFrom}. This is\\n     * zero by default.\\n     *\\n     * This value changes when {approve} or {transferFrom} are called.\\n     */\\n    function allowance(address owner, address spender) external view returns (uint256);\\n\\n    /**\\n     * @dev Sets `amount` as the allowance of `spender` over the caller's tokens.\\n     *\\n     * Returns a boolean value indicating whether the operation succeeded.\\n     *\\n     * IMPORTANT: Beware that changing an allowance with this method brings the risk\\n     * that someone may use both the old and the new allowance by unfortunate\\n     * transaction ordering. One possible solution to mitigate this race\\n     * condition is to first reduce the spender's allowance to 0 and set the\\n     * desired value afterwards:\\n     * https://github.com/ethereum/EIPs/issues/20#issuecomment-263524729\\n     *\\n     * Emits an {Approval} event.\\n     */\\n    function approve(address spender, uint256 amount) external returns (bool);\\n\\n    /**\\n     * @dev Moves `amount` tokens from `from` to `to` using the\\n     * allowance mechanism. `amount` is then deducted from the caller's\\n     * allowance.\\n     *\\n     * Returns a boolean value indicating whether the operation succeeded.\\n     *\\n     * Emits a {Transfer} event.\\n     */\\n    function transferFrom(address from, address to, uint256 amount) external returns (bool);\\n}\\n\",\"keccak256\":\"0x287b55befed2961a7eabd7d7b1b2839cbca8a5b80ef8dcbb25ed3d4c2002c305\",\"license\":\"MIT\"},\"@openzeppelin/contracts/token/ERC20/extensions/IERC20Metadata.sol\":{\"content\":\"// SPDX-License-Identifier: MIT\\n// OpenZeppelin Contracts v4.4.1 (token/ERC20/extensions/IERC20Metadata.sol)\\n\\npragma solidity ^0.8.0;\\n\\nimport \\\"../IERC20.sol\\\";\\n\\n/**\\n * @dev Interface for the optional metadata functions from the ERC20 standard.\\n *\\n * _Available since v4.1._\\n */\\ninterface IERC20Metadata is IERC20 {\\n    /**\\n     * @dev Returns the name of the token.\\n     */\\n    function name() external view returns (string memory);\\n\\n    /**\\n     * @dev Returns the symbol of the token.\\n     */\\n    function symbol() external view returns (string memory);\\n\\n    /**\\n     * @dev Returns the decimals places of the token.\\n     */\\n    function decimals() external view returns (uint8);\\n}\\n\",\"keccak256\":\"0x8de418a5503946cabe331f35fe242d3201a73f67f77aaeb7110acb1f30423aca\",\"license\":\"MIT\"},\"@openzeppelin/contracts/utils/Context.sol\":{\"content\":\"// SPDX-License-Identifier: MIT\\n// OpenZeppelin Contracts v4.4.1 (utils/Context.sol)\\n\\npragma solidity ^0.8.0;\\n\\n/**\\n * @dev Provides information about the current execution context, including the\\n * sender of the transaction and its data. While these are generally available\\n * via msg.sender and msg.data, they should not be accessed in such a direct\\n * manner, since when dealing with meta-transactions the account sending and\\n * paying for execution may not be the actual sender (as far as an application\\n * is concerned).\\n *\\n * This contract is only required for intermediate, library-like contracts.\\n */\\nabstract contract Context {\\n    function _msgSender() internal view virtual returns (address) {\\n        return msg.sender;\\n    }\\n\\n    function _msgData() internal view virtual returns (bytes calldata) {\\n        return msg.data;\\n    }\\n}\\n\",\"keccak256\":\"0xe2e337e6dde9ef6b680e07338c493ebea1b5fd09b43424112868e9cc1706bca7\",\"license\":\"MIT\"},\"@venusprotocol/governance-contracts/contracts/Governance/IAccessControlManagerV8.sol\":{\"content\":\"// SPDX-License-Identifier: BSD-3-Clause\\npragma solidity ^0.8.25;\\n\\nimport \\\"@openzeppelin/contracts/access/IAccessControl.sol\\\";\\n\\n/**\\n * @title IAccessControlManagerV8\\n * @author Venus\\n * @notice Interface implemented by the `AccessControlManagerV8` contract.\\n */\\ninterface IAccessControlManagerV8 is IAccessControl {\\n    function giveCallPermission(address contractAddress, string calldata functionSig, address accountToPermit) external;\\n\\n    function revokeCallPermission(\\n        address contractAddress,\\n        string calldata functionSig,\\n        address accountToRevoke\\n    ) external;\\n\\n    function isAllowedToCall(address account, string calldata functionSig) external view returns (bool);\\n\\n    function hasPermission(\\n        address account,\\n        address contractAddress,\\n        string calldata functionSig\\n    ) external view returns (bool);\\n}\\n\",\"keccak256\":\"0xaa29b098440d0b3a131c5ecdf25ce548790c1b5ac7bf9b5c0264b6af6f7a1e0b\",\"license\":\"BSD-3-Clause\"},\"@venusprotocol/solidity-utilities/contracts/validators.sol\":{\"content\":\"// SPDX-License-Identifier: BSD-3-Clause\\npragma solidity 0.8.25;\\n\\n/// @notice Thrown if the supplied address is a zero address where it is not allowed\\nerror ZeroAddressNotAllowed();\\n\\n/// @notice Thrown if the supplied value is 0 where it is not allowed\\nerror ZeroValueNotAllowed();\\n\\n/// @notice Checks if the provided address is nonzero, reverts otherwise\\n/// @param address_ Address to check\\n/// @custom:error ZeroAddressNotAllowed is thrown if the provided address is a zero address\\nfunction ensureNonzeroAddress(address address_) pure {\\n    if (address_ == address(0)) {\\n        revert ZeroAddressNotAllowed();\\n    }\\n}\\n\\n/// @notice Checks if the provided value is nonzero, reverts otherwise\\n/// @param value_ Value to check\\n/// @custom:error ZeroValueNotAllowed is thrown if the provided value is 0\\nfunction ensureNonzeroValue(uint256 value_) pure {\\n    if (value_ == 0) {\\n        revert ZeroValueNotAllowed();\\n    }\\n}\\n\",\"keccak256\":\"0xdb88e14d50dd21889ca3329d755673d022c47e8da005b6a545c7f69c2c4b7b86\",\"license\":\"BSD-3-Clause\"},\"contracts/Bridge/token/TokenController.sol\":{\"content\":\"// SPDX-License-Identifier: BSD-3-Clause\\npragma solidity 0.8.25;\\n\\nimport { IAccessControlManagerV8 } from \\\"@venusprotocol/governance-contracts/contracts/Governance/IAccessControlManagerV8.sol\\\";\\nimport { Pausable } from \\\"@openzeppelin/contracts/security/Pausable.sol\\\";\\nimport { Ownable } from \\\"@openzeppelin/contracts/access/Ownable.sol\\\";\\nimport { ensureNonzeroAddress } from \\\"@venusprotocol/solidity-utilities/contracts/validators.sol\\\";\\n\\n/**\\n * @title TokenController\\n * @author Venus\\n * @notice TokenController contract acts as a governance and access control mechanism,\\n * allowing the owner to manage minting restrictions and blacklist certain addresses to maintain control and security within the token ecosystem.\\n * It provides a flexible framework for token-related operations.\\n */\\n\\ncontract TokenController is Ownable, Pausable {\\n    /**\\n     * @notice Access control manager contract address.\\n     */\\n    address public accessControlManager;\\n    /**\\n     * @notice A Mapping used to keep track of the blacklist status of addresses.\\n     */\\n    mapping(address => bool) internal _blacklist;\\n    /**\\n     * @notice A mapping is used to keep track of the maximum amount a minter is permitted to mint.\\n     */\\n    mapping(address => uint256) public minterToCap;\\n    /**\\n     * @notice A Mapping used to keep track of the amount i.e already minted by minter.\\n     */\\n    mapping(address => uint256) public minterToMintedAmount;\\n\\n    /**\\n     * @notice Emitted when the blacklist status of a user is updated.\\n     */\\n    event BlacklistUpdated(address indexed user, bool value);\\n    /**\\n     * @notice Emitted when the minting limit for a minter is increased.\\n     */\\n    event MintLimitIncreased(address indexed minter, uint256 newLimit);\\n    /**\\n     * @notice Emitted when the minting limit for a minter is decreased.\\n     */\\n    event MintLimitDecreased(address indexed minter, uint256 newLimit);\\n    /**\\n     * @notice Emitted when the minting cap for a minter is changed.\\n     */\\n    event MintCapChanged(address indexed minter, uint256 amount);\\n    /**\\n     * @notice Emitted when the address of the access control manager of the contract is updated.\\n     */\\n    event NewAccessControlManager(address indexed oldAccessControlManager, address indexed newAccessControlManager);\\n    /**\\n     * @notice Emitted when all minted tokens are migrated from one minter to another.\\n     */\\n    event MintedTokensMigrated(address indexed source, address indexed destination);\\n\\n    /**\\n     * @notice This error is used to indicate that the minting limit has been exceeded. It is typically thrown when a minting operation would surpass the defined cap.\\n     */\\n    error MintLimitExceed();\\n    /**\\n     * @notice This error is used to indicate that `mint` `burn` and `transfer` actions are not allowed for the user address.\\n     */\\n    error AccountBlacklisted(address user);\\n    /**\\n     * @notice This error is used to indicate that sender is not allowed to perform this action.\\n     */\\n    error Unauthorized();\\n    /**\\n     * @notice This error is used to indicate that the new cap is greater than the previously minted tokens for the minter.\\n     */\\n    error NewCapNotGreaterThanMintedTokens();\\n    /**\\n     * @notice This error is used to indicate that the addresses must be different.\\n     */\\n    error AddressesMustDiffer();\\n    /**\\n     * @notice This error is used to indicate that the minter did not mint the required amount of tokens.\\n     */\\n    error MintedAmountExceed();\\n\\n    /**\\n     * @param accessControlManager_ Address of access control manager contract.\\n     * @custom:error ZeroAddressNotAllowed is thrown when accessControlManager contract address is zero.\\n     */\\n    constructor(address accessControlManager_) {\\n        ensureNonzeroAddress(accessControlManager_);\\n        accessControlManager = accessControlManager_;\\n    }\\n\\n    /**\\n     * @notice Pauses Token\\n     * @custom:access Controlled by AccessControlManager.\\n     */\\n    function pause() external {\\n        _ensureAllowed(\\\"pause()\\\");\\n        _pause();\\n    }\\n\\n    /**\\n     * @notice Resumes Token\\n     * @custom:access Controlled by AccessControlManager.\\n     */\\n    function unpause() external {\\n        _ensureAllowed(\\\"unpause()\\\");\\n        _unpause();\\n    }\\n\\n    /**\\n     * @notice Function to update blacklist.\\n     * @param user_ User address to be affected.\\n     * @param value_ Boolean to toggle value.\\n     * @custom:access Controlled by AccessControlManager.\\n     * @custom:event Emits BlacklistUpdated event.\\n     */\\n    function updateBlacklist(address user_, bool value_) external {\\n        _ensureAllowed(\\\"updateBlacklist(address,bool)\\\");\\n        _blacklist[user_] = value_;\\n        emit BlacklistUpdated(user_, value_);\\n    }\\n\\n    /**\\n     * @notice Sets the minting cap for minter.\\n     * @param minter_ Minter address.\\n     * @param amount_ Cap for the minter.\\n     * @custom:access Controlled by AccessControlManager.\\n     * @custom:event Emits MintCapChanged.\\n     */\\n    function setMintCap(address minter_, uint256 amount_) external {\\n        _ensureAllowed(\\\"setMintCap(address,uint256)\\\");\\n\\n        if (amount_ < minterToMintedAmount[minter_]) {\\n            revert NewCapNotGreaterThanMintedTokens();\\n        }\\n\\n        minterToCap[minter_] = amount_;\\n        emit MintCapChanged(minter_, amount_);\\n    }\\n\\n    /**\\n     * @notice Sets the address of the access control manager of this contract.\\n     * @dev Admin function to set the access control address.\\n     * @param newAccessControlAddress_ New address for the access control.\\n     * @custom:access Only owner.\\n     * @custom:event Emits NewAccessControlManager.\\n     * @custom:error ZeroAddressNotAllowed is thrown when newAccessControlAddress_ contract address is zero.\\n     */\\n    function setAccessControlManager(address newAccessControlAddress_) external onlyOwner {\\n        ensureNonzeroAddress(newAccessControlAddress_);\\n        emit NewAccessControlManager(accessControlManager, newAccessControlAddress_);\\n        accessControlManager = newAccessControlAddress_;\\n    }\\n\\n    /**\\n     * @notice Migrates all minted tokens from one minter to another. This function is useful when we want to permanent take down a bridge.\\n     * @param source_ Minter address to migrate tokens from.\\n     * @param destination_ Minter address to migrate tokens to.\\n     * @custom:access Controlled by AccessControlManager.\\n     * @custom:error MintLimitExceed is thrown when the minting limit exceeds the cap after migration.\\n     * @custom:error AddressesMustDiffer is thrown when the source_ and destination_ addresses are the same.\\n     * @custom:event Emits MintLimitIncreased and MintLimitDecreased events for 'source' and 'destination'.\\n     * @custom:event Emits MintedTokensMigrated.\\n     */\\n    function migrateMinterTokens(address source_, address destination_) external {\\n        _ensureAllowed(\\\"migrateMinterTokens(address,address)\\\");\\n\\n        if (source_ == destination_) {\\n            revert AddressesMustDiffer();\\n        }\\n\\n        uint256 sourceCap = minterToCap[source_];\\n        uint256 destinationCap = minterToCap[destination_];\\n\\n        uint256 sourceMinted = minterToMintedAmount[source_];\\n        uint256 destinationMinted = minterToMintedAmount[destination_];\\n        uint256 newDestinationMinted = destinationMinted + sourceMinted;\\n\\n        if (newDestinationMinted > destinationCap) {\\n            revert MintLimitExceed();\\n        }\\n\\n        minterToMintedAmount[source_] = 0;\\n        minterToMintedAmount[destination_] = newDestinationMinted;\\n        uint256 availableLimit;\\n        unchecked {\\n            availableLimit = destinationCap - newDestinationMinted;\\n        }\\n\\n        emit MintLimitDecreased(destination_, availableLimit);\\n        emit MintLimitIncreased(source_, sourceCap);\\n        emit MintedTokensMigrated(source_, destination_);\\n    }\\n\\n    /**\\n     * @notice Returns the blacklist status of the address.\\n     * @param user_ Address of user to check blacklist status.\\n     * @return bool status of blacklist.\\n     */\\n    function isBlackListed(address user_) external view returns (bool) {\\n        return _blacklist[user_];\\n    }\\n\\n    /**\\n     * @dev Checks the minter cap and eligibility of receiver to receive tokens.\\n     * @param from_  Minter address.\\n     * @param to_  Receiver address.\\n     * @param amount_  Amount to be mint.\\n     * @custom:error MintLimitExceed is thrown when minting limit exceeds the cap.\\n     * @custom:event Emits MintLimitDecreased with minter address and available limits.\\n     */\\n    function _isEligibleToMint(address from_, address to_, uint256 amount_) internal {\\n        uint256 mintingCap = minterToCap[from_];\\n        uint256 totalMintedOld = minterToMintedAmount[from_];\\n        uint256 totalMintedNew = totalMintedOld + amount_;\\n\\n        if (totalMintedNew > mintingCap) {\\n            revert MintLimitExceed();\\n        }\\n        minterToMintedAmount[from_] = totalMintedNew;\\n        uint256 availableLimit;\\n        unchecked {\\n            availableLimit = mintingCap - totalMintedNew;\\n        }\\n        emit MintLimitDecreased(from_, availableLimit);\\n    }\\n\\n    /**\\n     * @dev This is post hook of burn function, increases minting limit of the minter.\\n     * @param from_ Minter address.\\n     * @param amount_  Amount burned.\\n     * @custom:error MintedAmountExceed is thrown when `amount_` is greater than the tokens minted by `from_`.\\n     * @custom:event Emits MintLimitIncreased with minter address and availabe limit.\\n     */\\n    function _increaseMintLimit(address from_, uint256 amount_) internal {\\n        uint256 totalMintedOld = minterToMintedAmount[from_];\\n\\n        if (totalMintedOld < amount_) {\\n            revert MintedAmountExceed();\\n        }\\n\\n        uint256 totalMintedNew;\\n        unchecked {\\n            totalMintedNew = totalMintedOld - amount_;\\n        }\\n        minterToMintedAmount[from_] = totalMintedNew;\\n        uint256 availableLimit = minterToCap[from_] - totalMintedNew;\\n        emit MintLimitIncreased(from_, availableLimit);\\n    }\\n\\n    /**\\n     * @dev Checks the caller is allowed to call the specified fuction.\\n     * @param functionSig_ Function signatureon which access is to be checked.\\n     * @custom:error Unauthorized, thrown when unauthorised user try to access function.\\n     */\\n    function _ensureAllowed(string memory functionSig_) internal view {\\n        if (!IAccessControlManagerV8(accessControlManager).isAllowedToCall(msg.sender, functionSig_)) {\\n            revert Unauthorized();\\n        }\\n    }\\n}\\n\",\"keccak256\":\"0xae9daea7f260ac111e0855fc1f9c904623f3ab8a253fb3b060519a8384f95667\",\"license\":\"BSD-3-Clause\"},\"contracts/Bridge/token/XVS.sol\":{\"content\":\"// SPDX-License-Identifier: BSD-3-Clause\\npragma solidity 0.8.25;\\n\\nimport { ERC20 } from \\\"@openzeppelin/contracts/token/ERC20/ERC20.sol\\\";\\n\\nimport { TokenController } from \\\"./TokenController.sol\\\";\\n\\n/**\\n * @title XVS\\n * @author Venus\\n * @notice XVS contract serves as a customized ERC-20 token with additional minting and burning functionality.\\n *  It also incorporates access control features provided by the \\\"TokenController\\\" contract to ensure proper governance and restrictions on minting and burning operations.\\n */\\n\\ncontract XVS is ERC20, TokenController {\\n    constructor(address accessControlManager_) ERC20(\\\"Venus XVS\\\", \\\"XVS\\\") TokenController(accessControlManager_) {}\\n\\n    /**\\n     * @notice Creates `amount_` tokens and assigns them to `account_`, increasing\\n     * the total supply. Checks access and eligibility.\\n     * @param account_ Address to which tokens are assigned.\\n     * @param amount_ Amount of tokens to be assigned.\\n     * @custom:access Controlled by AccessControlManager.\\n     * @custom:event Emits MintLimitDecreased with new available limit.\\n     * @custom:error MintLimitExceed is thrown when minting amount exceeds the maximum cap.\\n     */\\n    function mint(address account_, uint256 amount_) external whenNotPaused {\\n        _ensureAllowed(\\\"mint(address,uint256)\\\");\\n        _isEligibleToMint(msg.sender, account_, amount_);\\n        _mint(account_, amount_);\\n    }\\n\\n    /**\\n     * @notice Destroys `amount_` tokens from `account_`, reducing the\\n     * total supply. Checks access and eligibility.\\n     * @param account_ Address from which tokens be destroyed.\\n     * @param amount_ Amount of tokens to be destroyed.\\n     * @custom:access Controlled by AccessControlManager.\\n     * @custom:event Emits MintLimitIncreased with new available limit.\\n     */\\n    function burn(address account_, uint256 amount_) external whenNotPaused {\\n        _ensureAllowed(\\\"burn(address,uint256)\\\");\\n        _burn(account_, amount_);\\n        _increaseMintLimit(msg.sender, amount_);\\n    }\\n\\n    /**\\n     * @notice Hook that is called before any transfer of tokens. This includes\\n     * minting and burning.\\n     * @param from_ Address of account from which tokens are to be transferred.\\n     * @param to_ Address of the account to which tokens are to be transferred.\\n     * @param amount_ The amount of tokens to be transferred.\\n     * @custom:error AccountBlacklisted is thrown when either `from` or `to` address is blacklisted.\\n     */\\n    function _beforeTokenTransfer(address from_, address to_, uint256 amount_) internal override whenNotPaused {\\n        if (_blacklist[to_]) {\\n            revert AccountBlacklisted(to_);\\n        }\\n        if (_blacklist[from_]) {\\n            revert AccountBlacklisted(from_);\\n        }\\n    }\\n}\\n\",\"keccak256\":\"0xd268c178725dee5da810df33bb1fae7e118df2773af3aed0acac29582b63ef52\",\"license\":\"BSD-3-Clause\"}},\"version\":1}",
+  "bytecode": "0x608060405234801561001057600080fd5b50604051611a3b380380611a3b83398101604081905261002f9161015f565b806040518060400160405280600981526020016856656e75732058565360b81b8152506040518060400160405280600381526020016258565360e81b815250816003908161007d9190610230565b50600461008a8282610230565b5050506100a361009e6100df60201b60201c565b6100e3565b6005805460ff60a01b191690556100b981610135565b600680546001600160a01b0319166001600160a01b0392909216919091179055506102ef565b3390565b600580546001600160a01b038381166001600160a01b0319831681179093556040519116919082907f8be0079c531659141344cd1fd0a4f28419497f9722a3daafe3b4186f6b6457e090600090a35050565b6001600160a01b03811661015c576040516342bcdf7f60e11b815260040160405180910390fd5b50565b60006020828403121561017157600080fd5b81516001600160a01b038116811461018857600080fd5b9392505050565b634e487b7160e01b600052604160045260246000fd5b600181811c908216806101b957607f821691505b6020821081036101d957634e487b7160e01b600052602260045260246000fd5b50919050565b601f82111561022b576000816000526020600020601f850160051c810160208610156102085750805b601f850160051c820191505b8181101561022757828155600101610214565b5050505b505050565b81516001600160401b038111156102495761024961018f565b61025d8161025784546101a5565b846101df565b602080601f831160018114610292576000841561027a5750858301515b600019600386901b1c1916600185901b178555610227565b600085815260208120601f198616915b828110156102c1578886015182559484019460019091019084016102a2565b50858210156102df5787850151600019600388901b60f8161c191681555b5050505050600190811b01905550565b61173d806102fe6000396000f3fe608060405234801561001057600080fd5b50600436106101a95760003560e01c80637b517334116100f9578063a9059cbb11610097578063d89e2dac11610071578063d89e2dac14610390578063dd62ed3e146103a3578063e47d6060146103b6578063f2fde38b146103e257600080fd5b8063a9059cbb14610357578063b4a0bdf31461036a578063c06abe771461037d57600080fd5b80639155e083116100d35780639155e0831461031657806395d89b41146103295780639dc29fac14610331578063a457c2d71461034457600080fd5b80637b517334146102c95780638456cb59146102e95780638da5cb5b146102f157600080fd5b8063391efe121161016657806340c10f191161014057806340c10f19146102735780635c975abb1461028657806370a0823114610298578063715018a6146102c157600080fd5b8063391efe121461023857806339509351146102585780633f4ba83a1461026b57600080fd5b806306fdde03146101ae578063095ea7b3146101cc5780630e32cb86146101ef57806318160ddd1461020457806323b872dd14610216578063313ce56714610229575b600080fd5b6101b66103f5565b6040516101c391906114f5565b60405180910390f35b6101df6101da36600461152b565b610487565b60405190151581526020016101c3565b6102026101fd366004611555565b6104a1565b005b6002545b6040519081526020016101c3565b6101df610224366004611570565b61050e565b604051601281526020016101c3565b610208610246366004611555565b60086020526000908152604090205481565b6101df61026636600461152b565b610532565b610202610554565b61020261028136600461152b565b610588565b600554600160a01b900460ff166101df565b6102086102a6366004611555565b6001600160a01b031660009081526020819052604090205490565b6102026105df565b6102086102d7366004611555565b60096020526000908152604090205481565b6102026105f1565b6005546001600160a01b03165b6040516001600160a01b0390911681526020016101c3565b6102026103243660046115ba565b610621565b6101b66106bf565b61020261033f36600461152b565b6106ce565b6101df61035236600461152b565b610720565b6101df61036536600461152b565b6107a0565b6006546102fe906001600160a01b031681565b61020261038b36600461152b565b6107ae565b61020261039e3660046115f1565b610872565b6102086103b13660046115f1565b610a1a565b6101df6103c4366004611555565b6001600160a01b031660009081526007602052604090205460ff1690565b6102026103f0366004611555565b610a45565b60606003805461040490611624565b80601f016020809104026020016040519081016040528092919081815260200182805461043090611624565b801561047d5780601f106104525761010080835404028352916020019161047d565b820191906000526020600020905b81548152906001019060200180831161046057829003601f168201915b5050505050905090565b600033610495818585610abe565b60019150505b92915050565b6104a9610be3565b6104b281610c3d565b6006546040516001600160a01b038084169216907f66fd58e82f7b31a2a5c30e0888f3093efe4e111b00cd2b0c31fe014601293aa090600090a3600680546001600160a01b0319166001600160a01b0392909216919091179055565b60003361051c858285610c64565b610527858585610cde565b506001949350505050565b6000336104958185856105458383610a1a565b61054f9190611674565b610abe565b61057e60405180604001604052806009815260200168756e7061757365282960b81b815250610e8d565b610586610f1c565b565b610590610f71565b6105c6604051806040016040528060158152602001746d696e7428616464726573732c75696e743235362960581b815250610e8d565b6105d1338383610fbe565b6105db8282611074565b5050565b6105e7610be3565b610586600061113f565b610619604051806040016040528060078152602001667061757365282960c81b815250610e8d565b610586611191565b61065f6040518060400160405280601d81526020017f757064617465426c61636b6c69737428616464726573732c626f6f6c29000000815250610e8d565b6001600160a01b038216600081815260076020908152604091829020805460ff191685151590811790915591519182527f6a12b3df6cba4203bd7fd06b816789f87de8c594299aed5717ae070fac781bac91015b60405180910390a25050565b60606004805461040490611624565b6106d6610f71565b61070c604051806040016040528060158152602001746275726e28616464726573732c75696e743235362960581b815250610e8d565b61071682826111d4565b6105db338261130f565b6000338161072e8286610a1a565b9050838110156107935760405162461bcd60e51b815260206004820152602560248201527f45524332303a2064656372656173656420616c6c6f77616e63652062656c6f77604482015264207a65726f60d81b60648201526084015b60405180910390fd5b6105278286868403610abe565b600033610495818585610cde565b6107ec6040518060400160405280601b81526020017f7365744d696e7443617028616464726573732c75696e74323536290000000000815250610e8d565b6001600160a01b0382166000908152600960205260409020548110156108255760405163ce89973d60e01b815260040160405180910390fd5b6001600160a01b03821660008181526008602052604090819020839055517f01a85f4ecff52e70907e25b863010bca98a9458d9f2fe9b3efb4c47d197e6448906106b39084815260200190565b6108936040518060600160405280602481526020016116e460249139610e8d565b806001600160a01b0316826001600160a01b0316036108c5576040516380ae98f560e01b815260040160405180910390fd5b6001600160a01b0380831660008181526008602090815260408083205494861680845281842054948452600990925280832054918352822054909161090a8383611674565b90508381111561092d57604051634f2dbd1d60e01b815260040160405180910390fd5b6001600160a01b038781166000908152600960209081526040808320839055928916808352918390208490559151838703808252927fbe214d1fa2403a39be9a36c9f4b45125eba30bf27a8b56a619baf00493ad3e61910160405180910390a2876001600160a01b03167f0831a8ba59684daef8a957d2bd2d943e233993771429e9a17b71ddb1cea35cdb876040516109c891815260200190565b60405180910390a2866001600160a01b0316886001600160a01b03167f63ce671e4a37975f0a9e340f6f72320c617a5f728b83e3860b03aa847dc26ebb60405160405180910390a35050505050505050565b6001600160a01b03918216600090815260016020908152604080832093909416825291909152205490565b610a4d610be3565b6001600160a01b038116610ab25760405162461bcd60e51b815260206004820152602660248201527f4f776e61626c653a206e6577206f776e657220697320746865207a65726f206160448201526564647265737360d01b606482015260840161078a565b610abb8161113f565b50565b6001600160a01b038316610b205760405162461bcd60e51b8152602060048201526024808201527f45524332303a20617070726f76652066726f6d20746865207a65726f206164646044820152637265737360e01b606482015260840161078a565b6001600160a01b038216610b815760405162461bcd60e51b815260206004820152602260248201527f45524332303a20617070726f766520746f20746865207a65726f206164647265604482015261737360f01b606482015260840161078a565b6001600160a01b0383811660008181526001602090815260408083209487168084529482529182902085905590518481527f8c5be1e5ebec7d5bd14f71427d1e84f3dd0314c0f7b2291e5b200ac8c7c3b92591015b60405180910390a3505050565b6005546001600160a01b031633146105865760405162461bcd60e51b815260206004820181905260248201527f4f776e61626c653a2063616c6c6572206973206e6f7420746865206f776e6572604482015260640161078a565b6001600160a01b038116610abb576040516342bcdf7f60e11b815260040160405180910390fd5b6000610c708484610a1a565b90506000198114610cd85781811015610ccb5760405162461bcd60e51b815260206004820152601d60248201527f45524332303a20696e73756666696369656e7420616c6c6f77616e6365000000604482015260640161078a565b610cd88484848403610abe565b50505050565b6001600160a01b038316610d425760405162461bcd60e51b815260206004820152602560248201527f45524332303a207472616e736665722066726f6d20746865207a65726f206164604482015264647265737360d81b606482015260840161078a565b6001600160a01b038216610da45760405162461bcd60e51b815260206004820152602360248201527f45524332303a207472616e7366657220746f20746865207a65726f206164647260448201526265737360e81b606482015260840161078a565b610daf8383836113cd565b6001600160a01b03831660009081526020819052604090205481811015610e275760405162461bcd60e51b815260206004820152602660248201527f45524332303a207472616e7366657220616d6f756e7420657863656564732062604482015265616c616e636560d01b606482015260840161078a565b6001600160a01b03848116600081815260208181526040808320878703905593871680835291849020805487019055925185815290927fddf252ad1be2c89b69c2b068fc378daa952ba7f163c4a11628f55a4df523b3ef910160405180910390a3610cd8565b6006546040516318c5e8ab60e01b81526001600160a01b03909116906318c5e8ab90610ebf9033908590600401611687565b602060405180830381865afa158015610edc573d6000803e3d6000fd5b505050506040513d601f19601f82011682018060405250810190610f0091906116b3565b610abb576040516282b42960e81b815260040160405180910390fd5b610f2461145f565b6005805460ff60a01b191690557f5db9ee0a495bf2e6ff9c91a7834c1ba4fdd244a5e8aa4e537bd38aeae4b073aa335b6040516001600160a01b03909116815260200160405180910390a1565b600554600160a01b900460ff16156105865760405162461bcd60e51b815260206004820152601060248201526f14185d5cd8589b194e881c185d5cd95960821b604482015260640161078a565b6001600160a01b03831660009081526008602090815260408083205460099092528220549091610fee8483611674565b90508281111561101157604051634f2dbd1d60e01b815260040160405180910390fd5b6001600160a01b038616600081815260096020526040908190208390555182850391907fbe214d1fa2403a39be9a36c9f4b45125eba30bf27a8b56a619baf00493ad3e61906110639084815260200190565b60405180910390a250505050505050565b6001600160a01b0382166110ca5760405162461bcd60e51b815260206004820152601f60248201527f45524332303a206d696e7420746f20746865207a65726f206164647265737300604482015260640161078a565b6110d6600083836113cd565b80600260008282546110e89190611674565b90915550506001600160a01b038216600081815260208181526040808320805486019055518481527fddf252ad1be2c89b69c2b068fc378daa952ba7f163c4a11628f55a4df523b3ef910160405180910390a35050565b600580546001600160a01b038381166001600160a01b0319831681179093556040519116919082907f8be0079c531659141344cd1fd0a4f28419497f9722a3daafe3b4186f6b6457e090600090a35050565b611199610f71565b6005805460ff60a01b1916600160a01b1790557f62e78cea01bee320cd4e420270b5ea74000d11b0c9f74754ebdbfc544b05a258610f543390565b6001600160a01b0382166112345760405162461bcd60e51b815260206004820152602160248201527f45524332303a206275726e2066726f6d20746865207a65726f206164647265736044820152607360f81b606482015260840161078a565b611240826000836113cd565b6001600160a01b038216600090815260208190526040902054818110156112b45760405162461bcd60e51b815260206004820152602260248201527f45524332303a206275726e20616d6f756e7420657863656564732062616c616e604482015261636560f01b606482015260840161078a565b6001600160a01b0383166000818152602081815260408083208686039055600280548790039055518581529192917fddf252ad1be2c89b69c2b068fc378daa952ba7f163c4a11628f55a4df523b3ef9101610bd6565b505050565b6001600160a01b03821660009081526009602052604090205481811015611349576040516348af2f2960e11b815260040160405180910390fd5b6001600160a01b03831660009081526009602090815260408083208585039081905560089092528220549091906113819083906116d0565b9050846001600160a01b03167f0831a8ba59684daef8a957d2bd2d943e233993771429e9a17b71ddb1cea35cdb826040516113be91815260200190565b60405180910390a25050505050565b6113d5610f71565b6001600160a01b03821660009081526007602052604090205460ff161561141a5760405163571f7b4960e01b81526001600160a01b038316600482015260240161078a565b6001600160a01b03831660009081526007602052604090205460ff161561130a5760405163571f7b4960e01b81526001600160a01b038416600482015260240161078a565b600554600160a01b900460ff166105865760405162461bcd60e51b815260206004820152601460248201527314185d5cd8589b194e881b9bdd081c185d5cd95960621b604482015260640161078a565b6000815180845260005b818110156114d5576020818501810151868301820152016114b9565b506000602082860101526020601f19601f83011685010191505092915050565b60208152600061150860208301846114af565b9392505050565b80356001600160a01b038116811461152657600080fd5b919050565b6000806040838503121561153e57600080fd5b6115478361150f565b946020939093013593505050565b60006020828403121561156757600080fd5b6115088261150f565b60008060006060848603121561158557600080fd5b61158e8461150f565b925061159c6020850161150f565b9150604084013590509250925092565b8015158114610abb57600080fd5b600080604083850312156115cd57600080fd5b6115d68361150f565b915060208301356115e6816115ac565b809150509250929050565b6000806040838503121561160457600080fd5b61160d8361150f565b915061161b6020840161150f565b90509250929050565b600181811c9082168061163857607f821691505b60208210810361165857634e487b7160e01b600052602260045260246000fd5b50919050565b634e487b7160e01b600052601160045260246000fd5b8082018082111561049b5761049b61165e565b6001600160a01b03831681526040602082018190526000906116ab908301846114af565b949350505050565b6000602082840312156116c557600080fd5b8151611508816115ac565b8181038181111561049b5761049b61165e56fe6d6967726174654d696e746572546f6b656e7328616464726573732c6164647265737329a2646970667358221220a1e16fcdda42e36f69f1b86faae54c70a14c6a62109fffaf251650ec2be02ca664736f6c63430008190033",
+  "deployedBytecode": "0x608060405234801561001057600080fd5b50600436106101a95760003560e01c80637b517334116100f9578063a9059cbb11610097578063d89e2dac11610071578063d89e2dac14610390578063dd62ed3e146103a3578063e47d6060146103b6578063f2fde38b146103e257600080fd5b8063a9059cbb14610357578063b4a0bdf31461036a578063c06abe771461037d57600080fd5b80639155e083116100d35780639155e0831461031657806395d89b41146103295780639dc29fac14610331578063a457c2d71461034457600080fd5b80637b517334146102c95780638456cb59146102e95780638da5cb5b146102f157600080fd5b8063391efe121161016657806340c10f191161014057806340c10f19146102735780635c975abb1461028657806370a0823114610298578063715018a6146102c157600080fd5b8063391efe121461023857806339509351146102585780633f4ba83a1461026b57600080fd5b806306fdde03146101ae578063095ea7b3146101cc5780630e32cb86146101ef57806318160ddd1461020457806323b872dd14610216578063313ce56714610229575b600080fd5b6101b66103f5565b6040516101c391906114f5565b60405180910390f35b6101df6101da36600461152b565b610487565b60405190151581526020016101c3565b6102026101fd366004611555565b6104a1565b005b6002545b6040519081526020016101c3565b6101df610224366004611570565b61050e565b604051601281526020016101c3565b610208610246366004611555565b60086020526000908152604090205481565b6101df61026636600461152b565b610532565b610202610554565b61020261028136600461152b565b610588565b600554600160a01b900460ff166101df565b6102086102a6366004611555565b6001600160a01b031660009081526020819052604090205490565b6102026105df565b6102086102d7366004611555565b60096020526000908152604090205481565b6102026105f1565b6005546001600160a01b03165b6040516001600160a01b0390911681526020016101c3565b6102026103243660046115ba565b610621565b6101b66106bf565b61020261033f36600461152b565b6106ce565b6101df61035236600461152b565b610720565b6101df61036536600461152b565b6107a0565b6006546102fe906001600160a01b031681565b61020261038b36600461152b565b6107ae565b61020261039e3660046115f1565b610872565b6102086103b13660046115f1565b610a1a565b6101df6103c4366004611555565b6001600160a01b031660009081526007602052604090205460ff1690565b6102026103f0366004611555565b610a45565b60606003805461040490611624565b80601f016020809104026020016040519081016040528092919081815260200182805461043090611624565b801561047d5780601f106104525761010080835404028352916020019161047d565b820191906000526020600020905b81548152906001019060200180831161046057829003601f168201915b5050505050905090565b600033610495818585610abe565b60019150505b92915050565b6104a9610be3565b6104b281610c3d565b6006546040516001600160a01b038084169216907f66fd58e82f7b31a2a5c30e0888f3093efe4e111b00cd2b0c31fe014601293aa090600090a3600680546001600160a01b0319166001600160a01b0392909216919091179055565b60003361051c858285610c64565b610527858585610cde565b506001949350505050565b6000336104958185856105458383610a1a565b61054f9190611674565b610abe565b61057e60405180604001604052806009815260200168756e7061757365282960b81b815250610e8d565b610586610f1c565b565b610590610f71565b6105c6604051806040016040528060158152602001746d696e7428616464726573732c75696e743235362960581b815250610e8d565b6105d1338383610fbe565b6105db8282611074565b5050565b6105e7610be3565b610586600061113f565b610619604051806040016040528060078152602001667061757365282960c81b815250610e8d565b610586611191565b61065f6040518060400160405280601d81526020017f757064617465426c61636b6c69737428616464726573732c626f6f6c29000000815250610e8d565b6001600160a01b038216600081815260076020908152604091829020805460ff191685151590811790915591519182527f6a12b3df6cba4203bd7fd06b816789f87de8c594299aed5717ae070fac781bac91015b60405180910390a25050565b60606004805461040490611624565b6106d6610f71565b61070c604051806040016040528060158152602001746275726e28616464726573732c75696e743235362960581b815250610e8d565b61071682826111d4565b6105db338261130f565b6000338161072e8286610a1a565b9050838110156107935760405162461bcd60e51b815260206004820152602560248201527f45524332303a2064656372656173656420616c6c6f77616e63652062656c6f77604482015264207a65726f60d81b60648201526084015b60405180910390fd5b6105278286868403610abe565b600033610495818585610cde565b6107ec6040518060400160405280601b81526020017f7365744d696e7443617028616464726573732c75696e74323536290000000000815250610e8d565b6001600160a01b0382166000908152600960205260409020548110156108255760405163ce89973d60e01b815260040160405180910390fd5b6001600160a01b03821660008181526008602052604090819020839055517f01a85f4ecff52e70907e25b863010bca98a9458d9f2fe9b3efb4c47d197e6448906106b39084815260200190565b6108936040518060600160405280602481526020016116e460249139610e8d565b806001600160a01b0316826001600160a01b0316036108c5576040516380ae98f560e01b815260040160405180910390fd5b6001600160a01b0380831660008181526008602090815260408083205494861680845281842054948452600990925280832054918352822054909161090a8383611674565b90508381111561092d57604051634f2dbd1d60e01b815260040160405180910390fd5b6001600160a01b038781166000908152600960209081526040808320839055928916808352918390208490559151838703808252927fbe214d1fa2403a39be9a36c9f4b45125eba30bf27a8b56a619baf00493ad3e61910160405180910390a2876001600160a01b03167f0831a8ba59684daef8a957d2bd2d943e233993771429e9a17b71ddb1cea35cdb876040516109c891815260200190565b60405180910390a2866001600160a01b0316886001600160a01b03167f63ce671e4a37975f0a9e340f6f72320c617a5f728b83e3860b03aa847dc26ebb60405160405180910390a35050505050505050565b6001600160a01b03918216600090815260016020908152604080832093909416825291909152205490565b610a4d610be3565b6001600160a01b038116610ab25760405162461bcd60e51b815260206004820152602660248201527f4f776e61626c653a206e6577206f776e657220697320746865207a65726f206160448201526564647265737360d01b606482015260840161078a565b610abb8161113f565b50565b6001600160a01b038316610b205760405162461bcd60e51b8152602060048201526024808201527f45524332303a20617070726f76652066726f6d20746865207a65726f206164646044820152637265737360e01b606482015260840161078a565b6001600160a01b038216610b815760405162461bcd60e51b815260206004820152602260248201527f45524332303a20617070726f766520746f20746865207a65726f206164647265604482015261737360f01b606482015260840161078a565b6001600160a01b0383811660008181526001602090815260408083209487168084529482529182902085905590518481527f8c5be1e5ebec7d5bd14f71427d1e84f3dd0314c0f7b2291e5b200ac8c7c3b92591015b60405180910390a3505050565b6005546001600160a01b031633146105865760405162461bcd60e51b815260206004820181905260248201527f4f776e61626c653a2063616c6c6572206973206e6f7420746865206f776e6572604482015260640161078a565b6001600160a01b038116610abb576040516342bcdf7f60e11b815260040160405180910390fd5b6000610c708484610a1a565b90506000198114610cd85781811015610ccb5760405162461bcd60e51b815260206004820152601d60248201527f45524332303a20696e73756666696369656e7420616c6c6f77616e6365000000604482015260640161078a565b610cd88484848403610abe565b50505050565b6001600160a01b038316610d425760405162461bcd60e51b815260206004820152602560248201527f45524332303a207472616e736665722066726f6d20746865207a65726f206164604482015264647265737360d81b606482015260840161078a565b6001600160a01b038216610da45760405162461bcd60e51b815260206004820152602360248201527f45524332303a207472616e7366657220746f20746865207a65726f206164647260448201526265737360e81b606482015260840161078a565b610daf8383836113cd565b6001600160a01b03831660009081526020819052604090205481811015610e275760405162461bcd60e51b815260206004820152602660248201527f45524332303a207472616e7366657220616d6f756e7420657863656564732062604482015265616c616e636560d01b606482015260840161078a565b6001600160a01b03848116600081815260208181526040808320878703905593871680835291849020805487019055925185815290927fddf252ad1be2c89b69c2b068fc378daa952ba7f163c4a11628f55a4df523b3ef910160405180910390a3610cd8565b6006546040516318c5e8ab60e01b81526001600160a01b03909116906318c5e8ab90610ebf9033908590600401611687565b602060405180830381865afa158015610edc573d6000803e3d6000fd5b505050506040513d601f19601f82011682018060405250810190610f0091906116b3565b610abb576040516282b42960e81b815260040160405180910390fd5b610f2461145f565b6005805460ff60a01b191690557f5db9ee0a495bf2e6ff9c91a7834c1ba4fdd244a5e8aa4e537bd38aeae4b073aa335b6040516001600160a01b03909116815260200160405180910390a1565b600554600160a01b900460ff16156105865760405162461bcd60e51b815260206004820152601060248201526f14185d5cd8589b194e881c185d5cd95960821b604482015260640161078a565b6001600160a01b03831660009081526008602090815260408083205460099092528220549091610fee8483611674565b90508281111561101157604051634f2dbd1d60e01b815260040160405180910390fd5b6001600160a01b038616600081815260096020526040908190208390555182850391907fbe214d1fa2403a39be9a36c9f4b45125eba30bf27a8b56a619baf00493ad3e61906110639084815260200190565b60405180910390a250505050505050565b6001600160a01b0382166110ca5760405162461bcd60e51b815260206004820152601f60248201527f45524332303a206d696e7420746f20746865207a65726f206164647265737300604482015260640161078a565b6110d6600083836113cd565b80600260008282546110e89190611674565b90915550506001600160a01b038216600081815260208181526040808320805486019055518481527fddf252ad1be2c89b69c2b068fc378daa952ba7f163c4a11628f55a4df523b3ef910160405180910390a35050565b600580546001600160a01b038381166001600160a01b0319831681179093556040519116919082907f8be0079c531659141344cd1fd0a4f28419497f9722a3daafe3b4186f6b6457e090600090a35050565b611199610f71565b6005805460ff60a01b1916600160a01b1790557f62e78cea01bee320cd4e420270b5ea74000d11b0c9f74754ebdbfc544b05a258610f543390565b6001600160a01b0382166112345760405162461bcd60e51b815260206004820152602160248201527f45524332303a206275726e2066726f6d20746865207a65726f206164647265736044820152607360f81b606482015260840161078a565b611240826000836113cd565b6001600160a01b038216600090815260208190526040902054818110156112b45760405162461bcd60e51b815260206004820152602260248201527f45524332303a206275726e20616d6f756e7420657863656564732062616c616e604482015261636560f01b606482015260840161078a565b6001600160a01b0383166000818152602081815260408083208686039055600280548790039055518581529192917fddf252ad1be2c89b69c2b068fc378daa952ba7f163c4a11628f55a4df523b3ef9101610bd6565b505050565b6001600160a01b03821660009081526009602052604090205481811015611349576040516348af2f2960e11b815260040160405180910390fd5b6001600160a01b03831660009081526009602090815260408083208585039081905560089092528220549091906113819083906116d0565b9050846001600160a01b03167f0831a8ba59684daef8a957d2bd2d943e233993771429e9a17b71ddb1cea35cdb826040516113be91815260200190565b60405180910390a25050505050565b6113d5610f71565b6001600160a01b03821660009081526007602052604090205460ff161561141a5760405163571f7b4960e01b81526001600160a01b038316600482015260240161078a565b6001600160a01b03831660009081526007602052604090205460ff161561130a5760405163571f7b4960e01b81526001600160a01b038416600482015260240161078a565b600554600160a01b900460ff166105865760405162461bcd60e51b815260206004820152601460248201527314185d5cd8589b194e881b9bdd081c185d5cd95960621b604482015260640161078a565b6000815180845260005b818110156114d5576020818501810151868301820152016114b9565b506000602082860101526020601f19601f83011685010191505092915050565b60208152600061150860208301846114af565b9392505050565b80356001600160a01b038116811461152657600080fd5b919050565b6000806040838503121561153e57600080fd5b6115478361150f565b946020939093013593505050565b60006020828403121561156757600080fd5b6115088261150f565b60008060006060848603121561158557600080fd5b61158e8461150f565b925061159c6020850161150f565b9150604084013590509250925092565b8015158114610abb57600080fd5b600080604083850312156115cd57600080fd5b6115d68361150f565b915060208301356115e6816115ac565b809150509250929050565b6000806040838503121561160457600080fd5b61160d8361150f565b915061161b6020840161150f565b90509250929050565b600181811c9082168061163857607f821691505b60208210810361165857634e487b7160e01b600052602260045260246000fd5b50919050565b634e487b7160e01b600052601160045260246000fd5b8082018082111561049b5761049b61165e565b6001600160a01b03831681526040602082018190526000906116ab908301846114af565b949350505050565b6000602082840312156116c557600080fd5b8151611508816115ac565b8181038181111561049b5761049b61165e56fe6d6967726174654d696e746572546f6b656e7328616464726573732c6164647265737329a2646970667358221220a1e16fcdda42e36f69f1b86faae54c70a14c6a62109fffaf251650ec2be02ca664736f6c63430008190033",
+  "devdoc": {
+    "author": "Venus",
+    "events": {
+      "Approval(address,address,uint256)": {
+        "details": "Emitted when the allowance of a `spender` for an `owner` is set by a call to {approve}. `value` is the new allowance."
+      },
+      "Paused(address)": {
+        "details": "Emitted when the pause is triggered by `account`."
+      },
+      "Transfer(address,address,uint256)": {
+        "details": "Emitted when `value` tokens are moved from one account (`from`) to another (`to`). Note that `value` may be zero."
+      },
+      "Unpaused(address)": {
+        "details": "Emitted when the pause is lifted by `account`."
+      }
+    },
+    "kind": "dev",
+    "methods": {
+      "allowance(address,address)": {
+        "details": "See {IERC20-allowance}."
+      },
+      "approve(address,uint256)": {
+        "details": "See {IERC20-approve}. NOTE: If `amount` is the maximum `uint256`, the allowance is not updated on `transferFrom`. This is semantically equivalent to an infinite approval. Requirements: - `spender` cannot be the zero address."
+      },
+      "balanceOf(address)": {
+        "details": "See {IERC20-balanceOf}."
+      },
+      "burn(address,uint256)": {
+        "custom:access": "Controlled by AccessControlManager.",
+        "custom:event": "Emits MintLimitIncreased with new available limit.",
+        "params": {
+          "account_": "Address from which tokens be destroyed.",
+          "amount_": "Amount of tokens to be destroyed."
+        }
+      },
+      "decimals()": {
+        "details": "Returns the number of decimals used to get its user representation. For example, if `decimals` equals `2`, a balance of `505` tokens should be displayed to a user as `5.05` (`505 / 10 ** 2`). Tokens usually opt for a value of 18, imitating the relationship between Ether and Wei. This is the default value returned by this function, unless it's overridden. NOTE: This information is only used for _display_ purposes: it in no way affects any of the arithmetic of the contract, including {IERC20-balanceOf} and {IERC20-transfer}."
+      },
+      "decreaseAllowance(address,uint256)": {
+        "details": "Atomically decreases the allowance granted to `spender` by the caller. This is an alternative to {approve} that can be used as a mitigation for problems described in {IERC20-approve}. Emits an {Approval} event indicating the updated allowance. Requirements: - `spender` cannot be the zero address. - `spender` must have allowance for the caller of at least `subtractedValue`."
+      },
+      "increaseAllowance(address,uint256)": {
+        "details": "Atomically increases the allowance granted to `spender` by the caller. This is an alternative to {approve} that can be used as a mitigation for problems described in {IERC20-approve}. Emits an {Approval} event indicating the updated allowance. Requirements: - `spender` cannot be the zero address."
+      },
+      "isBlackListed(address)": {
+        "params": {
+          "user_": "Address of user to check blacklist status."
+        },
+        "returns": {
+          "_0": "bool status of blacklist."
+        }
+      },
+      "migrateMinterTokens(address,address)": {
+        "custom:access": "Controlled by AccessControlManager.",
+        "custom:error": "MintLimitExceed is thrown when the minting limit exceeds the cap after migration.AddressesMustDiffer is thrown when the source_ and destination_ addresses are the same.",
+        "custom:event": "Emits MintLimitIncreased and MintLimitDecreased events for 'source' and 'destination'.Emits MintedTokensMigrated.",
+        "params": {
+          "destination_": "Minter address to migrate tokens to.",
+          "source_": "Minter address to migrate tokens from."
+        }
+      },
+      "mint(address,uint256)": {
+        "custom:access": "Controlled by AccessControlManager.",
+        "custom:error": "MintLimitExceed is thrown when minting amount exceeds the maximum cap.",
+        "custom:event": "Emits MintLimitDecreased with new available limit.",
+        "params": {
+          "account_": "Address to which tokens are assigned.",
+          "amount_": "Amount of tokens to be assigned."
+        }
+      },
+      "name()": {
+        "details": "Returns the name of the token."
+      },
+      "owner()": {
+        "details": "Returns the address of the current owner."
+      },
+      "pause()": {
+        "custom:access": "Controlled by AccessControlManager."
+      },
+      "paused()": {
+        "details": "Returns true if the contract is paused, and false otherwise."
+      },
+      "renounceOwnership()": {
+        "details": "Leaves the contract without owner. It will not be possible to call `onlyOwner` functions. Can only be called by the current owner. NOTE: Renouncing ownership will leave the contract without an owner, thereby disabling any functionality that is only available to the owner."
+      },
+      "setAccessControlManager(address)": {
+        "custom:access": "Only owner.",
+        "custom:error": "ZeroAddressNotAllowed is thrown when newAccessControlAddress_ contract address is zero.",
+        "custom:event": "Emits NewAccessControlManager.",
+        "details": "Admin function to set the access control address.",
+        "params": {
+          "newAccessControlAddress_": "New address for the access control."
+        }
+      },
+      "setMintCap(address,uint256)": {
+        "custom:access": "Controlled by AccessControlManager.",
+        "custom:event": "Emits MintCapChanged.",
+        "params": {
+          "amount_": "Cap for the minter.",
+          "minter_": "Minter address."
+        }
+      },
+      "symbol()": {
+        "details": "Returns the symbol of the token, usually a shorter version of the name."
+      },
+      "totalSupply()": {
+        "details": "See {IERC20-totalSupply}."
+      },
+      "transfer(address,uint256)": {
+        "details": "See {IERC20-transfer}. Requirements: - `to` cannot be the zero address. - the caller must have a balance of at least `amount`."
+      },
+      "transferFrom(address,address,uint256)": {
+        "details": "See {IERC20-transferFrom}. Emits an {Approval} event indicating the updated allowance. This is not required by the EIP. See the note at the beginning of {ERC20}. NOTE: Does not update the allowance if the current allowance is the maximum `uint256`. Requirements: - `from` and `to` cannot be the zero address. - `from` must have a balance of at least `amount`. - the caller must have allowance for ``from``'s tokens of at least `amount`."
+      },
+      "transferOwnership(address)": {
+        "details": "Transfers ownership of the contract to a new account (`newOwner`). Can only be called by the current owner."
+      },
+      "unpause()": {
+        "custom:access": "Controlled by AccessControlManager."
+      },
+      "updateBlacklist(address,bool)": {
+        "custom:access": "Controlled by AccessControlManager.",
+        "custom:event": "Emits BlacklistUpdated event.",
+        "params": {
+          "user_": "User address to be affected.",
+          "value_": "Boolean to toggle value."
+        }
+      }
+    },
+    "title": "XVS",
+    "version": 1
+  },
+  "userdoc": {
+    "errors": {
+      "AccountBlacklisted(address)": [
+        {
+          "notice": "This error is used to indicate that `mint` `burn` and `transfer` actions are not allowed for the user address."
+        }
+      ],
+      "AddressesMustDiffer()": [
+        {
+          "notice": "This error is used to indicate that the addresses must be different."
+        }
+      ],
+      "MintLimitExceed()": [
+        {
+          "notice": "This error is used to indicate that the minting limit has been exceeded. It is typically thrown when a minting operation would surpass the defined cap."
+        }
+      ],
+      "MintedAmountExceed()": [
+        {
+          "notice": "This error is used to indicate that the minter did not mint the required amount of tokens."
+        }
+      ],
+      "NewCapNotGreaterThanMintedTokens()": [
+        {
+          "notice": "This error is used to indicate that the new cap is greater than the previously minted tokens for the minter."
+        }
+      ],
+      "Unauthorized()": [
+        {
+          "notice": "This error is used to indicate that sender is not allowed to perform this action."
+        }
+      ],
+      "ZeroAddressNotAllowed()": [
+        {
+          "notice": "Thrown if the supplied address is a zero address where it is not allowed"
+        }
+      ]
+    },
+    "events": {
+      "BlacklistUpdated(address,bool)": {
+        "notice": "Emitted when the blacklist status of a user is updated."
+      },
+      "MintCapChanged(address,uint256)": {
+        "notice": "Emitted when the minting cap for a minter is changed."
+      },
+      "MintLimitDecreased(address,uint256)": {
+        "notice": "Emitted when the minting limit for a minter is decreased."
+      },
+      "MintLimitIncreased(address,uint256)": {
+        "notice": "Emitted when the minting limit for a minter is increased."
+      },
+      "MintedTokensMigrated(address,address)": {
+        "notice": "Emitted when all minted tokens are migrated from one minter to another."
+      },
+      "NewAccessControlManager(address,address)": {
+        "notice": "Emitted when the address of the access control manager of the contract is updated."
+      }
+    },
+    "kind": "user",
+    "methods": {
+      "accessControlManager()": {
+        "notice": "Access control manager contract address."
+      },
+      "burn(address,uint256)": {
+        "notice": "Destroys `amount_` tokens from `account_`, reducing the total supply. Checks access and eligibility."
+      },
+      "isBlackListed(address)": {
+        "notice": "Returns the blacklist status of the address."
+      },
+      "migrateMinterTokens(address,address)": {
+        "notice": "Migrates all minted tokens from one minter to another. This function is useful when we want to permanent take down a bridge."
+      },
+      "mint(address,uint256)": {
+        "notice": "Creates `amount_` tokens and assigns them to `account_`, increasing the total supply. Checks access and eligibility."
+      },
+      "minterToCap(address)": {
+        "notice": "A mapping is used to keep track of the maximum amount a minter is permitted to mint."
+      },
+      "minterToMintedAmount(address)": {
+        "notice": "A Mapping used to keep track of the amount i.e already minted by minter."
+      },
+      "pause()": {
+        "notice": "Pauses Token"
+      },
+      "setAccessControlManager(address)": {
+        "notice": "Sets the address of the access control manager of this contract."
+      },
+      "setMintCap(address,uint256)": {
+        "notice": "Sets the minting cap for minter."
+      },
+      "unpause()": {
+        "notice": "Resumes Token"
+      },
+      "updateBlacklist(address,bool)": {
+        "notice": "Function to update blacklist."
+      }
+    },
+    "notice": "XVS contract serves as a customized ERC-20 token with additional minting and burning functionality.  It also incorporates access control features provided by the \"TokenController\" contract to ensure proper governance and restrictions on minting and burning operations.",
+    "version": 1
+  },
+  "storageLayout": {
+    "storage": [
+      {
+        "astId": 5612,
+        "contract": "contracts/Bridge/token/XVS.sol:XVS",
+        "label": "_balances",
+        "offset": 0,
+        "slot": "0",
+        "type": "t_mapping(t_address,t_uint256)"
+      },
+      {
+        "astId": 5618,
+        "contract": "contracts/Bridge/token/XVS.sol:XVS",
+        "label": "_allowances",
+        "offset": 0,
+        "slot": "1",
+        "type": "t_mapping(t_address,t_mapping(t_address,t_uint256))"
+      },
+      {
+        "astId": 5620,
+        "contract": "contracts/Bridge/token/XVS.sol:XVS",
+        "label": "_totalSupply",
+        "offset": 0,
+        "slot": "2",
+        "type": "t_uint256"
+      },
+      {
+        "astId": 5622,
+        "contract": "contracts/Bridge/token/XVS.sol:XVS",
+        "label": "_name",
+        "offset": 0,
+        "slot": "3",
+        "type": "t_string_storage"
+      },
+      {
+        "astId": 5624,
+        "contract": "contracts/Bridge/token/XVS.sol:XVS",
+        "label": "_symbol",
+        "offset": 0,
+        "slot": "4",
+        "type": "t_string_storage"
+      },
+      {
+        "astId": 5383,
+        "contract": "contracts/Bridge/token/XVS.sol:XVS",
+        "label": "_owner",
+        "offset": 0,
+        "slot": "5",
+        "type": "t_address"
+      },
+      {
+        "astId": 5506,
+        "contract": "contracts/Bridge/token/XVS.sol:XVS",
+        "label": "_paused",
+        "offset": 20,
+        "slot": "5",
+        "type": "t_bool"
+      },
+      {
+        "astId": 11288,
+        "contract": "contracts/Bridge/token/XVS.sol:XVS",
+        "label": "accessControlManager",
+        "offset": 0,
+        "slot": "6",
+        "type": "t_address"
+      },
+      {
+        "astId": 11293,
+        "contract": "contracts/Bridge/token/XVS.sol:XVS",
+        "label": "_blacklist",
+        "offset": 0,
+        "slot": "7",
+        "type": "t_mapping(t_address,t_bool)"
+      },
+      {
+        "astId": 11298,
+        "contract": "contracts/Bridge/token/XVS.sol:XVS",
+        "label": "minterToCap",
+        "offset": 0,
+        "slot": "8",
+        "type": "t_mapping(t_address,t_uint256)"
+      },
+      {
+        "astId": 11303,
+        "contract": "contracts/Bridge/token/XVS.sol:XVS",
+        "label": "minterToMintedAmount",
+        "offset": 0,
+        "slot": "9",
+        "type": "t_mapping(t_address,t_uint256)"
+      }
+    ],
+    "types": {
+      "t_address": {
+        "encoding": "inplace",
+        "label": "address",
+        "numberOfBytes": "20"
+      },
+      "t_bool": {
+        "encoding": "inplace",
+        "label": "bool",
+        "numberOfBytes": "1"
+      },
+      "t_mapping(t_address,t_bool)": {
+        "encoding": "mapping",
+        "key": "t_address",
+        "label": "mapping(address => bool)",
+        "numberOfBytes": "32",
+        "value": "t_bool"
+      },
+      "t_mapping(t_address,t_mapping(t_address,t_uint256))": {
+        "encoding": "mapping",
+        "key": "t_address",
+        "label": "mapping(address => mapping(address => uint256))",
+        "numberOfBytes": "32",
+        "value": "t_mapping(t_address,t_uint256)"
+      },
+      "t_mapping(t_address,t_uint256)": {
+        "encoding": "mapping",
+        "key": "t_address",
+        "label": "mapping(address => uint256)",
+        "numberOfBytes": "32",
+        "value": "t_uint256"
+      },
+      "t_string_storage": {
+        "encoding": "bytes",
+        "label": "string",
+        "numberOfBytes": "32"
+      },
+      "t_uint256": {
+        "encoding": "inplace",
+        "label": "uint256",
+        "numberOfBytes": "32"
+      }
+    }
+  }
+}
