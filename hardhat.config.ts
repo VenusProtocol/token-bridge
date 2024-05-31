@@ -53,6 +53,7 @@ extendConfig((config: HardhatConfig) => {
           "node_modules/@venusprotocol/governance-contracts/deployments/arbitrumsepolia",
           "node_modules/@venusprotocol/oracle/deployments/arbitrumsepolia",
         ],
+        arbitrumone: ["node_modules/@venusprotocol/governance-contracts/deployments/arbitrumone"],
       },
     };
   }
