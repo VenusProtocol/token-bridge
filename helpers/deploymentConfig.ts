@@ -135,25 +135,83 @@ export const bridgeConfig: BridgeConfig = {
     methods: [...createMethodEntries(10161), ...createMethodEntries(10202), ...createMethodEntries(10231)],
   },
   bscmainnet: {
-    methods: [...createMethodEntries(101), ...createMethodEntries(202), ...createMethodEntries(110)],
+    methods: [
+      ...createMethodEntries(101),
+      ...createMethodEntries(202),
+      ...createMethodEntries(
+        110,
+        300000,
+        parseUnits("100000", 18),
+        parseUnits("20000", 18),
+        parseUnits("102000", 18),
+        parseUnits("20400", 18),
+      ),
+    ],
   },
   sepolia: {
     methods: [...createMethodEntries(10102), ...createMethodEntries(10202), ...createMethodEntries(10231)],
   },
   ethereum: {
-    methods: [...createMethodEntries(102), ...createMethodEntries(202), ...createMethodEntries(110)],
+    methods: [
+      ...createMethodEntries(102),
+      ...createMethodEntries(202),
+      ...createMethodEntries(
+        110,
+        300000,
+        parseUnits("100000", 18),
+        parseUnits("20000", 18),
+        parseUnits("102000", 18),
+        parseUnits("20400", 18),
+      ),
+    ],
   },
   opbnbtestnet: {
     methods: [...createMethodEntries(10102), ...createMethodEntries(10161), ...createMethodEntries(10231)],
   },
   opbnbmainnet: {
-    methods: [...createMethodEntries(102), ...createMethodEntries(101), ...createMethodEntries(110)],
+    methods: [
+      ...createMethodEntries(102),
+      ...createMethodEntries(101),
+      ...createMethodEntries(
+        110,
+        300000,
+        parseUnits("100000", 18),
+        parseUnits("20000", 18),
+        parseUnits("102000", 18),
+        parseUnits("20400", 18),
+      ),
+    ],
   },
   arbitrumsepolia: {
     methods: [...createMethodEntries(10102), ...createMethodEntries(10202), ...createMethodEntries(10161)],
   },
   arbitrumone: {
-    methods: [...createMethodEntries(102), ...createMethodEntries(101), ...createMethodEntries(202)],
+    methods: [
+      ...createMethodEntries(
+        102,
+        300000,
+        parseUnits("100000", 18),
+        parseUnits("20000", 18),
+        parseUnits("102000", 18),
+        parseUnits("20400", 18),
+      ),
+      ...createMethodEntries(
+        101,
+        300000,
+        parseUnits("100000", 18),
+        parseUnits("20000", 18),
+        parseUnits("102000", 18),
+        parseUnits("20400", 18),
+      ),
+      ...createMethodEntries(
+        202,
+        300000,
+        parseUnits("100000", 18),
+        parseUnits("20000", 18),
+        parseUnits("102000", 18),
+        parseUnits("20400", 18),
+      ),
+    ],
   },
 };
 

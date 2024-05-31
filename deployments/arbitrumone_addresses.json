@@ -1,5 +1,12 @@
 {
   "name": "arbitrumone",
   "chainId": "42161",
-  "addresses": {}
+  "addresses": {
+    "DefaultProxyAdmin": "0xF6fF3e9459227f0cDE8B102b90bE25960317b216",
+    "XVS": "0xc1Eb7689147C81aC840d4FF0D298489fc7986d52",
+    "XVSBridgeAdmin": "0xf5d81C6F7DAA3F97A6265C8441f92eFda22Ad784",
+    "XVSBridgeAdmin_Implementation": "0xC57f35500f4F5B2B31c5250bF8BCcf8058835a9B",
+    "XVSBridgeAdmin_Proxy": "0xf5d81C6F7DAA3F97A6265C8441f92eFda22Ad784",
+    "XVSProxyOFTDest": "0x20cEa49B5F7a6DBD78cAE772CA5973eF360AA1e6"
+  }
 }
