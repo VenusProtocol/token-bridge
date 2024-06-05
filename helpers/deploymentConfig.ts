@@ -20,6 +20,7 @@ const OPBNB_MAINNET_MULTISIG = "0xC46796a21a3A9FAB6546aF3434F2eBfFd0604207";
 const ETHEREUM_MULTISIG = "0x285960C5B22fD66A736C7136967A3eB15e93CC67";
 const ARBITRUM_SEPOLIA_MULTISIG = "0x1426A5Ae009c4443188DA8793751024E358A61C2";
 const ARBITRUM_ONE_MULTISIG = "0x14e0E151b33f9802b3e75b621c1457afc44DcAA0";
+const XLAYER_TESTNET_MULTISIG = "0x5961449d63149035aCfC0714D5155f24C9819004";
 
 export const preconfiguredAddresses = {
   bsctestnet: {
@@ -69,6 +70,13 @@ export const preconfiguredAddresses = {
     CriticalTimelock: ARBITRUM_ONE_MULTISIG,
     LzEndpoint: "0x3c2269811836af69497E5F486A85D7316753cf62",
     LzVirtualChainId: "110",
+  },
+  xlayertestnet: {
+    NormalTimelock: XLAYER_TESTNET_MULTISIG,
+    FastTrackTimelock: XLAYER_TESTNET_MULTISIG,
+    CriticalTimelock: XLAYER_TESTNET_MULTISIG,
+    LzEndpoint: "0x2cA20802fd1Fd9649bA8Aa7E50F0C82b479f35fe",
+    LzVirtualChainId: "10269",
   },
 };
 
@@ -233,6 +241,8 @@ export async function getPreConfiguredAddresses(networkName: string): Promise<Pr
       return preconfiguredAddresses.arbitrumsepolia;
     case "arbitrumone":
       return preconfiguredAddresses.arbitrumone;
+    case "xlayertestnet":
+      return preconfiguredAddresses.xlayertestnet;
     default:
       throw new Error(`config for network ${networkName} is not available.`);
   }
