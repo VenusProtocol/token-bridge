@@ -20,6 +20,7 @@ const OPBNB_MAINNET_MULTISIG = "0xC46796a21a3A9FAB6546aF3434F2eBfFd0604207";
 const ETHEREUM_MULTISIG = "0x285960C5B22fD66A736C7136967A3eB15e93CC67";
 const ARBITRUM_SEPOLIA_MULTISIG = "0x1426A5Ae009c4443188DA8793751024E358A61C2";
 const ARBITRUM_ONE_MULTISIG = "0x14e0E151b33f9802b3e75b621c1457afc44DcAA0";
+const OP_SEPOLIA_MULTISIG = "0xd57365EE4E850e881229e2F8Aa405822f289e78d";
 
 export const preconfiguredAddresses = {
   bsctestnet: {
@@ -69,6 +70,13 @@ export const preconfiguredAddresses = {
     CriticalTimelock: ARBITRUM_ONE_MULTISIG,
     LzEndpoint: "0x3c2269811836af69497E5F486A85D7316753cf62",
     LzVirtualChainId: "110",
+  },
+  opsepolia: {
+    NormalTimelock: OP_SEPOLIA_MULTISIG,
+    FastTrackTimelock: OP_SEPOLIA_MULTISIG,
+    CriticalTimelock: OP_SEPOLIA_MULTISIG,
+    LzEndpoint: "0x55370E0fBB5f5b8dAeD978BA1c075a499eB107B8",
+    LzVirtualChainId: "10232",
   },
 };
 
@@ -132,7 +140,12 @@ export const xvsTokenPermissions = ["mint(address,uint256)", "burn(address,uint2
 
 export const bridgeConfig: BridgeConfig = {
   bsctestnet: {
-    methods: [...createMethodEntries(10161), ...createMethodEntries(10202), ...createMethodEntries(10231)],
+    methods: [
+      ...createMethodEntries(10161),
+      ...createMethodEntries(10202),
+      ...createMethodEntries(10231),
+      ...createMethodEntries(10232),
+    ],
   },
   bscmainnet: {
     methods: [
@@ -149,7 +162,12 @@ export const bridgeConfig: BridgeConfig = {
     ],
   },
   sepolia: {
-    methods: [...createMethodEntries(10102), ...createMethodEntries(10202), ...createMethodEntries(10231)],
+    methods: [
+      ...createMethodEntries(10102),
+      ...createMethodEntries(10202),
+      ...createMethodEntries(10231),
+      ...createMethodEntries(10232),
+    ],
   },
   ethereum: {
     methods: [
@@ -166,7 +184,12 @@ export const bridgeConfig: BridgeConfig = {
     ],
   },
   opbnbtestnet: {
-    methods: [...createMethodEntries(10102), ...createMethodEntries(10161), ...createMethodEntries(10231)],
+    methods: [
+      ...createMethodEntries(10102),
+      ...createMethodEntries(10161),
+      ...createMethodEntries(10231),
+      ...createMethodEntries(10232),
+    ],
   },
   opbnbmainnet: {
     methods: [
@@ -183,7 +206,12 @@ export const bridgeConfig: BridgeConfig = {
     ],
   },
   arbitrumsepolia: {
-    methods: [...createMethodEntries(10102), ...createMethodEntries(10202), ...createMethodEntries(10161)],
+    methods: [
+      ...createMethodEntries(10102),
+      ...createMethodEntries(10202),
+      ...createMethodEntries(10161),
+      ...createMethodEntries(10232),
+    ],
   },
   arbitrumone: {
     methods: [
@@ -213,6 +241,14 @@ export const bridgeConfig: BridgeConfig = {
       ),
     ],
   },
+  opsepolia: {
+    methods: [
+      ...createMethodEntries(10102),
+      ...createMethodEntries(10202),
+      ...createMethodEntries(10161),
+      ...createMethodEntries(10231),
+    ],
+  },
 };
 
 export async function getPreConfiguredAddresses(networkName: string): Promise<PreconfiguredAddresses> {
@@ -233,6 +269,8 @@ export async function getPreConfiguredAddresses(networkName: string): Promise<Pr
       return preconfiguredAddresses.arbitrumsepolia;
     case "arbitrumone":
       return preconfiguredAddresses.arbitrumone;
+    case "opsepolia":
+      return preconfiguredAddresses.opsepolia;
     default:
       throw new Error(`config for network ${networkName} is not available.`);
   }
