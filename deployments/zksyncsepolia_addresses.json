@@ -2,6 +2,7 @@
   "name": "zksyncsepolia",
   "chainId": "300",
   "addresses": {
+    "DefaultProxyAdmin": "0x18E44f588a4DcF2F7145d35A5C226e129040b6D3",
     "XVS": "0x3AeCac43A2ebe5D8184e650403bf9F656F9D1cfA"
   }
 }
