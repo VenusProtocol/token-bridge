@@ -71,8 +71,13 @@ export const preconfiguredAddresses = {
     LzEndpoint: "0x3c2269811836af69497E5F486A85D7316753cf62",
     LzVirtualChainId: "110",
   },
-  // To-do
-  zksyncsepolia: {},
+  zksyncsepolia: {
+    NormalTimelock: ZKSYNC_SEPOLIA_MULTISIG,
+    FastTrackTimelock: ZKSYNC_SEPOLIA_MULTISIG,
+    CriticalTimelock: ZKSYNC_SEPOLIA_MULTISIG,
+    LzEndpoint: "0x99b6359ce8E0eBdC27eBeDb76FE28F29303E78fF",
+    LzVirtualChainId: "10248",
+  },
 };
 
 export const xvsBridgeMethodsSrc = [
@@ -135,7 +140,12 @@ export const xvsTokenPermissions = ["mint(address,uint256)", "burn(address,uint2
 
 export const bridgeConfig: BridgeConfig = {
   bsctestnet: {
-    methods: [...createMethodEntries(10161), ...createMethodEntries(10202), ...createMethodEntries(10231)],
+    methods: [
+      ...createMethodEntries(10161),
+      ...createMethodEntries(10202),
+      ...createMethodEntries(10231),
+      ...createMethodEntries(10248),
+    ],
   },
   bscmainnet: {
     methods: [
@@ -152,7 +162,12 @@ export const bridgeConfig: BridgeConfig = {
     ],
   },
   sepolia: {
-    methods: [...createMethodEntries(10102), ...createMethodEntries(10202), ...createMethodEntries(10231)],
+    methods: [
+      ...createMethodEntries(10102),
+      ...createMethodEntries(10202),
+      ...createMethodEntries(10231),
+      ...createMethodEntries(10248),
+    ],
   },
   ethereum: {
     methods: [
@@ -169,7 +184,12 @@ export const bridgeConfig: BridgeConfig = {
     ],
   },
   opbnbtestnet: {
-    methods: [...createMethodEntries(10102), ...createMethodEntries(10161), ...createMethodEntries(10231)],
+    methods: [
+      ...createMethodEntries(10102),
+      ...createMethodEntries(10161),
+      ...createMethodEntries(10231),
+      ...createMethodEntries(10248),
+    ],
   },
   opbnbmainnet: {
     methods: [
@@ -186,7 +206,12 @@ export const bridgeConfig: BridgeConfig = {
     ],
   },
   arbitrumsepolia: {
-    methods: [...createMethodEntries(10102), ...createMethodEntries(10202), ...createMethodEntries(10161)],
+    methods: [
+      ...createMethodEntries(10102),
+      ...createMethodEntries(10202),
+      ...createMethodEntries(10161),
+      ...createMethodEntries(10248),
+    ],
   },
   arbitrumone: {
     methods: [
@@ -214,6 +239,14 @@ export const bridgeConfig: BridgeConfig = {
         parseUnits("102000", 18),
         parseUnits("20400", 18),
       ),
+    ],
+  },
+  zksyncsepolia: {
+    methods: [
+      ...createMethodEntries(10102),
+      ...createMethodEntries(10202),
+      ...createMethodEntries(10161),
+      ...createMethodEntries(10231),
     ],
   },
 };
