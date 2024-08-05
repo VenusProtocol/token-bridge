@@ -7,6 +7,7 @@ import "@nomicfoundation/hardhat-chai-matchers";
 import "@nomiclabs/hardhat-ethers";
 import "@typechain/hardhat";
 import * as dotenv from "dotenv";
+import "hardhat-dependency-compiler";
 import "hardhat-deploy";
 import "hardhat-gas-reporter";
 import { HardhatUserConfig, extendConfig, task } from "hardhat/config";
