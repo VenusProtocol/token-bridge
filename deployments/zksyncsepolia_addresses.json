@@ -1,0 +1,12 @@
+{
+  "name": "zksyncsepolia",
+  "chainId": "300",
+  "addresses": {
+    "DefaultProxyAdmin": "0x18E44f588a4DcF2F7145d35A5C226e129040b6D3",
+    "XVS": "0x3AeCac43A2ebe5D8184e650403bf9F656F9D1cfA",
+    "XVSBridgeAdmin": "0x28cfE3f2D7D8944FAd162a058260ec922C19065E",
+    "XVSBridgeAdmin_Implementation": "0xa91c63A17bAc00afD7B749fB8a94DE26c0C3699B",
+    "XVSBridgeAdmin_Proxy": "0x28cfE3f2D7D8944FAd162a058260ec922C19065E",
+    "XVSProxyOFTDest": "0x760461ccB2508CAAa2ECe0c28af3a4707b853043"
+  }
+}

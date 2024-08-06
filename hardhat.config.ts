@@ -8,6 +8,7 @@ import "@openzeppelin/hardhat-upgrades";
 import "@typechain/hardhat";
 import * as dotenv from "dotenv";
 import { parseUnits } from "ethers/lib/utils";
+import "hardhat-dependency-compiler";
 import "hardhat-deploy";
 import "hardhat-gas-reporter";
 import { HardhatUserConfig, extendConfig, task } from "hardhat/config";
@@ -258,6 +259,12 @@ const config: HardhatUserConfig = {
   },
   external: {
     deployments: {},
+  },
+  dependencyCompiler: {
+    paths: [
+      "hardhat-deploy/solc_0.8/proxy/OptimizedTransparentUpgradeableProxy.sol",
+      "hardhat-deploy/solc_0.8/openzeppelin/proxy/transparent/ProxyAdmin.sol",
+    ],
   },
 };
 
