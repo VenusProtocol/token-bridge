@@ -1,0 +1,7 @@
+{
+  "name": "zksyncmainnet",
+  "chainId": "324",
+  "addresses": {
+    "XVS": "0xD78ABD81a3D57712a3af080dc4185b698Fe9ac5A"
+  }
+}
