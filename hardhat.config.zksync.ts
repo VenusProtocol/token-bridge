@@ -78,6 +78,14 @@ const config: HardhatUserConfig = {
       zksync: true,
       live: true,
     },
+    zksyncmainnet: {
+      url: process.env.ARCHIVE_NODE_zksync || "https://mainnet.era.zksync.io",
+      ethNetwork: "mainnet",
+      verifyURL: "https://zksync2-mainnet-explorer.zksync.io/contract_verification",
+      accounts: DEPLOYER_PRIVATE_KEY ? [`0x${DEPLOYER_PRIVATE_KEY}`] : [],
+      zksync: true,
+      live: true,
+    },
   },
   gasReporter: {
     enabled: process.env.REPORT_GAS !== undefined,
