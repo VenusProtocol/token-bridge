@@ -2,6 +2,11 @@
   "name": "zksyncmainnet",
   "chainId": "324",
   "addresses": {
-    "XVS": "0xD78ABD81a3D57712a3af080dc4185b698Fe9ac5A"
+    "DefaultProxyAdmin": "0x8Ea1A989B036f7Ef21bb95CE4E7961522Ca00287",
+    "XVS": "0xD78ABD81a3D57712a3af080dc4185b698Fe9ac5A",
+    "XVSBridgeAdmin": "0x2471043F05Cc41A6051dd6714DC967C7BfC8F902",
+    "XVSBridgeAdmin_Implementation": "0x21f8b24f48a3af53B9B597DbA1D7737e4D7aBa3B",
+    "XVSBridgeAdmin_Proxy": "0x2471043F05Cc41A6051dd6714DC967C7BfC8F902",
+    "XVSProxyOFTDest": "0x16a62B534e09A7534CD5847CFE5Bf6a4b0c1B116"
   }
 }
