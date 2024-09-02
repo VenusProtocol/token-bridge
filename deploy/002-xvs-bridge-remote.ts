@@ -106,7 +106,7 @@ const func: DeployFunction = async function (hre: HardhatRuntimeEnvironment) {
   const XVSProxyOFTDest = await deploy("XVSProxyOFTDest", {
     from: deployer,
     contract: "XVSProxyOFTDest",
-    args: [XVS.address, 8, preconfiguredAddresses.LzEndpoint, resilientOracle],
+    args: [XVS.address, 8, preconfiguredAddresses.LzEndpoint, resilientOracle.address],
     autoMine: true,
     log: true,
     skipIfAlreadyDeployed: true,
