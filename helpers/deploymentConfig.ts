@@ -20,6 +20,8 @@ const OPBNB_MAINNET_MULTISIG = "0xC46796a21a3A9FAB6546aF3434F2eBfFd0604207";
 const ETHEREUM_MULTISIG = "0x285960C5B22fD66A736C7136967A3eB15e93CC67";
 const ARBITRUM_SEPOLIA_MULTISIG = "0x1426A5Ae009c4443188DA8793751024E358A61C2";
 const ARBITRUM_ONE_MULTISIG = "0x14e0E151b33f9802b3e75b621c1457afc44DcAA0";
+const ZKSYNC_SEPOLIA_MULTISIG = "0xa2f83de95E9F28eD443132C331B6a9C9B7a9F866";
+const ZKSYNC_MAINNET_MULTISIG = "0x751Aa759cfBB6CE71A43b48e40e1cCcFC66Ba4aa";
 
 export const preconfiguredAddresses = {
   bsctestnet: {
@@ -69,6 +71,20 @@ export const preconfiguredAddresses = {
     CriticalTimelock: ARBITRUM_ONE_MULTISIG,
     LzEndpoint: "0x3c2269811836af69497E5F486A85D7316753cf62",
     LzVirtualChainId: "110",
+  },
+  zksyncsepolia: {
+    NormalTimelock: ZKSYNC_SEPOLIA_MULTISIG,
+    FastTrackTimelock: ZKSYNC_SEPOLIA_MULTISIG,
+    CriticalTimelock: ZKSYNC_SEPOLIA_MULTISIG,
+    LzEndpoint: "0x99b6359ce8E0eBdC27eBeDb76FE28F29303E78fF",
+    LzVirtualChainId: "10248",
+  },
+  zksyncmainnet: {
+    NormalTimelock: ZKSYNC_MAINNET_MULTISIG,
+    FastTrackTimelock: ZKSYNC_MAINNET_MULTISIG,
+    CriticalTimelock: ZKSYNC_MAINNET_MULTISIG,
+    LzEndpoint: "0x9b896c0e23220469C7AE69cb4BbAE391eAa4C8da",
+    LzVirtualChainId: "165",
   },
 };
 
@@ -132,7 +148,12 @@ export const xvsTokenPermissions = ["mint(address,uint256)", "burn(address,uint2
 
 export const bridgeConfig: BridgeConfig = {
   bsctestnet: {
-    methods: [...createMethodEntries(10161), ...createMethodEntries(10202), ...createMethodEntries(10231)],
+    methods: [
+      ...createMethodEntries(10161),
+      ...createMethodEntries(10202),
+      ...createMethodEntries(10231),
+      ...createMethodEntries(10248),
+    ],
   },
   bscmainnet: {
     methods: [
@@ -146,10 +167,16 @@ export const bridgeConfig: BridgeConfig = {
         parseUnits("102000", 18),
         parseUnits("20400", 18),
       ),
+      ...createMethodEntries(165),
     ],
   },
   sepolia: {
-    methods: [...createMethodEntries(10102), ...createMethodEntries(10202), ...createMethodEntries(10231)],
+    methods: [
+      ...createMethodEntries(10102),
+      ...createMethodEntries(10202),
+      ...createMethodEntries(10231),
+      ...createMethodEntries(10248),
+    ],
   },
   ethereum: {
     methods: [
@@ -163,10 +190,16 @@ export const bridgeConfig: BridgeConfig = {
         parseUnits("102000", 18),
         parseUnits("20400", 18),
       ),
+      ...createMethodEntries(165),
     ],
   },
   opbnbtestnet: {
-    methods: [...createMethodEntries(10102), ...createMethodEntries(10161), ...createMethodEntries(10231)],
+    methods: [
+      ...createMethodEntries(10102),
+      ...createMethodEntries(10161),
+      ...createMethodEntries(10231),
+      ...createMethodEntries(10248),
+    ],
   },
   opbnbmainnet: {
     methods: [
@@ -180,10 +213,16 @@ export const bridgeConfig: BridgeConfig = {
         parseUnits("102000", 18),
         parseUnits("20400", 18),
       ),
+      ...createMethodEntries(165),
     ],
   },
   arbitrumsepolia: {
-    methods: [...createMethodEntries(10102), ...createMethodEntries(10202), ...createMethodEntries(10161)],
+    methods: [
+      ...createMethodEntries(10102),
+      ...createMethodEntries(10202),
+      ...createMethodEntries(10161),
+      ...createMethodEntries(10248),
+    ],
   },
   arbitrumone: {
     methods: [
@@ -211,6 +250,23 @@ export const bridgeConfig: BridgeConfig = {
         parseUnits("102000", 18),
         parseUnits("20400", 18),
       ),
+      ...createMethodEntries(165),
+    ],
+  },
+  zksyncsepolia: {
+    methods: [
+      ...createMethodEntries(10102),
+      ...createMethodEntries(10202),
+      ...createMethodEntries(10161),
+      ...createMethodEntries(10231),
+    ],
+  },
+  zksyncmainnet: {
+    methods: [
+      ...createMethodEntries(102),
+      ...createMethodEntries(101),
+      ...createMethodEntries(202),
+      ...createMethodEntries(110),
     ],
   },
 };
@@ -233,6 +289,10 @@ export async function getPreConfiguredAddresses(networkName: string): Promise<Pr
       return preconfiguredAddresses.arbitrumsepolia;
     case "arbitrumone":
       return preconfiguredAddresses.arbitrumone;
+    case "zksyncsepolia":
+      return preconfiguredAddresses.zksyncsepolia;
+    case "zksyncmainnet":
+      return preconfiguredAddresses.zksyncmainnet;
     default:
       throw new Error(`config for network ${networkName} is not available.`);
   }

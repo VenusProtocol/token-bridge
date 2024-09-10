@@ -74,6 +74,10 @@ const func: DeployFunction = async function (hre: HardhatRuntimeEnvironment) {
   const resilientOracle = await ethers.getContract("ResilientOracle");
   const XVS = await ethers.getContract("XVS");
 
+  const defaultProxyAdmin = await hre.artifacts.readArtifact(
+    "hardhat-deploy/solc_0.8/openzeppelin/proxy/transparent/ProxyAdmin.sol:ProxyAdmin",
+  );
+
   const XVSProxyOFTSrc = await deploy("XVSProxyOFTSrc", {
     from: deployer,
     contract: "XVSProxyOFTSrc",
@@ -88,10 +92,14 @@ const func: DeployFunction = async function (hre: HardhatRuntimeEnvironment) {
     contract: "XVSBridgeAdmin",
     proxy: {
       owner: normalTimelock.address,
-      proxyContract: "OpenZeppelinTransparentProxy",
+      proxyContract: "OptimizedTransparentUpgradeableProxy",
       execute: {
         methodName: "initialize",
         args: [accessControlManager.address],
+      },
+      viaAdminContract: {
+        name: "DefaultProxyAdmin",
+        artifact: defaultProxyAdmin,
       },
       upgradeIndex: 0,
     },

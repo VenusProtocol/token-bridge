@@ -86,6 +86,9 @@ const func: DeployFunction = async function (hre: HardhatRuntimeEnvironment) {
   const { deploy } = deployments;
   const { deployer } = await getNamedAccounts();
   const preconfiguredAddresses = await getPreConfiguredAddresses(hre.network.name);
+  const defaultProxyAdmin = await hre.artifacts.readArtifact(
+    "hardhat-deploy/solc_0.8/openzeppelin/proxy/transparent/ProxyAdmin.sol:ProxyAdmin",
+  );
 
   const proxyOwnerAddress = await toAddress(preconfiguredAddresses.NormalTimelock, hre);
   const accessControlManager = await ethers.getContract("AccessControlManager");
@@ -97,6 +100,7 @@ const func: DeployFunction = async function (hre: HardhatRuntimeEnvironment) {
     args: [accessControlManager.address],
     autoMine: true,
     log: true,
+    skipIfAlreadyDeployed: true,
   });
 
   const XVSProxyOFTDest = await deploy("XVSProxyOFTDest", {
@@ -105,6 +109,7 @@ const func: DeployFunction = async function (hre: HardhatRuntimeEnvironment) {
     args: [XVS.address, 8, preconfiguredAddresses.LzEndpoint, resilientOracle.address],
     autoMine: true,
     log: true,
+    skipIfAlreadyDeployed: true,
   });
 
   const XVSBridgeAdmin = await deploy("XVSBridgeAdmin", {
@@ -113,15 +118,20 @@ const func: DeployFunction = async function (hre: HardhatRuntimeEnvironment) {
     contract: "XVSBridgeAdmin",
     proxy: {
       owner: proxyOwnerAddress,
-      proxyContract: "OpenZeppelinTransparentProxy",
+      proxyContract: "OptimizedTransparentUpgradeableProxy",
       execute: {
         methodName: "initialize",
         args: [accessControlManager.address],
+      },
+      viaAdminContract: {
+        name: "DefaultProxyAdmin",
+        artifact: defaultProxyAdmin,
       },
       upgradeIndex: 0,
     },
     log: true,
     autoMine: true,
+    skipIfAlreadyDeployed: true,
   });
 
   const bridge = await ethers.getContract<XVSProxyOFTDest>("XVSProxyOFTDest");
