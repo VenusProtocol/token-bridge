@@ -3467,7 +3467,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@venusprotocol/governance-contracts@npm:^2.3.0, @venusprotocol/governance-contracts@npm:^2.3.0-dev.1":
+"@venusprotocol/governance-contracts@npm:^2.3.0":
   version: 2.3.0
   resolution: "@venusprotocol/governance-contracts@npm:2.3.0"
   dependencies:
@@ -3478,9 +3478,9 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@venusprotocol/oracle@npm:^2.5.0-dev.2":
-  version: 2.5.1
-  resolution: "@venusprotocol/oracle@npm:2.5.1"
+"@venusprotocol/oracle@npm:^2.5.0":
+  version: 2.5.0
+  resolution: "@venusprotocol/oracle@npm:2.5.0"
   dependencies:
     "@chainlink/contracts": ^0.5.1
     "@defi-wonderland/smock": 2.3.5
@@ -3495,7 +3495,7 @@ __metadata:
     hardhat-deploy: ^0.12.4
     module-alias: ^2.2.2
     solidity-docgen: ^0.6.0-beta.29
-  checksum: c6dfcb627e31342363ddf67e1ed615db744e7d1e6e15256c1ef8d772d0ddb88e986523b1653bba21b050a2ff61f2fdfac733570b6b83fd271aedf3516e285ee5
+  checksum: fb0ec02dc3973dda26821df5f6e7975639d749451d1dceb451c8c7da709f2fc4cb8d5f8f6328a81ddf29542e4059464c3bef78e6b4baca7597a9b6f030eefe87
   languageName: node
   linkType: hard
 
@@ -3531,22 +3531,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@venusprotocol/token-bridge@npm:^2.0.0":
-  version: 2.1.0
-  resolution: "@venusprotocol/token-bridge@npm:2.1.0"
-  dependencies:
-    "@layerzerolabs/solidity-examples": ^1.0.0
-    "@openzeppelin/contracts": ^4.8.3
-    "@openzeppelin/contracts-upgradeable": ^4.8.3
-    "@openzeppelin/hardhat-upgrades": ^1.21.0
-    "@solidity-parser/parser": ^0.13.2
-    ethers: ^5.7.0
-    module-alias: ^2.2.2
-  checksum: 022163873126822b7cd84bd470b2f7bdb439cad1ac78136a5956418803bdc873360de28ab8d1e50f28ab80add900d56660c8273ac132ba47bbd3c3890b67b046
-  languageName: node
-  linkType: hard
-
-"@venusprotocol/token-bridge@workspace:.":
+"@venusprotocol/token-bridge@^2.0.0, @venusprotocol/token-bridge@workspace:.":
   version: 0.0.0-use.local
   resolution: "@venusprotocol/token-bridge@workspace:."
   dependencies:
@@ -3577,8 +3562,8 @@ __metadata:
     "@types/node": ^12.20.50
     "@typescript-eslint/eslint-plugin": ^5.27.1
     "@typescript-eslint/parser": ^5.27.1
-    "@venusprotocol/governance-contracts": ^2.3.0-dev.1
-    "@venusprotocol/oracle": ^2.5.0-dev.2
+    "@venusprotocol/governance-contracts": ^2.3.0
+    "@venusprotocol/oracle": ^2.5.0
     "@venusprotocol/solidity-utilities": 2.0.0
     bignumber.js: 9.0.0
     chai: ^4.3.6
