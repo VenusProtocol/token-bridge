@@ -1,0 +1,12 @@
+{
+  "name": "opsepolia",
+  "chainId": "11155420",
+  "addresses": {
+    "DefaultProxyAdmin": "0xa9aaf2A1cCf2C3a87997942abaA740887cC89241",
+    "XVS": "0x789482e37218f9b26d8D9115E356462fA9A37116",
+    "XVSBridgeAdmin": "0x6bBcB95eCF9BEc9AE91d5Ad227783e3913145321",
+    "XVSBridgeAdmin_Implementation": "0x6E1bb2dd25CcE31A57d27F941a74786c67e8C6e3",
+    "XVSBridgeAdmin_Proxy": "0x6bBcB95eCF9BEc9AE91d5Ad227783e3913145321",
+    "XVSProxyOFTDest": "0x79a36dc9a43D05Db4747c59c02F48ed500e47dF1"
+  }
+}
