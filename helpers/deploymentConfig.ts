@@ -23,6 +23,7 @@ const ARBITRUM_ONE_MULTISIG = "0x14e0E151b33f9802b3e75b621c1457afc44DcAA0";
 const ZKSYNC_SEPOLIA_MULTISIG = "0xa2f83de95E9F28eD443132C331B6a9C9B7a9F866";
 const OP_SEPOLIA_MULTISIG = "0xd57365EE4E850e881229e2F8Aa405822f289e78d";
 const ZKSYNC_MAINNET_MULTISIG = "0x751Aa759cfBB6CE71A43b48e40e1cCcFC66Ba4aa";
+const OP_MAINNET_MULTISIG = "0x2e94dd14E81999CdBF5deDE31938beD7308354b3";
 
 export const preconfiguredAddresses = {
   bsctestnet: {
@@ -93,6 +94,13 @@ export const preconfiguredAddresses = {
     CriticalTimelock: ZKSYNC_MAINNET_MULTISIG,
     LzEndpoint: "0x9b896c0e23220469C7AE69cb4BbAE391eAa4C8da",
     LzVirtualChainId: "165",
+  },
+  opmainnet: {
+    NormalTimelock: OP_MAINNET_MULTISIG,
+    FastTrackTimelock: OP_MAINNET_MULTISIG,
+    CriticalTimelock: OP_MAINNET_MULTISIG,
+    LzEndpoint: "0x3c2269811836af69497E5F486A85D7316753cf62",
+    LzVirtualChainId: "111",
   },
 };
 
@@ -291,6 +299,15 @@ export const bridgeConfig: BridgeConfig = {
       ...createMethodEntries(110),
     ],
   },
+  opmainnet: {
+    methods: [
+      ...createMethodEntries(102),
+      ...createMethodEntries(101),
+      ...createMethodEntries(202),
+      ...createMethodEntries(110),
+      ...createMethodEntries(165),
+    ],
+  },
 };
 
 export async function getPreConfiguredAddresses(networkName: string): Promise<PreconfiguredAddresses> {
@@ -317,6 +334,8 @@ export async function getPreConfiguredAddresses(networkName: string): Promise<Pr
       return preconfiguredAddresses.opsepolia;
     case "zksyncmainnet":
       return preconfiguredAddresses.zksyncmainnet;
+    case "opmainnet":
+      return preconfiguredAddresses.opmainnet;
     default:
       throw new Error(`config for network ${networkName} is not available.`);
   }
