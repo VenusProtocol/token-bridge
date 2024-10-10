@@ -1,0 +1,12 @@
+{
+  "name": "opmainnet",
+  "chainId": "10",
+  "addresses": {
+    "DefaultProxyAdmin": "0xeaF9490cBEA6fF9bA1D23671C39a799CeD0DCED2",
+    "XVS": "0x4a971e87ad1F61f7f3081645f52a99277AE917cF",
+    "XVSBridgeAdmin": "0x3c307DF1Bf3198a2417d9CA86806B307D147Ddf7",
+    "XVSBridgeAdmin_Implementation": "0xc8A17E5394aeB0A0E227E0f27F922dc60300e80B",
+    "XVSBridgeAdmin_Proxy": "0x3c307DF1Bf3198a2417d9CA86806B307D147Ddf7",
+    "XVSProxyOFTDest": "0xbBe46bAec851355c3FC4856914c47eB6Cea0B8B4"
+  }
+}

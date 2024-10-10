@@ -3467,27 +3467,27 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@venusprotocol/governance-contracts@npm:^2.3.0":
-  version: 2.3.0
-  resolution: "@venusprotocol/governance-contracts@npm:2.3.0"
+"@venusprotocol/governance-contracts@npm:^2.4.0":
+  version: 2.4.0
+  resolution: "@venusprotocol/governance-contracts@npm:2.4.0"
   dependencies:
     "@venusprotocol/solidity-utilities": 2.0.0
     hardhat-deploy-ethers: ^0.3.0-beta.13
     module-alias: ^2.2.2
-  checksum: b7c6054d36f435e6360acbe5ef31816901377bffb119147a519c7aa93f8ad4205dfbb85deb706a5fbc37ab144dfdb42284f18c8e95bc729a780303c828221891
+  checksum: 2a754a05a655bc7b24c33685f86c9bd616a6e7cba4b048315b11eca67a8c1e37c033f04e1b4394e7326251b6af49ab257275cef72727c8976ae16c7f2c2ff0e7
   languageName: node
   linkType: hard
 
-"@venusprotocol/oracle@npm:^2.5.0":
-  version: 2.5.0
-  resolution: "@venusprotocol/oracle@npm:2.5.0"
+"@venusprotocol/oracle@npm:^2.6.0":
+  version: 2.6.0
+  resolution: "@venusprotocol/oracle@npm:2.6.0"
   dependencies:
     "@chainlink/contracts": ^0.5.1
     "@defi-wonderland/smock": 2.3.5
     "@nomicfoundation/hardhat-network-helpers": ^1.0.8
     "@openzeppelin/contracts": ^4.6.0
     "@openzeppelin/contracts-upgradeable": ^4.7.3
-    "@venusprotocol/governance-contracts": ^2.3.0
+    "@venusprotocol/governance-contracts": ^2.4.0
     "@venusprotocol/solidity-utilities": ^2.0.0
     "@venusprotocol/venus-protocol": ^9.1.0
     ethers: ^5.6.8
@@ -3495,7 +3495,7 @@ __metadata:
     hardhat-deploy: ^0.12.4
     module-alias: ^2.2.2
     solidity-docgen: ^0.6.0-beta.29
-  checksum: fb0ec02dc3973dda26821df5f6e7975639d749451d1dceb451c8c7da709f2fc4cb8d5f8f6328a81ddf29542e4059464c3bef78e6b4baca7597a9b6f030eefe87
+  checksum: 47c36e0cbba6f4963113e8e2db268063a52f4ffe913a8aab398f25d5c83ac5f448e45cb57992cb8f406e1be9a581557b7c75c4d8754d42f5d3164bff49f2b5c9
   languageName: node
   linkType: hard
 
@@ -3532,8 +3532,8 @@ __metadata:
   linkType: hard
 
 "@venusprotocol/token-bridge@npm:^2.0.0":
-  version: 2.1.0
-  resolution: "@venusprotocol/token-bridge@npm:2.1.0"
+  version: 2.2.0
+  resolution: "@venusprotocol/token-bridge@npm:2.2.0"
   dependencies:
     "@layerzerolabs/solidity-examples": ^1.0.0
     "@openzeppelin/contracts": ^4.8.3
@@ -3542,7 +3542,7 @@ __metadata:
     "@solidity-parser/parser": ^0.13.2
     ethers: ^5.7.0
     module-alias: ^2.2.2
-  checksum: 022163873126822b7cd84bd470b2f7bdb439cad1ac78136a5956418803bdc873360de28ab8d1e50f28ab80add900d56660c8273ac132ba47bbd3c3890b67b046
+  checksum: 86bdefc8853cd334bedbb9d63b4a8d266271dcaa28705fdb6368a66fbc22838e0d1c00cf4b9eb2083c925a6a3e47bbfebd234d660b0660a9b437a52a5f0d7a90
   languageName: node
   linkType: hard
 
@@ -3577,8 +3577,8 @@ __metadata:
     "@types/node": ^12.20.50
     "@typescript-eslint/eslint-plugin": ^5.27.1
     "@typescript-eslint/parser": ^5.27.1
-    "@venusprotocol/governance-contracts": ^2.3.0
-    "@venusprotocol/oracle": ^2.5.0
+    "@venusprotocol/governance-contracts": ^2.4.0
+    "@venusprotocol/oracle": ^2.6.0
     "@venusprotocol/solidity-utilities": 2.0.0
     bignumber.js: 9.0.0
     chai: ^4.3.6
