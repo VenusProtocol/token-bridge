@@ -24,6 +24,7 @@ const ZKSYNC_SEPOLIA_MULTISIG = "0xa2f83de95E9F28eD443132C331B6a9C9B7a9F866";
 const OP_SEPOLIA_MULTISIG = "0xd57365EE4E850e881229e2F8Aa405822f289e78d";
 const ZKSYNC_MAINNET_MULTISIG = "0x751Aa759cfBB6CE71A43b48e40e1cCcFC66Ba4aa";
 const OP_MAINNET_MULTISIG = "0x2e94dd14E81999CdBF5deDE31938beD7308354b3";
+const BASE_SEPOLIA_MULTISIG = "0xdf3b635d2b535f906BB02abb22AED71346E36a00";
 
 export const preconfiguredAddresses = {
   bsctestnet: {
@@ -102,6 +103,13 @@ export const preconfiguredAddresses = {
     LzEndpoint: "0x3c2269811836af69497E5F486A85D7316753cf62",
     LzVirtualChainId: "111",
   },
+  basesepolia: {
+    NormalTimelock: BASE_SEPOLIA_MULTISIG,
+    FastTrackTimelock: BASE_SEPOLIA_MULTISIG,
+    CriticalTimelock: BASE_SEPOLIA_MULTISIG,
+    LzEndpoint: "0x55370E0fBB5f5b8dAeD978BA1c075a499eB107B8",
+    LzVirtualChainId: "10245",
+  },
 };
 
 export const xvsBridgeMethodsSrc = [
@@ -170,6 +178,14 @@ export const bridgeConfig: BridgeConfig = {
       ...createMethodEntries(10231),
       ...createMethodEntries(10248),
       ...createMethodEntries(10232),
+      ...createMethodEntries(
+        10245,
+        300000,
+        parseUnits("100000", 18),
+        parseUnits("20000", 18),
+        parseUnits("102000", 18),
+        parseUnits("20400", 18),
+      )
     ],
   },
   bscmainnet: {
@@ -383,6 +399,22 @@ export const bridgeConfig: BridgeConfig = {
       ),
     ],
   },
+  basesepolia: {
+    methods: [
+      ...createMethodEntries(
+        10102,
+        300000,
+        parseUnits("100000", 18),
+        parseUnits("20000", 18),
+        parseUnits("102000", 18),
+        parseUnits("20400", 18),
+      ),
+      ...createMethodEntries(10202),
+      ...createMethodEntries(10161),
+      ...createMethodEntries(10248),
+      ...createMethodEntries(10232),
+    ],
+  },
 };
 
 export async function getPreConfiguredAddresses(networkName: string): Promise<PreconfiguredAddresses> {
@@ -411,6 +443,8 @@ export async function getPreConfiguredAddresses(networkName: string): Promise<Pr
       return preconfiguredAddresses.zksyncmainnet;
     case "opmainnet":
       return preconfiguredAddresses.opmainnet;
+    case "basesepolia":
+      return preconfiguredAddresses.basesepolia;
     default:
       throw new Error(`config for network ${networkName} is not available.`);
   }
