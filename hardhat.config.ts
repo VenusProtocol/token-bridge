@@ -60,8 +60,8 @@ extendConfig((config: HardhatConfig) => {
           "node_modules/@venusprotocol/oracle/deployments/opsepolia",
         ],
         unichainsepolia: [
-          "node_modules/@venusprotocol/governance-contracts/deployments/opsepolia",
-          "node_modules/@venusprotocol/oracle/deployments/opsepolia",
+          "node_modules/@venusprotocol/governance-contracts/deployments/unichainsepolia",
+          "node_modules/@venusprotocol/oracle/deployments/unichainsepolia",
         ],
       },
     };
