@@ -218,6 +218,7 @@ export const bridgeConfig: BridgeConfig = {
       ...createMethodEntries(10231),
       ...createMethodEntries(10248),
       ...createMethodEntries(10232),
+      ...createMethodEntries(10245),
     ],
   },
   ethereum: {
@@ -250,6 +251,7 @@ export const bridgeConfig: BridgeConfig = {
       ...createMethodEntries(10231),
       ...createMethodEntries(10248),
       ...createMethodEntries(10232),
+      ...createMethodEntries(10245),
     ],
   },
   opbnbmainnet: {
@@ -282,6 +284,7 @@ export const bridgeConfig: BridgeConfig = {
       ...createMethodEntries(10161),
       ...createMethodEntries(10248),
       ...createMethodEntries(10232),
+      ...createMethodEntries(10245),
     ],
   },
   arbitrumone: {
@@ -328,6 +331,7 @@ export const bridgeConfig: BridgeConfig = {
       ...createMethodEntries(10161),
       ...createMethodEntries(10231),
       ...createMethodEntries(10232),
+      ...createMethodEntries(10245),
     ],
   },
   opsepolia: {
@@ -337,6 +341,7 @@ export const bridgeConfig: BridgeConfig = {
       ...createMethodEntries(10161),
       ...createMethodEntries(10231),
       ...createMethodEntries(10248),
+      ...createMethodEntries(10245),
     ],
   },
   zksyncmainnet: {
@@ -413,6 +418,7 @@ export const bridgeConfig: BridgeConfig = {
       ...createMethodEntries(10161),
       ...createMethodEntries(10248),
       ...createMethodEntries(10232),
+      ...createMethodEntries(10231),
     ],
   },
 };
