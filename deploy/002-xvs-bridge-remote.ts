@@ -91,13 +91,13 @@ const func: DeployFunction = async function (hre: HardhatRuntimeEnvironment) {
   );
 
   const proxyOwnerAddress = await toAddress(preconfiguredAddresses.NormalTimelock, hre);
-  const accessControlManager = "0x724138223D8F76b519fdE715f60124E7Ce51e051"; //await ethers.getContract("AccessControlManager");
-  const resilientOracle =  "0xC34871C982cf0Bc6e7aCa2c2670Bc319bDA1C744"; //await ethers.getContract("ResilientOracle");
+  const accessControlManager = await ethers.getContract("AccessControlManager");
+  const resilientOracle = await ethers.getContract("ResilientOracle");
 
   const XVS = await deploy("XVS", {
     from: deployer,
     contract: "XVS",
-    args: [accessControlManager],
+    args: [accessControlManager.address],
     autoMine: true,
     log: true,
     skipIfAlreadyDeployed: true,
@@ -106,7 +106,7 @@ const func: DeployFunction = async function (hre: HardhatRuntimeEnvironment) {
   const XVSProxyOFTDest = await deploy("XVSProxyOFTDest", {
     from: deployer,
     contract: "XVSProxyOFTDest",
-    args: [XVS.address, 8, preconfiguredAddresses.LzEndpoint, resilientOracle],
+    args: [XVS.address, 8, preconfiguredAddresses.LzEndpoint, resilientOracle.address],
     autoMine: true,
     log: true,
     skipIfAlreadyDeployed: true,
@@ -121,7 +121,7 @@ const func: DeployFunction = async function (hre: HardhatRuntimeEnvironment) {
       proxyContract: "OptimizedTransparentUpgradeableProxy",
       execute: {
         methodName: "initialize",
-        args: [accessControlManager],
+        args: [accessControlManager.address],
       },
       viaAdminContract: {
         name: "DefaultProxyAdmin",
@@ -159,7 +159,7 @@ const func: DeployFunction = async function (hre: HardhatRuntimeEnvironment) {
   const commands = [
     ...(await configureAccessControls(
       xvsBridgeMethodsDest,
-      accessControlManager,
+      accessControlManager.address,
       preconfiguredAddresses.NormalTimelock,
       XVSBridgeAdmin.address,
       hre,
@@ -167,7 +167,7 @@ const func: DeployFunction = async function (hre: HardhatRuntimeEnvironment) {
 
     ...(await configureAccessControls(
       xvsTokenPermissions,
-      accessControlManager,
+      accessControlManager.address,
       XVSProxyOFTDest.address,
       XVS.address,
       hre,
@@ -175,7 +175,7 @@ const func: DeployFunction = async function (hre: HardhatRuntimeEnvironment) {
 
     ...(await configureAccessControls(
       XVSBridgeAdminMethods,
-      accessControlManager,
+      accessControlManager.address,
       preconfiguredAddresses.NormalTimelock,
       XVSBridgeAdmin.address,
       hre,
@@ -183,7 +183,7 @@ const func: DeployFunction = async function (hre: HardhatRuntimeEnvironment) {
 
     ...(await configureAccessControls(
       XVSTokenDestMethods,
-      accessControlManager,
+      accessControlManager.address,
       preconfiguredAddresses.NormalTimelock,
       XVS.address,
       hre,
