@@ -185,7 +185,7 @@ export const bridgeConfig: BridgeConfig = {
         parseUnits("20000", 18),
         parseUnits("102000", 18),
         parseUnits("20400", 18),
-      )
+      ),
     ],
   },
   bscmainnet: {

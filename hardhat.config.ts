@@ -185,7 +185,7 @@ const config: HardhatUserConfig = {
       // accounts: DEPLOYER_PRIVATE_KEY ? [`0x${DEPLOYER_PRIVATE_KEY}`] : [],
       accounts: {
         mnemonic: process.env.MNEMONIC || "",
-      }
+      },
     },
   },
   gasReporter: {
@@ -281,7 +281,7 @@ const config: HardhatUserConfig = {
           apiURL: "https://api-sepolia.basescan.org/api",
           browserURL: "https://sepolia.basescan.org/",
         },
-      }
+      },
     ],
     apiKey: {
       bscmainnet: process.env.ETHERSCAN_API_KEY || "ETHERSCAN_API_KEY",
