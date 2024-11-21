@@ -178,14 +178,7 @@ export const bridgeConfig: BridgeConfig = {
       ...createMethodEntries(10231),
       ...createMethodEntries(10248),
       ...createMethodEntries(10232),
-      ...createMethodEntries(
-        10245,
-        300000,
-        parseUnits("100000", 18),
-        parseUnits("20000", 18),
-        parseUnits("102000", 18),
-        parseUnits("20400", 18),
-      ),
+      ...createMethodEntries(10245),
     ],
   },
   bscmainnet: {
@@ -406,14 +399,7 @@ export const bridgeConfig: BridgeConfig = {
   },
   basesepolia: {
     methods: [
-      ...createMethodEntries(
-        10102,
-        300000,
-        parseUnits("100000", 18),
-        parseUnits("20000", 18),
-        parseUnits("102000", 18),
-        parseUnits("20400", 18),
-      ),
+      ...createMethodEntries(10102),
       ...createMethodEntries(10202),
       ...createMethodEntries(10161),
       ...createMethodEntries(10248),
@@ -459,10 +445,10 @@ export async function getPreConfiguredAddresses(networkName: string): Promise<Pr
 function createMethodEntries(
   chainId: number,
   minDstGas: number = 300000,
-  maxDailyLimit: BigNumber = parseUnits("50000", 18),
-  maxSingleTransactionLimit: BigNumber = parseUnits("10000", 18),
-  maxDailyReceiveLimit: BigNumber = parseUnits("51000", 18),
-  maxSingleReceiveTransactionLimit: BigNumber = parseUnits("10200", 18),
+  maxDailyLimit: BigNumber = parseUnits("100000", 18),
+  maxSingleTransactionLimit: BigNumber = parseUnits("20000", 18),
+  maxDailyReceiveLimit: BigNumber = parseUnits("102000", 18),
+  maxSingleReceiveTransactionLimit: BigNumber = parseUnits("20400", 18),
 ): MethodEntry[] {
   return [
     { method: "setMinDstGas(uint16,uint16,uint256)", args: [chainId, 0, minDstGas] },
