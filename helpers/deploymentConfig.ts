@@ -24,6 +24,7 @@ const ZKSYNC_SEPOLIA_MULTISIG = "0xa2f83de95E9F28eD443132C331B6a9C9B7a9F866";
 const OP_SEPOLIA_MULTISIG = "0xd57365EE4E850e881229e2F8Aa405822f289e78d";
 const ZKSYNC_MAINNET_MULTISIG = "0x751Aa759cfBB6CE71A43b48e40e1cCcFC66Ba4aa";
 const OP_MAINNET_MULTISIG = "0x2e94dd14E81999CdBF5deDE31938beD7308354b3";
+const BASE_SEPOLIA_MULTISIG = "0xdf3b635d2b535f906BB02abb22AED71346E36a00";
 
 export const preconfiguredAddresses = {
   bsctestnet: {
@@ -102,6 +103,13 @@ export const preconfiguredAddresses = {
     LzEndpoint: "0x3c2269811836af69497E5F486A85D7316753cf62",
     LzVirtualChainId: "111",
   },
+  basesepolia: {
+    NormalTimelock: BASE_SEPOLIA_MULTISIG,
+    FastTrackTimelock: BASE_SEPOLIA_MULTISIG,
+    CriticalTimelock: BASE_SEPOLIA_MULTISIG,
+    LzEndpoint: "0x55370E0fBB5f5b8dAeD978BA1c075a499eB107B8",
+    LzVirtualChainId: "10245",
+  },
 };
 
 export const xvsBridgeMethodsSrc = [
@@ -170,6 +178,7 @@ export const bridgeConfig: BridgeConfig = {
       ...createMethodEntries(10231),
       ...createMethodEntries(10248),
       ...createMethodEntries(10232),
+      ...createMethodEntries(10245),
     ],
   },
   bscmainnet: {
@@ -202,6 +211,7 @@ export const bridgeConfig: BridgeConfig = {
       ...createMethodEntries(10231),
       ...createMethodEntries(10248),
       ...createMethodEntries(10232),
+      ...createMethodEntries(10245),
     ],
   },
   ethereum: {
@@ -234,6 +244,7 @@ export const bridgeConfig: BridgeConfig = {
       ...createMethodEntries(10231),
       ...createMethodEntries(10248),
       ...createMethodEntries(10232),
+      ...createMethodEntries(10245),
     ],
   },
   opbnbmainnet: {
@@ -266,6 +277,7 @@ export const bridgeConfig: BridgeConfig = {
       ...createMethodEntries(10161),
       ...createMethodEntries(10248),
       ...createMethodEntries(10232),
+      ...createMethodEntries(10245),
     ],
   },
   arbitrumone: {
@@ -312,6 +324,7 @@ export const bridgeConfig: BridgeConfig = {
       ...createMethodEntries(10161),
       ...createMethodEntries(10231),
       ...createMethodEntries(10232),
+      ...createMethodEntries(10245),
     ],
   },
   opsepolia: {
@@ -321,6 +334,7 @@ export const bridgeConfig: BridgeConfig = {
       ...createMethodEntries(10161),
       ...createMethodEntries(10231),
       ...createMethodEntries(10248),
+      ...createMethodEntries(10245),
     ],
   },
   zksyncmainnet: {
@@ -383,6 +397,16 @@ export const bridgeConfig: BridgeConfig = {
       ),
     ],
   },
+  basesepolia: {
+    methods: [
+      ...createMethodEntries(10102),
+      ...createMethodEntries(10202),
+      ...createMethodEntries(10161),
+      ...createMethodEntries(10248),
+      ...createMethodEntries(10232),
+      ...createMethodEntries(10231),
+    ],
+  },
 };
 
 export async function getPreConfiguredAddresses(networkName: string): Promise<PreconfiguredAddresses> {
@@ -411,6 +435,8 @@ export async function getPreConfiguredAddresses(networkName: string): Promise<Pr
       return preconfiguredAddresses.zksyncmainnet;
     case "opmainnet":
       return preconfiguredAddresses.opmainnet;
+    case "basesepolia":
+      return preconfiguredAddresses.basesepolia;
     default:
       throw new Error(`config for network ${networkName} is not available.`);
   }
@@ -419,10 +445,10 @@ export async function getPreConfiguredAddresses(networkName: string): Promise<Pr
 function createMethodEntries(
   chainId: number,
   minDstGas: number = 300000,
-  maxDailyLimit: BigNumber = parseUnits("50000", 18),
-  maxSingleTransactionLimit: BigNumber = parseUnits("10000", 18),
-  maxDailyReceiveLimit: BigNumber = parseUnits("51000", 18),
-  maxSingleReceiveTransactionLimit: BigNumber = parseUnits("10200", 18),
+  maxDailyLimit: BigNumber = parseUnits("100000", 18),
+  maxSingleTransactionLimit: BigNumber = parseUnits("20000", 18),
+  maxDailyReceiveLimit: BigNumber = parseUnits("102000", 18),
+  maxSingleReceiveTransactionLimit: BigNumber = parseUnits("20400", 18),
 ): MethodEntry[] {
   return [
     { method: "setMinDstGas(uint16,uint16,uint256)", args: [chainId, 0, minDstGas] },
