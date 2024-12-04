@@ -421,6 +421,16 @@ export const bridgeConfig: BridgeConfig = {
       ...createMethodEntries(10231),
     ],
   },
+  basemainnet: {
+    methods: [
+      ...createMethodEntries(102),
+      ...createMethodEntries(101),
+      ...createMethodEntries(202),
+      ...createMethodEntries(165),
+      ...createMethodEntries(111),
+      ...createMethodEntries(110),
+    ],
+  },
 };
 
 export async function getPreConfiguredAddresses(networkName: string): Promise<PreconfiguredAddresses> {
