@@ -1,5 +1,7 @@
 {
   "name": "basemainnet",
   "chainId": "8453",
-  "addresses": {}
+  "addresses": {
+    "DefaultProxyAdmin": "0x7B06EF6b68648C61aFE0f715740fE3950B90746B"
+  }
 }
