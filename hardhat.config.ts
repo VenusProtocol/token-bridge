@@ -63,6 +63,10 @@ extendConfig((config: HardhatConfig) => {
           "node_modules/@venusprotocol/governance-contracts/deployments/basesepolia",
           "node_modules/@venusprotocol/oracle/deployments/basesepolia",
         ],
+        basemainnet: [
+          // TODO: "node_modules/@venusprotocol/governance-contracts/deployments/basemainnet",
+          // TODO: "node_modules/@venusprotocol/oracle/deployments/basemainnet",
+        ],
       },
     };
   }
@@ -188,7 +192,7 @@ const config: HardhatUserConfig = {
       url: process.env.ARCHIVE_NODE_basemainnet || "https://mainnet.base.org",
       chainId: 8453,
       live: true,
-      accounts: process.env.DEPLOYER_PRIVATE_KEY ? [`0x${process.env.DEPLOYER_PRIVATE_KEY}`] : [],
+      accounts: DEPLOYER_PRIVATE_KEY ? [`0x${DEPLOYER_PRIVATE_KEY}`] : [],
     },
   },
   gasReporter: {
@@ -289,7 +293,7 @@ const config: HardhatUserConfig = {
         network: "basemainnet",
         chainId: 8453,
         urls: {
-          apiURL: "https://mainnet.base.org",
+          apiURL: "https://api.basescan.org/api",
           browserURL: "https://basescan.org/",
         },
       },
