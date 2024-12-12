@@ -64,8 +64,8 @@ extendConfig((config: HardhatConfig) => {
           "node_modules/@venusprotocol/oracle/deployments/basesepolia",
         ],
         basemainnet: [
-          // TODO: "node_modules/@venusprotocol/governance-contracts/deployments/basemainnet",
-          // TODO: "node_modules/@venusprotocol/oracle/deployments/basemainnet",
+          "node_modules/@venusprotocol/governance-contracts/deployments/basemainnet",
+          "node_modules/@venusprotocol/oracle/deployments/basemainnet",
         ],
       },
     };
