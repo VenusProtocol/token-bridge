@@ -1,0 +1,12 @@
+{
+  "name": "basesepolia",
+  "chainId": "84532",
+  "addresses": {
+    "DefaultProxyAdmin": "0xB85dD19112c4BF1240FeD0f26E8D0b0576a82546",
+    "XVS": "0xE657EDb5579B82135a274E85187927C42E38C021",
+    "XVSBridgeAdmin": "0xE431E82d8fFfd81E7c082BeC7Fe2C306f5c988aD",
+    "XVSBridgeAdmin_Implementation": "0xec90c30b0C6ebdd1Fb6A64f40cf550cD207A3CAf",
+    "XVSBridgeAdmin_Proxy": "0xE431E82d8fFfd81E7c082BeC7Fe2C306f5c988aD",
+    "XVSProxyOFTDest": "0xD5Cd1fD17B724a391C1bce55Eb9d88E3205eED60"
+  }
+}

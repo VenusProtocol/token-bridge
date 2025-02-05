@@ -1,0 +1,12 @@
+{
+  "name": "basemainnet",
+  "chainId": "8453",
+  "addresses": {
+    "DefaultProxyAdmin": "0x7B06EF6b68648C61aFE0f715740fE3950B90746B",
+    "XVS": "0xebB7873213c8d1d9913D8eA39Aa12d74cB107995",
+    "XVSBridgeAdmin": "0x6303FEcee7161bF959d65df4Afb9e1ba5701f78e",
+    "XVSBridgeAdmin_Implementation": "0x358691eB7CC06ac512d9068a71Ea3bc2893F50Ed",
+    "XVSBridgeAdmin_Proxy": "0x6303FEcee7161bF959d65df4Afb9e1ba5701f78e",
+    "XVSProxyOFTDest": "0x3dD92fB51a5d381Ae78E023dfB5DD1D45D2426Cd"
+  }
+}

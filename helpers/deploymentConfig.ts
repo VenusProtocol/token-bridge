@@ -24,6 +24,8 @@ const ZKSYNC_SEPOLIA_MULTISIG = "0xa2f83de95E9F28eD443132C331B6a9C9B7a9F866";
 const OP_SEPOLIA_MULTISIG = "0xd57365EE4E850e881229e2F8Aa405822f289e78d";
 const ZKSYNC_MAINNET_MULTISIG = "0x751Aa759cfBB6CE71A43b48e40e1cCcFC66Ba4aa";
 const OP_MAINNET_MULTISIG = "0x2e94dd14E81999CdBF5deDE31938beD7308354b3";
+const BASE_SEPOLIA_MULTISIG = "0xdf3b635d2b535f906BB02abb22AED71346E36a00";
+const BASE_MAINNET_MULTISIG = "0x1803Cf1D3495b43cC628aa1d8638A981F8CD341C";
 const UNICHAIN_SEPOLIA_MULTISIG = "0x9831D3A641E8c7F082EEA75b8249c99be9D09a34";
 
 export const preconfiguredAddresses = {
@@ -103,6 +105,20 @@ export const preconfiguredAddresses = {
     LzEndpoint: "0x3c2269811836af69497E5F486A85D7316753cf62",
     LzVirtualChainId: "111",
   },
+  basesepolia: {
+    NormalTimelock: BASE_SEPOLIA_MULTISIG,
+    FastTrackTimelock: BASE_SEPOLIA_MULTISIG,
+    CriticalTimelock: BASE_SEPOLIA_MULTISIG,
+    LzEndpoint: "0x55370E0fBB5f5b8dAeD978BA1c075a499eB107B8",
+    LzVirtualChainId: "10245",
+  },
+  basemainnet: {
+    NormalTimelock: BASE_MAINNET_MULTISIG,
+    FastTrackTimelock: BASE_MAINNET_MULTISIG,
+    CriticalTimelock: BASE_MAINNET_MULTISIG,
+    LzEndpoint: "0xb6319cC6c8c27A8F5dAF0dD3DF91EA35C4720dd7",
+    LzVirtualChainId: "184",
+  },
   unichainsepolia: {
     NormalTimelock: UNICHAIN_SEPOLIA_MULTISIG,
     FastTrackTimelock: UNICHAIN_SEPOLIA_MULTISIG,
@@ -178,6 +194,7 @@ export const bridgeConfig: BridgeConfig = {
       ...createMethodEntries(10231),
       ...createMethodEntries(10248),
       ...createMethodEntries(10232),
+      ...createMethodEntries(10245),
       ...createMethodEntries(
         10333,
         300000,
@@ -209,6 +226,7 @@ export const bridgeConfig: BridgeConfig = {
         parseUnits("102000", 18),
         parseUnits("20400", 18),
       ),
+      ...createMethodEntries(184),
     ],
   },
   sepolia: {
@@ -218,6 +236,7 @@ export const bridgeConfig: BridgeConfig = {
       ...createMethodEntries(10231),
       ...createMethodEntries(10248),
       ...createMethodEntries(10232),
+      ...createMethodEntries(10245),
       ...createMethodEntries(
         10333,
         300000,
@@ -249,6 +268,7 @@ export const bridgeConfig: BridgeConfig = {
         parseUnits("102000", 18),
         parseUnits("20400", 18),
       ),
+      ...createMethodEntries(184),
     ],
   },
   opbnbtestnet: {
@@ -258,6 +278,7 @@ export const bridgeConfig: BridgeConfig = {
       ...createMethodEntries(10231),
       ...createMethodEntries(10248),
       ...createMethodEntries(10232),
+      ...createMethodEntries(10245),
       ...createMethodEntries(
         10333,
         300000,
@@ -289,6 +310,7 @@ export const bridgeConfig: BridgeConfig = {
         parseUnits("102000", 18),
         parseUnits("20400", 18),
       ),
+      ...createMethodEntries(184),
     ],
   },
   arbitrumsepolia: {
@@ -298,6 +320,7 @@ export const bridgeConfig: BridgeConfig = {
       ...createMethodEntries(10161),
       ...createMethodEntries(10248),
       ...createMethodEntries(10232),
+      ...createMethodEntries(10245),
       ...createMethodEntries(
         10333,
         300000,
@@ -343,6 +366,7 @@ export const bridgeConfig: BridgeConfig = {
         parseUnits("102000", 18),
         parseUnits("20400", 18),
       ),
+      ...createMethodEntries(184),
     ],
   },
   zksyncsepolia: {
@@ -352,6 +376,7 @@ export const bridgeConfig: BridgeConfig = {
       ...createMethodEntries(10161),
       ...createMethodEntries(10231),
       ...createMethodEntries(10232),
+      ...createMethodEntries(10245),
       ...createMethodEntries(
         10333,
         300000,
@@ -369,6 +394,7 @@ export const bridgeConfig: BridgeConfig = {
       ...createMethodEntries(10161),
       ...createMethodEntries(10231),
       ...createMethodEntries(10248),
+      ...createMethodEntries(10245),
       ...createMethodEntries(
         10333,
         300000,
@@ -393,6 +419,7 @@ export const bridgeConfig: BridgeConfig = {
         parseUnits("102000", 18),
         parseUnits("20400", 18),
       ),
+      ...createMethodEntries(184),
     ],
   },
   opmainnet: {
@@ -437,6 +464,27 @@ export const bridgeConfig: BridgeConfig = {
         parseUnits("102000", 18),
         parseUnits("20400", 18),
       ),
+      ...createMethodEntries(184),
+    ],
+  },
+  basesepolia: {
+    methods: [
+      ...createMethodEntries(10102),
+      ...createMethodEntries(10202),
+      ...createMethodEntries(10161),
+      ...createMethodEntries(10248),
+      ...createMethodEntries(10232),
+      ...createMethodEntries(10231),
+    ],
+  },
+  basemainnet: {
+    methods: [
+      ...createMethodEntries(102),
+      ...createMethodEntries(101),
+      ...createMethodEntries(202),
+      ...createMethodEntries(165),
+      ...createMethodEntries(111),
+      ...createMethodEntries(110),
     ],
   },
   unichainsepolia: {
@@ -491,6 +539,7 @@ export const bridgeConfig: BridgeConfig = {
       ),
     ],
   },
+
 };
 
 export async function getPreConfiguredAddresses(networkName: string): Promise<PreconfiguredAddresses> {
@@ -519,6 +568,10 @@ export async function getPreConfiguredAddresses(networkName: string): Promise<Pr
       return preconfiguredAddresses.zksyncmainnet;
     case "opmainnet":
       return preconfiguredAddresses.opmainnet;
+    case "basesepolia":
+      return preconfiguredAddresses.basesepolia;
+    case "basemainnet":
+      return preconfiguredAddresses.basemainnet;
     case "unichainsepolia":
       return preconfiguredAddresses.unichainsepolia;
     default:
@@ -529,10 +582,10 @@ export async function getPreConfiguredAddresses(networkName: string): Promise<Pr
 function createMethodEntries(
   chainId: number,
   minDstGas: number = 300000,
-  maxDailyLimit: BigNumber = parseUnits("50000", 18),
-  maxSingleTransactionLimit: BigNumber = parseUnits("10000", 18),
-  maxDailyReceiveLimit: BigNumber = parseUnits("51000", 18),
-  maxSingleReceiveTransactionLimit: BigNumber = parseUnits("10200", 18),
+  maxDailyLimit: BigNumber = parseUnits("100000", 18),
+  maxSingleTransactionLimit: BigNumber = parseUnits("20000", 18),
+  maxDailyReceiveLimit: BigNumber = parseUnits("102000", 18),
+  maxSingleReceiveTransactionLimit: BigNumber = parseUnits("20400", 18),
 ): MethodEntry[] {
   return [
     { method: "setMinDstGas(uint16,uint16,uint256)", args: [chainId, 0, minDstGas] },
