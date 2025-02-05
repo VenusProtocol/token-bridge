@@ -539,7 +539,6 @@ export const bridgeConfig: BridgeConfig = {
       ),
     ],
   },
-
 };
 
 export async function getPreConfiguredAddresses(networkName: string): Promise<PreconfiguredAddresses> {
