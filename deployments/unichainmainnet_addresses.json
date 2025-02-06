@@ -1,0 +1,7 @@
+{
+  "name": "unichainmainnet",
+  "chainId": "130",
+  "addresses": {
+    "XVS": "0x81908BBaad3f6fC74093540Ab2E9B749BB62aA0d"
+  }
+}
