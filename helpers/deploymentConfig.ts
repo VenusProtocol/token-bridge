@@ -26,6 +26,7 @@ const ZKSYNC_MAINNET_MULTISIG = "0x751Aa759cfBB6CE71A43b48e40e1cCcFC66Ba4aa";
 const OP_MAINNET_MULTISIG = "0x2e94dd14E81999CdBF5deDE31938beD7308354b3";
 const BASE_SEPOLIA_MULTISIG = "0xdf3b635d2b535f906BB02abb22AED71346E36a00";
 const BASE_MAINNET_MULTISIG = "0x1803Cf1D3495b43cC628aa1d8638A981F8CD341C";
+const UNICHAIN_MAINNET_MULTISIG = "0x1803Cf1D3495b43cC628aa1d8638A981F8CD341C";
 
 export const preconfiguredAddresses = {
   bsctestnet: {
@@ -117,6 +118,13 @@ export const preconfiguredAddresses = {
     CriticalTimelock: BASE_MAINNET_MULTISIG,
     LzEndpoint: "0xb6319cC6c8c27A8F5dAF0dD3DF91EA35C4720dd7",
     LzVirtualChainId: "184",
+  },
+  unichainmainnet: {
+    NormalTimelock: UNICHAIN_MAINNET_MULTISIG,
+    FastTrackTimelock: UNICHAIN_MAINNET_MULTISIG,
+    CriticalTimelock: UNICHAIN_MAINNET_MULTISIG,
+    LzEndpoint: "",
+    LzVirtualChainId: "0",
   },
 };
 
@@ -463,6 +471,8 @@ export async function getPreConfiguredAddresses(networkName: string): Promise<Pr
       return preconfiguredAddresses.basesepolia;
     case "basemainnet":
       return preconfiguredAddresses.basemainnet;
+    case "unichainmainnet":
+      return preconfiguredAddresses.unichainmainnet;
     default:
       throw new Error(`config for network ${networkName} is not available.`);
   }
