@@ -26,6 +26,7 @@ const ZKSYNC_MAINNET_MULTISIG = "0x751Aa759cfBB6CE71A43b48e40e1cCcFC66Ba4aa";
 const OP_MAINNET_MULTISIG = "0x2e94dd14E81999CdBF5deDE31938beD7308354b3";
 const BASE_SEPOLIA_MULTISIG = "0xdf3b635d2b535f906BB02abb22AED71346E36a00";
 const BASE_MAINNET_MULTISIG = "0x1803Cf1D3495b43cC628aa1d8638A981F8CD341C";
+const UNICHAIN_SEPOLIA_MULTISIG = "0x9831D3A641E8c7F082EEA75b8249c99be9D09a34";
 
 export const preconfiguredAddresses = {
   bsctestnet: {
@@ -118,6 +119,13 @@ export const preconfiguredAddresses = {
     LzEndpoint: "0xb6319cC6c8c27A8F5dAF0dD3DF91EA35C4720dd7",
     LzVirtualChainId: "184",
   },
+  unichainsepolia: {
+    NormalTimelock: UNICHAIN_SEPOLIA_MULTISIG,
+    FastTrackTimelock: UNICHAIN_SEPOLIA_MULTISIG,
+    CriticalTimelock: UNICHAIN_SEPOLIA_MULTISIG,
+    LzEndpoint: "0x012f6eaE2A0Bf5916f48b5F37C62Bcfb7C1ffdA1",
+    LzVirtualChainId: "10333",
+  },
 };
 
 export const xvsBridgeMethodsSrc = [
@@ -187,6 +195,14 @@ export const bridgeConfig: BridgeConfig = {
       ...createMethodEntries(10248),
       ...createMethodEntries(10232),
       ...createMethodEntries(10245),
+      ...createMethodEntries(
+        10333,
+        300000,
+        parseUnits("100000", 18),
+        parseUnits("20000", 18),
+        parseUnits("102000", 18),
+        parseUnits("20400", 18),
+      ),
     ],
   },
   bscmainnet: {
@@ -221,6 +237,14 @@ export const bridgeConfig: BridgeConfig = {
       ...createMethodEntries(10248),
       ...createMethodEntries(10232),
       ...createMethodEntries(10245),
+      ...createMethodEntries(
+        10333,
+        300000,
+        parseUnits("100000", 18),
+        parseUnits("20000", 18),
+        parseUnits("102000", 18),
+        parseUnits("20400", 18),
+      ),
     ],
   },
   ethereum: {
@@ -255,6 +279,14 @@ export const bridgeConfig: BridgeConfig = {
       ...createMethodEntries(10248),
       ...createMethodEntries(10232),
       ...createMethodEntries(10245),
+      ...createMethodEntries(
+        10333,
+        300000,
+        parseUnits("100000", 18),
+        parseUnits("20000", 18),
+        parseUnits("102000", 18),
+        parseUnits("20400", 18),
+      ),
     ],
   },
   opbnbmainnet: {
@@ -289,6 +321,14 @@ export const bridgeConfig: BridgeConfig = {
       ...createMethodEntries(10248),
       ...createMethodEntries(10232),
       ...createMethodEntries(10245),
+      ...createMethodEntries(
+        10333,
+        300000,
+        parseUnits("100000", 18),
+        parseUnits("20000", 18),
+        parseUnits("102000", 18),
+        parseUnits("20400", 18),
+      ),
     ],
   },
   arbitrumone: {
@@ -337,6 +377,14 @@ export const bridgeConfig: BridgeConfig = {
       ...createMethodEntries(10231),
       ...createMethodEntries(10232),
       ...createMethodEntries(10245),
+      ...createMethodEntries(
+        10333,
+        300000,
+        parseUnits("100000", 18),
+        parseUnits("20000", 18),
+        parseUnits("102000", 18),
+        parseUnits("20400", 18),
+      ),
     ],
   },
   opsepolia: {
@@ -347,6 +395,14 @@ export const bridgeConfig: BridgeConfig = {
       ...createMethodEntries(10231),
       ...createMethodEntries(10248),
       ...createMethodEntries(10245),
+      ...createMethodEntries(
+        10333,
+        300000,
+        parseUnits("100000", 18),
+        parseUnits("20000", 18),
+        parseUnits("102000", 18),
+        parseUnits("20400", 18),
+      ),
     ],
   },
   zksyncmainnet: {
@@ -431,6 +487,58 @@ export const bridgeConfig: BridgeConfig = {
       ...createMethodEntries(110),
     ],
   },
+  unichainsepolia: {
+    methods: [
+      ...createMethodEntries(
+        10102,
+        300000,
+        parseUnits("100000", 18),
+        parseUnits("20000", 18),
+        parseUnits("102000", 18),
+        parseUnits("20400", 18),
+      ),
+      ...createMethodEntries(
+        10202,
+        300000,
+        parseUnits("100000", 18),
+        parseUnits("20000", 18),
+        parseUnits("102000", 18),
+        parseUnits("20400", 18),
+      ),
+      ...createMethodEntries(
+        10161,
+        300000,
+        parseUnits("100000", 18),
+        parseUnits("20000", 18),
+        parseUnits("102000", 18),
+        parseUnits("20400", 18),
+      ),
+      ...createMethodEntries(
+        10231,
+        300000,
+        parseUnits("100000", 18),
+        parseUnits("20000", 18),
+        parseUnits("102000", 18),
+        parseUnits("20400", 18),
+      ),
+      ...createMethodEntries(
+        10248,
+        300000,
+        parseUnits("100000", 18),
+        parseUnits("20000", 18),
+        parseUnits("102000", 18),
+        parseUnits("20400", 18),
+      ),
+      ...createMethodEntries(
+        10232,
+        300000,
+        parseUnits("100000", 18),
+        parseUnits("20000", 18),
+        parseUnits("102000", 18),
+        parseUnits("20400", 18),
+      ),
+    ],
+  },
 };
 
 export async function getPreConfiguredAddresses(networkName: string): Promise<PreconfiguredAddresses> {
@@ -463,6 +571,8 @@ export async function getPreConfiguredAddresses(networkName: string): Promise<Pr
       return preconfiguredAddresses.basesepolia;
     case "basemainnet":
       return preconfiguredAddresses.basemainnet;
+    case "unichainsepolia":
+      return preconfiguredAddresses.unichainsepolia;
     default:
       throw new Error(`config for network ${networkName} is not available.`);
   }

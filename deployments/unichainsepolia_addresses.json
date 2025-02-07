@@ -1,0 +1,12 @@
+{
+  "name": "unichainsepolia",
+  "chainId": "1301",
+  "addresses": {
+    "DefaultProxyAdmin": "0x256735eFdfDf135bD6991854e0065909e57804aa",
+    "XVS": "0xC0e51E865bc9Fed0a32Cc0B2A65449567Bc5c741",
+    "XVSBridgeAdmin": "0xc570c62bbECCd0a63408de95d9418ad7b89Ff63F",
+    "XVSBridgeAdmin_Implementation": "0x19bd6F5877bfE6912C2957B7125f6EA27C9b2FbD",
+    "XVSBridgeAdmin_Proxy": "0xc570c62bbECCd0a63408de95d9418ad7b89Ff63F",
+    "XVSProxyOFTDest": "0xCAF833318a6663bb23aa7f218e597c2F7970b4D2"
+  }
+}
