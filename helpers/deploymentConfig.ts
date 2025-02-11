@@ -27,6 +27,7 @@ const OP_MAINNET_MULTISIG = "0x2e94dd14E81999CdBF5deDE31938beD7308354b3";
 const BASE_SEPOLIA_MULTISIG = "0xdf3b635d2b535f906BB02abb22AED71346E36a00";
 const BASE_MAINNET_MULTISIG = "0x1803Cf1D3495b43cC628aa1d8638A981F8CD341C";
 const UNICHAIN_SEPOLIA_MULTISIG = "0x9831D3A641E8c7F082EEA75b8249c99be9D09a34";
+const UNICHAIN_MAINNET_MULTISIG = "0x1803Cf1D3495b43cC628aa1d8638A981F8CD341C";
 
 export const preconfiguredAddresses = {
   bsctestnet: {
@@ -126,6 +127,13 @@ export const preconfiguredAddresses = {
     LzEndpoint: "0x012f6eaE2A0Bf5916f48b5F37C62Bcfb7C1ffdA1",
     LzVirtualChainId: "10333",
   },
+  unichainmainnet: {
+    NormalTimelock: UNICHAIN_MAINNET_MULTISIG,
+    FastTrackTimelock: UNICHAIN_MAINNET_MULTISIG,
+    CriticalTimelock: UNICHAIN_MAINNET_MULTISIG,
+    LzEndpoint: "0xb6319cC6c8c27A8F5dAF0dD3DF91EA35C4720dd7",
+    LzVirtualChainId: "320",
+  },
 };
 
 export const xvsBridgeMethodsSrc = [
@@ -189,14 +197,14 @@ export const xvsTokenPermissions = ["mint(address,uint256)", "burn(address,uint2
 export const bridgeConfig: BridgeConfig = {
   bsctestnet: {
     methods: [
-      ...createMethodEntries(10161),
-      ...createMethodEntries(10202),
-      ...createMethodEntries(10231),
-      ...createMethodEntries(10248),
-      ...createMethodEntries(10232),
-      ...createMethodEntries(10245),
+      ...createMethodEntries(parseInt(preconfiguredAddresses.sepolia.LzVirtualChainId)),
+      ...createMethodEntries(parseInt(preconfiguredAddresses.opbnbtestnet.LzVirtualChainId)),
+      ...createMethodEntries(parseInt(preconfiguredAddresses.arbitrumsepolia.LzVirtualChainId)),
+      ...createMethodEntries(parseInt(preconfiguredAddresses.zksyncsepolia.LzVirtualChainId)),
+      ...createMethodEntries(parseInt(preconfiguredAddresses.opsepolia.LzVirtualChainId)),
+      ...createMethodEntries(parseInt(preconfiguredAddresses.basesepolia.LzVirtualChainId)),
       ...createMethodEntries(
-        10333,
+        parseInt(preconfiguredAddresses.unichainsepolia.LzVirtualChainId),
         300000,
         parseUnits("100000", 18),
         parseUnits("20000", 18),
@@ -207,38 +215,46 @@ export const bridgeConfig: BridgeConfig = {
   },
   bscmainnet: {
     methods: [
-      ...createMethodEntries(101),
-      ...createMethodEntries(202),
+      ...createMethodEntries(parseInt(preconfiguredAddresses.ethereum.LzVirtualChainId)),
+      ...createMethodEntries(parseInt(preconfiguredAddresses.opbnbmainnet.LzVirtualChainId)),
       ...createMethodEntries(
-        110,
+        parseInt(preconfiguredAddresses.arbitrumone.LzVirtualChainId),
         300000,
         parseUnits("100000", 18),
         parseUnits("20000", 18),
         parseUnits("102000", 18),
         parseUnits("20400", 18),
       ),
-      ...createMethodEntries(165),
+      ...createMethodEntries(parseInt(preconfiguredAddresses.zksyncmainnet.LzVirtualChainId)),
       ...createMethodEntries(
-        111,
+        parseInt(preconfiguredAddresses.opmainnet.LzVirtualChainId),
         300000,
         parseUnits("100000", 18),
         parseUnits("20000", 18),
         parseUnits("102000", 18),
         parseUnits("20400", 18),
       ),
-      ...createMethodEntries(184),
+      ...createMethodEntries(parseInt(preconfiguredAddresses.basemainnet.LzVirtualChainId)),
+      ...createMethodEntries(
+        parseInt(preconfiguredAddresses.unichainmainnet.LzVirtualChainId),
+        300000,
+        parseUnits("100000", 18),
+        parseUnits("20000", 18),
+        parseUnits("102000", 18),
+        parseUnits("20400", 18),
+      ),
     ],
   },
   sepolia: {
     methods: [
-      ...createMethodEntries(10102),
-      ...createMethodEntries(10202),
-      ...createMethodEntries(10231),
-      ...createMethodEntries(10248),
-      ...createMethodEntries(10232),
-      ...createMethodEntries(10245),
+      ...createMethodEntries(parseInt(preconfiguredAddresses.bsctestnet.LzVirtualChainId)),
+      ...createMethodEntries(parseInt(preconfiguredAddresses.opbnbtestnet.LzVirtualChainId)),
+      ...createMethodEntries(parseInt(preconfiguredAddresses.arbitrumsepolia.LzVirtualChainId)),
+      ...createMethodEntries(parseInt(preconfiguredAddresses.zksyncsepolia.LzVirtualChainId)),
+      ...createMethodEntries(parseInt(preconfiguredAddresses.opsepolia.LzVirtualChainId)),
+      ...createMethodEntries(parseInt(preconfiguredAddresses.basesepolia.LzVirtualChainId)),
       ...createMethodEntries(
-        10333,
+        parseInt(preconfiguredAddresses.unichainsepolia.LzVirtualChainId),
         300000,
         parseUnits("100000", 18),
         parseUnits("20000", 18),
@@ -249,38 +265,46 @@ export const bridgeConfig: BridgeConfig = {
   },
   ethereum: {
     methods: [
-      ...createMethodEntries(102),
-      ...createMethodEntries(202),
+      ...createMethodEntries(parseInt(preconfiguredAddresses.bscmainnet.LzVirtualChainId)),
+      ...createMethodEntries(parseInt(preconfiguredAddresses.opbnbmainnet.LzVirtualChainId)),
       ...createMethodEntries(
-        110,
+        parseInt(preconfiguredAddresses.arbitrumone.LzVirtualChainId),
         300000,
         parseUnits("100000", 18),
         parseUnits("20000", 18),
         parseUnits("102000", 18),
         parseUnits("20400", 18),
       ),
-      ...createMethodEntries(165),
+      ...createMethodEntries(parseInt(preconfiguredAddresses.zksyncmainnet.LzVirtualChainId)),
       ...createMethodEntries(
-        111,
+        parseInt(preconfiguredAddresses.opmainnet.LzVirtualChainId),
         300000,
         parseUnits("100000", 18),
         parseUnits("20000", 18),
         parseUnits("102000", 18),
         parseUnits("20400", 18),
       ),
-      ...createMethodEntries(184),
+      ...createMethodEntries(parseInt(preconfiguredAddresses.basemainnet.LzVirtualChainId)),
+      ...createMethodEntries(
+        parseInt(preconfiguredAddresses.unichainmainnet.LzVirtualChainId),
+        300000,
+        parseUnits("100000", 18),
+        parseUnits("20000", 18),
+        parseUnits("102000", 18),
+        parseUnits("20400", 18),
+      ),
     ],
   },
   opbnbtestnet: {
     methods: [
-      ...createMethodEntries(10102),
-      ...createMethodEntries(10161),
-      ...createMethodEntries(10231),
-      ...createMethodEntries(10248),
-      ...createMethodEntries(10232),
-      ...createMethodEntries(10245),
+      ...createMethodEntries(parseInt(preconfiguredAddresses.bsctestnet.LzVirtualChainId)),
+      ...createMethodEntries(parseInt(preconfiguredAddresses.sepolia.LzVirtualChainId)),
+      ...createMethodEntries(parseInt(preconfiguredAddresses.arbitrumsepolia.LzVirtualChainId)),
+      ...createMethodEntries(parseInt(preconfiguredAddresses.zksyncsepolia.LzVirtualChainId)),
+      ...createMethodEntries(parseInt(preconfiguredAddresses.opsepolia.LzVirtualChainId)),
+      ...createMethodEntries(parseInt(preconfiguredAddresses.basesepolia.LzVirtualChainId)),
       ...createMethodEntries(
-        10333,
+        parseInt(preconfiguredAddresses.unichainsepolia.LzVirtualChainId),
         300000,
         parseUnits("100000", 18),
         parseUnits("20000", 18),
@@ -291,38 +315,46 @@ export const bridgeConfig: BridgeConfig = {
   },
   opbnbmainnet: {
     methods: [
-      ...createMethodEntries(102),
-      ...createMethodEntries(101),
+      ...createMethodEntries(parseInt(preconfiguredAddresses.bscmainnet.LzVirtualChainId)),
+      ...createMethodEntries(parseInt(preconfiguredAddresses.ethereum.LzVirtualChainId)),
       ...createMethodEntries(
-        110,
+        parseInt(preconfiguredAddresses.arbitrumone.LzVirtualChainId),
         300000,
         parseUnits("100000", 18),
         parseUnits("20000", 18),
         parseUnits("102000", 18),
         parseUnits("20400", 18),
       ),
-      ...createMethodEntries(165),
+      ...createMethodEntries(parseInt(preconfiguredAddresses.zksyncmainnet.LzVirtualChainId)),
       ...createMethodEntries(
-        111,
+        parseInt(preconfiguredAddresses.opmainnet.LzVirtualChainId),
         300000,
         parseUnits("100000", 18),
         parseUnits("20000", 18),
         parseUnits("102000", 18),
         parseUnits("20400", 18),
       ),
-      ...createMethodEntries(184),
+      ...createMethodEntries(parseInt(preconfiguredAddresses.basemainnet.LzVirtualChainId)),
+      ...createMethodEntries(
+        parseInt(preconfiguredAddresses.unichainmainnet.LzVirtualChainId),
+        300000,
+        parseUnits("100000", 18),
+        parseUnits("20000", 18),
+        parseUnits("102000", 18),
+        parseUnits("20400", 18),
+      ),
     ],
   },
   arbitrumsepolia: {
     methods: [
-      ...createMethodEntries(10102),
-      ...createMethodEntries(10202),
-      ...createMethodEntries(10161),
-      ...createMethodEntries(10248),
-      ...createMethodEntries(10232),
-      ...createMethodEntries(10245),
+      ...createMethodEntries(parseInt(preconfiguredAddresses.bsctestnet.LzVirtualChainId)),
+      ...createMethodEntries(parseInt(preconfiguredAddresses.opbnbtestnet.LzVirtualChainId)),
+      ...createMethodEntries(parseInt(preconfiguredAddresses.sepolia.LzVirtualChainId)),
+      ...createMethodEntries(parseInt(preconfiguredAddresses.zksyncmainnet.LzVirtualChainId)),
+      ...createMethodEntries(parseInt(preconfiguredAddresses.opsepolia.LzVirtualChainId)),
+      ...createMethodEntries(parseInt(preconfiguredAddresses.basesepolia.LzVirtualChainId)),
       ...createMethodEntries(
-        10333,
+        parseInt(preconfiguredAddresses.unichainsepolia.LzVirtualChainId),
         300000,
         parseUnits("100000", 18),
         parseUnits("20000", 18),
@@ -334,7 +366,7 @@ export const bridgeConfig: BridgeConfig = {
   arbitrumone: {
     methods: [
       ...createMethodEntries(
-        102,
+        parseInt(preconfiguredAddresses.bscmainnet.LzVirtualChainId),
         300000,
         parseUnits("100000", 18),
         parseUnits("20000", 18),
@@ -342,7 +374,7 @@ export const bridgeConfig: BridgeConfig = {
         parseUnits("20400", 18),
       ),
       ...createMethodEntries(
-        101,
+        parseInt(preconfiguredAddresses.ethereum.LzVirtualChainId),
         300000,
         parseUnits("100000", 18),
         parseUnits("20000", 18),
@@ -350,35 +382,43 @@ export const bridgeConfig: BridgeConfig = {
         parseUnits("20400", 18),
       ),
       ...createMethodEntries(
-        202,
+        parseInt(preconfiguredAddresses.opbnbmainnet.LzVirtualChainId),
         300000,
         parseUnits("100000", 18),
         parseUnits("20000", 18),
         parseUnits("102000", 18),
         parseUnits("20400", 18),
       ),
-      ...createMethodEntries(165),
+      ...createMethodEntries(parseInt(preconfiguredAddresses.zksyncmainnet.LzVirtualChainId)),
       ...createMethodEntries(
-        111,
+        parseInt(preconfiguredAddresses.opmainnet.LzVirtualChainId),
         300000,
         parseUnits("100000", 18),
         parseUnits("20000", 18),
         parseUnits("102000", 18),
         parseUnits("20400", 18),
       ),
-      ...createMethodEntries(184),
+      ...createMethodEntries(parseInt(preconfiguredAddresses.basemainnet.LzVirtualChainId)),
+      ...createMethodEntries(
+        parseInt(preconfiguredAddresses.unichainmainnet.LzVirtualChainId),
+        300000,
+        parseUnits("100000", 18),
+        parseUnits("20000", 18),
+        parseUnits("102000", 18),
+        parseUnits("20400", 18),
+      ),
     ],
   },
   zksyncsepolia: {
     methods: [
-      ...createMethodEntries(10102),
-      ...createMethodEntries(10202),
-      ...createMethodEntries(10161),
-      ...createMethodEntries(10231),
-      ...createMethodEntries(10232),
-      ...createMethodEntries(10245),
+      ...createMethodEntries(parseInt(preconfiguredAddresses.bsctestnet.LzVirtualChainId)),
+      ...createMethodEntries(parseInt(preconfiguredAddresses.opbnbtestnet.LzVirtualChainId)),
+      ...createMethodEntries(parseInt(preconfiguredAddresses.sepolia.LzVirtualChainId)),
+      ...createMethodEntries(parseInt(preconfiguredAddresses.arbitrumsepolia.LzVirtualChainId)),
+      ...createMethodEntries(parseInt(preconfiguredAddresses.opsepolia.LzVirtualChainId)),
+      ...createMethodEntries(parseInt(preconfiguredAddresses.basesepolia.LzVirtualChainId)),
       ...createMethodEntries(
-        10333,
+        parseInt(preconfiguredAddresses.unichainsepolia.LzVirtualChainId),
         300000,
         parseUnits("100000", 18),
         parseUnits("20000", 18),
@@ -389,14 +429,14 @@ export const bridgeConfig: BridgeConfig = {
   },
   opsepolia: {
     methods: [
-      ...createMethodEntries(10102),
-      ...createMethodEntries(10202),
-      ...createMethodEntries(10161),
-      ...createMethodEntries(10231),
-      ...createMethodEntries(10248),
-      ...createMethodEntries(10245),
+      ...createMethodEntries(parseInt(preconfiguredAddresses.bsctestnet.LzVirtualChainId)),
+      ...createMethodEntries(parseInt(preconfiguredAddresses.opbnbtestnet.LzVirtualChainId)),
+      ...createMethodEntries(parseInt(preconfiguredAddresses.sepolia.LzVirtualChainId)),
+      ...createMethodEntries(parseInt(preconfiguredAddresses.arbitrumsepolia.LzVirtualChainId)),
+      ...createMethodEntries(parseInt(preconfiguredAddresses.zksyncsepolia.LzVirtualChainId)),
+      ...createMethodEntries(parseInt(preconfiguredAddresses.basesepolia.LzVirtualChainId)),
       ...createMethodEntries(
-        10333,
+        parseInt(preconfiguredAddresses.unichainsepolia.LzVirtualChainId),
         300000,
         parseUnits("100000", 18),
         parseUnits("20000", 18),
@@ -407,25 +447,33 @@ export const bridgeConfig: BridgeConfig = {
   },
   zksyncmainnet: {
     methods: [
-      ...createMethodEntries(102),
-      ...createMethodEntries(101),
-      ...createMethodEntries(202),
-      ...createMethodEntries(110),
+      ...createMethodEntries(parseInt(preconfiguredAddresses.bscmainnet.LzVirtualChainId)),
+      ...createMethodEntries(parseInt(preconfiguredAddresses.ethereum.LzVirtualChainId)),
+      ...createMethodEntries(parseInt(preconfiguredAddresses.opbnbmainnet.LzVirtualChainId)),
+      ...createMethodEntries(parseInt(preconfiguredAddresses.arbitrumone.LzVirtualChainId)),
       ...createMethodEntries(
-        111,
+        parseInt(preconfiguredAddresses.opmainnet.LzVirtualChainId),
         300000,
         parseUnits("100000", 18),
         parseUnits("20000", 18),
         parseUnits("102000", 18),
         parseUnits("20400", 18),
       ),
-      ...createMethodEntries(184),
+      ...createMethodEntries(parseInt(preconfiguredAddresses.basemainnet.LzVirtualChainId)),
+      ...createMethodEntries(
+        parseInt(preconfiguredAddresses.unichainmainnet.LzVirtualChainId),
+        300000,
+        parseUnits("100000", 18),
+        parseUnits("20000", 18),
+        parseUnits("102000", 18),
+        parseUnits("20400", 18),
+      ),
     ],
   },
   opmainnet: {
     methods: [
       ...createMethodEntries(
-        102,
+        parseInt(preconfiguredAddresses.bscmainnet.LzVirtualChainId),
         300000,
         parseUnits("100000", 18),
         parseUnits("20000", 18),
@@ -433,7 +481,7 @@ export const bridgeConfig: BridgeConfig = {
         parseUnits("20400", 18),
       ),
       ...createMethodEntries(
-        101,
+        parseInt(preconfiguredAddresses.ethereum.LzVirtualChainId),
         300000,
         parseUnits("100000", 18),
         parseUnits("20000", 18),
@@ -441,7 +489,7 @@ export const bridgeConfig: BridgeConfig = {
         parseUnits("20400", 18),
       ),
       ...createMethodEntries(
-        202,
+        parseInt(preconfiguredAddresses.opbnbmainnet.LzVirtualChainId),
         300000,
         parseUnits("100000", 18),
         parseUnits("20000", 18),
@@ -449,7 +497,7 @@ export const bridgeConfig: BridgeConfig = {
         parseUnits("20400", 18),
       ),
       ...createMethodEntries(
-        110,
+        parseInt(preconfiguredAddresses.arbitrumone.LzVirtualChainId),
         300000,
         parseUnits("100000", 18),
         parseUnits("20000", 18),
@@ -457,40 +505,57 @@ export const bridgeConfig: BridgeConfig = {
         parseUnits("20400", 18),
       ),
       ...createMethodEntries(
-        165,
+        parseInt(preconfiguredAddresses.zksyncmainnet.LzVirtualChainId),
         300000,
         parseUnits("100000", 18),
         parseUnits("20000", 18),
         parseUnits("102000", 18),
         parseUnits("20400", 18),
       ),
-      ...createMethodEntries(184),
+      ...createMethodEntries(parseInt(preconfiguredAddresses.basemainnet.LzVirtualChainId)),
+      ...createMethodEntries(
+        parseInt(preconfiguredAddresses.unichainmainnet.LzVirtualChainId),
+        300000,
+        parseUnits("100000", 18),
+        parseUnits("20000", 18),
+        parseUnits("102000", 18),
+        parseUnits("20400", 18),
+      ),
     ],
   },
   basesepolia: {
     methods: [
-      ...createMethodEntries(10102),
-      ...createMethodEntries(10202),
-      ...createMethodEntries(10161),
-      ...createMethodEntries(10248),
-      ...createMethodEntries(10232),
-      ...createMethodEntries(10231),
+      ...createMethodEntries(parseInt(preconfiguredAddresses.bsctestnet.LzVirtualChainId)),
+      ...createMethodEntries(parseInt(preconfiguredAddresses.opbnbtestnet.LzVirtualChainId)),
+      ...createMethodEntries(parseInt(preconfiguredAddresses.sepolia.LzVirtualChainId)),
+      ...createMethodEntries(parseInt(preconfiguredAddresses.arbitrumsepolia.LzVirtualChainId)),
+      ...createMethodEntries(parseInt(preconfiguredAddresses.zksyncsepolia.LzVirtualChainId)),
+      ...createMethodEntries(parseInt(preconfiguredAddresses.opsepolia.LzVirtualChainId)),
+      ...createMethodEntries(parseInt(preconfiguredAddresses.unichainsepolia.LzVirtualChainId)),
     ],
   },
   basemainnet: {
     methods: [
-      ...createMethodEntries(102),
-      ...createMethodEntries(101),
-      ...createMethodEntries(202),
-      ...createMethodEntries(165),
-      ...createMethodEntries(111),
-      ...createMethodEntries(110),
+      ...createMethodEntries(parseInt(preconfiguredAddresses.bscmainnet.LzVirtualChainId)),
+      ...createMethodEntries(parseInt(preconfiguredAddresses.ethereum.LzVirtualChainId)),
+      ...createMethodEntries(parseInt(preconfiguredAddresses.opbnbmainnet.LzVirtualChainId)),
+      ...createMethodEntries(parseInt(preconfiguredAddresses.arbitrumone.LzVirtualChainId)),
+      ...createMethodEntries(parseInt(preconfiguredAddresses.zksyncmainnet.LzVirtualChainId)),
+      ...createMethodEntries(parseInt(preconfiguredAddresses.opmainnet.LzVirtualChainId)),
+      ...createMethodEntries(
+        parseInt(preconfiguredAddresses.unichainmainnet.LzVirtualChainId),
+        300000,
+        parseUnits("100000", 18),
+        parseUnits("20000", 18),
+        parseUnits("102000", 18),
+        parseUnits("20400", 18),
+      ),
     ],
   },
   unichainsepolia: {
     methods: [
       ...createMethodEntries(
-        10102,
+        parseInt(preconfiguredAddresses.bsctestnet.LzVirtualChainId),
         300000,
         parseUnits("100000", 18),
         parseUnits("20000", 18),
@@ -498,7 +563,7 @@ export const bridgeConfig: BridgeConfig = {
         parseUnits("20400", 18),
       ),
       ...createMethodEntries(
-        10202,
+        parseInt(preconfiguredAddresses.opbnbtestnet.LzVirtualChainId),
         300000,
         parseUnits("100000", 18),
         parseUnits("20000", 18),
@@ -506,7 +571,7 @@ export const bridgeConfig: BridgeConfig = {
         parseUnits("20400", 18),
       ),
       ...createMethodEntries(
-        10161,
+        parseInt(preconfiguredAddresses.sepolia.LzVirtualChainId),
         300000,
         parseUnits("100000", 18),
         parseUnits("20000", 18),
@@ -514,7 +579,7 @@ export const bridgeConfig: BridgeConfig = {
         parseUnits("20400", 18),
       ),
       ...createMethodEntries(
-        10231,
+        parseInt(preconfiguredAddresses.arbitrumsepolia.LzVirtualChainId),
         300000,
         parseUnits("100000", 18),
         parseUnits("20000", 18),
@@ -522,7 +587,7 @@ export const bridgeConfig: BridgeConfig = {
         parseUnits("20400", 18),
       ),
       ...createMethodEntries(
-        10248,
+        parseInt(preconfiguredAddresses.zksyncsepolia.LzVirtualChainId),
         300000,
         parseUnits("100000", 18),
         parseUnits("20000", 18),
@@ -530,7 +595,75 @@ export const bridgeConfig: BridgeConfig = {
         parseUnits("20400", 18),
       ),
       ...createMethodEntries(
-        10232,
+        parseInt(preconfiguredAddresses.opsepolia.LzVirtualChainId),
+        300000,
+        parseUnits("100000", 18),
+        parseUnits("20000", 18),
+        parseUnits("102000", 18),
+        parseUnits("20400", 18),
+      ),
+      ...createMethodEntries(
+        parseInt(preconfiguredAddresses.basesepolia.LzVirtualChainId),
+        300000,
+        parseUnits("100000", 18),
+        parseUnits("20000", 18),
+        parseUnits("102000", 18),
+        parseUnits("20400", 18),
+      ),
+    ],
+  },
+  unichainmainnet: {
+    methods: [
+      ...createMethodEntries(
+        parseInt(preconfiguredAddresses.bscmainnet.LzVirtualChainId),
+        300000,
+        parseUnits("100000", 18),
+        parseUnits("20000", 18),
+        parseUnits("102000", 18),
+        parseUnits("20400", 18),
+      ),
+      ...createMethodEntries(
+        parseInt(preconfiguredAddresses.ethereum.LzVirtualChainId),
+        300000,
+        parseUnits("100000", 18),
+        parseUnits("20000", 18),
+        parseUnits("102000", 18),
+        parseUnits("20400", 18),
+      ),
+      ...createMethodEntries(
+        parseInt(preconfiguredAddresses.opbnbmainnet.LzVirtualChainId),
+        300000,
+        parseUnits("100000", 18),
+        parseUnits("20000", 18),
+        parseUnits("102000", 18),
+        parseUnits("20400", 18),
+      ),
+      ...createMethodEntries(
+        parseInt(preconfiguredAddresses.arbitrumone.LzVirtualChainId),
+        300000,
+        parseUnits("100000", 18),
+        parseUnits("20000", 18),
+        parseUnits("102000", 18),
+        parseUnits("20400", 18),
+      ),
+      ...createMethodEntries(
+        parseInt(preconfiguredAddresses.zksyncmainnet.LzVirtualChainId),
+        300000,
+        parseUnits("100000", 18),
+        parseUnits("20000", 18),
+        parseUnits("102000", 18),
+        parseUnits("20400", 18),
+      ),
+      ...createMethodEntries(
+        parseInt(preconfiguredAddresses.basemainnet.LzVirtualChainId),
+        300000,
+        parseUnits("100000", 18),
+        parseUnits("20000", 18),
+        parseUnits("102000", 18),
+        parseUnits("20400", 18),
+      ),
+      ...createMethodEntries(
+        parseInt(preconfiguredAddresses.opmainnet.LzVirtualChainId),
         300000,
         parseUnits("100000", 18),
         parseUnits("20000", 18),
@@ -573,6 +706,8 @@ export async function getPreConfiguredAddresses(networkName: string): Promise<Pr
       return preconfiguredAddresses.basemainnet;
     case "unichainsepolia":
       return preconfiguredAddresses.unichainsepolia;
+    case "unichainmainnet":
+      return preconfiguredAddresses.unichainmainnet;
     default:
       throw new Error(`config for network ${networkName} is not available.`);
   }

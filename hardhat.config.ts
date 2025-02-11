@@ -71,6 +71,10 @@ extendConfig((config: HardhatConfig) => {
           "node_modules/@venusprotocol/governance-contracts/deployments/unichainsepolia",
           "node_modules/@venusprotocol/oracle/deployments/unichainsepolia",
         ],
+        unichainmainnet: [
+          "node_modules/@venusprotocol/governance-contracts/deployments/unichainmainnet",
+          "node_modules/@venusprotocol/oracle/deployments/unichainmainnet",
+        ],
       },
     };
   }
@@ -204,6 +208,12 @@ const config: HardhatUserConfig = {
       live: true,
       accounts: DEPLOYER_PRIVATE_KEY ? [`0x${DEPLOYER_PRIVATE_KEY}`] : [],
     },
+    unichainmainnet: {
+      url: process.env.ARCHIVE_NODE_unichainmainnet || "https://mainnet.unichain.org",
+      chainId: 130,
+      live: true,
+      accounts: DEPLOYER_PRIVATE_KEY ? [`0x${DEPLOYER_PRIVATE_KEY}`] : [],
+    },
   },
   gasReporter: {
     enabled: process.env.REPORT_GAS !== undefined,
@@ -315,6 +325,14 @@ const config: HardhatUserConfig = {
           browserURL: "https://sepolia.uniscan.xyz/",
         },
       },
+      {
+        network: "unichainmainnet",
+        chainId: 130,
+        urls: {
+          apiURL: `https://api.uniscan.xyz/api/`,
+          browserURL: "https://uniscan.xyz/",
+        },
+      },
     ],
     apiKey: {
       bscmainnet: process.env.ETHERSCAN_API_KEY || "ETHERSCAN_API_KEY",
@@ -330,6 +348,7 @@ const config: HardhatUserConfig = {
       basesepolia: process.env.ETHERSCAN_API_KEY || "ETHERSCAN_API_KEY",
       basemainnet: process.env.ETHERSCAN_API_KEY || "ETHERSCAN_API_KEY",
       unichainsepolia: process.env.ETHERSCAN_API_KEY || "ETHERSCAN_API_KEY",
+      unichainmainnet: process.env.ETHERSCAN_API_KEY || "ETHERSCAN_API_KEY",
     },
   },
   paths: {
