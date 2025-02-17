@@ -134,6 +134,13 @@ export const preconfiguredAddresses = {
     LzEndpoint: "0xb6319cC6c8c27A8F5dAF0dD3DF91EA35C4720dd7",
     LzVirtualChainId: "320",
   },
+  berachainbartio: {
+    NormalTimelock: "0x8699D418D8bae5CFdc566E4fce897B08bd9B03B0",
+    FastTrackTimelock: "0x723b7CB226d86bd89638ec77936463453a46C656",
+    CriticalTimelock: "0x920eeE8A5581e80Ca9C47CbF11B7A6cDB30204BD",
+    LzEndpoint: "0x83c73Da98cf733B03315aFa8758834b36a195b87",
+    LzVirtualChainId: "10291",
+  },
 };
 
 export const xvsBridgeMethodsSrc = [
@@ -211,6 +218,7 @@ export const bridgeConfig: BridgeConfig = {
         parseUnits("102000", 18),
         parseUnits("20400", 18),
       ),
+      ...createMethodEntries(parseInt(preconfiguredAddresses.berachainbartio.LzVirtualChainId)),
     ],
   },
   bscmainnet: {
@@ -261,6 +269,7 @@ export const bridgeConfig: BridgeConfig = {
         parseUnits("102000", 18),
         parseUnits("20400", 18),
       ),
+      ...createMethodEntries(parseInt(preconfiguredAddresses.berachainbartio.LzVirtualChainId)),
     ],
   },
   ethereum: {
@@ -311,6 +320,7 @@ export const bridgeConfig: BridgeConfig = {
         parseUnits("102000", 18),
         parseUnits("20400", 18),
       ),
+      ...createMethodEntries(parseInt(preconfiguredAddresses.berachainbartio.LzVirtualChainId)),
     ],
   },
   opbnbmainnet: {
@@ -361,6 +371,7 @@ export const bridgeConfig: BridgeConfig = {
         parseUnits("102000", 18),
         parseUnits("20400", 18),
       ),
+      ...createMethodEntries(parseInt(preconfiguredAddresses.berachainbartio.LzVirtualChainId)),
     ],
   },
   arbitrumone: {
@@ -425,6 +436,7 @@ export const bridgeConfig: BridgeConfig = {
         parseUnits("102000", 18),
         parseUnits("20400", 18),
       ),
+      ...createMethodEntries(parseInt(preconfiguredAddresses.berachainbartio.LzVirtualChainId)),
     ],
   },
   opsepolia: {
@@ -443,6 +455,7 @@ export const bridgeConfig: BridgeConfig = {
         parseUnits("102000", 18),
         parseUnits("20400", 18),
       ),
+      ...createMethodEntries(parseInt(preconfiguredAddresses.berachainbartio.LzVirtualChainId)),
     ],
   },
   zksyncmainnet: {
@@ -532,6 +545,7 @@ export const bridgeConfig: BridgeConfig = {
       ...createMethodEntries(parseInt(preconfiguredAddresses.zksyncsepolia.LzVirtualChainId)),
       ...createMethodEntries(parseInt(preconfiguredAddresses.opsepolia.LzVirtualChainId)),
       ...createMethodEntries(parseInt(preconfiguredAddresses.unichainsepolia.LzVirtualChainId)),
+      ...createMethodEntries(parseInt(preconfiguredAddresses.berachainbartio.LzVirtualChainId)),
     ],
   },
   basemainnet: {
@@ -610,6 +624,7 @@ export const bridgeConfig: BridgeConfig = {
         parseUnits("102000", 18),
         parseUnits("20400", 18),
       ),
+      ...createMethodEntries(parseInt(preconfiguredAddresses.berachainbartio.LzVirtualChainId)),
     ],
   },
   unichainmainnet: {
@@ -672,6 +687,18 @@ export const bridgeConfig: BridgeConfig = {
       ),
     ],
   },
+  berachainbartio: {
+    methods: [
+      ...createMethodEntries(parseInt(preconfiguredAddresses.bsctestnet.LzVirtualChainId)),
+      ...createMethodEntries(parseInt(preconfiguredAddresses.opbnbtestnet.LzVirtualChainId)),
+      ...createMethodEntries(parseInt(preconfiguredAddresses.sepolia.LzVirtualChainId)),
+      ...createMethodEntries(parseInt(preconfiguredAddresses.arbitrumsepolia.LzVirtualChainId)),
+      ...createMethodEntries(parseInt(preconfiguredAddresses.zksyncsepolia.LzVirtualChainId)),
+      ...createMethodEntries(parseInt(preconfiguredAddresses.opsepolia.LzVirtualChainId)),
+      ...createMethodEntries(parseInt(preconfiguredAddresses.basesepolia.LzVirtualChainId)),
+      ...createMethodEntries(parseInt(preconfiguredAddresses.unichainsepolia.LzVirtualChainId)),
+    ],
+  },
 };
 
 export async function getPreConfiguredAddresses(networkName: string): Promise<PreconfiguredAddresses> {
@@ -708,6 +735,8 @@ export async function getPreConfiguredAddresses(networkName: string): Promise<Pr
       return preconfiguredAddresses.unichainsepolia;
     case "unichainmainnet":
       return preconfiguredAddresses.unichainmainnet;
+    case "berachainbartio":
+      return preconfiguredAddresses.berachainbartio;
     default:
       throw new Error(`config for network ${networkName} is not available.`);
   }
