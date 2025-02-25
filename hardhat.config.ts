@@ -75,6 +75,10 @@ extendConfig((config: HardhatConfig) => {
           "node_modules/@venusprotocol/governance-contracts/deployments/unichainmainnet",
           "node_modules/@venusprotocol/oracle/deployments/unichainmainnet",
         ],
+        berachainbartio: [
+          "node_modules/@venusprotocol/governance-contracts/deployments/berachainbartio",
+          "node_modules/@venusprotocol/oracle/deployments/berachainbartio",
+        ],
       },
     };
   }
