@@ -3531,7 +3531,22 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@venusprotocol/token-bridge@^2.0.0, @venusprotocol/token-bridge@workspace:.":
+"@venusprotocol/token-bridge@npm:^2.0.0":
+  version: 2.6.0
+  resolution: "@venusprotocol/token-bridge@npm:2.6.0"
+  dependencies:
+    "@layerzerolabs/solidity-examples": ^1.0.0
+    "@openzeppelin/contracts": ^4.8.3
+    "@openzeppelin/contracts-upgradeable": ^4.8.3
+    "@openzeppelin/hardhat-upgrades": ^1.21.0
+    "@solidity-parser/parser": ^0.13.2
+    ethers: ^5.7.0
+    module-alias: ^2.2.2
+  checksum: 84c70eb608495392c09e825c025bbd796675354ddaa3bb1144b570dbc7e5f2b283b52086a014fccecf7bd679725ddd5a15edc65cfeed323e03d8b75548d6bc4a
+  languageName: node
+  linkType: hard
+
+"@venusprotocol/token-bridge@workspace:.":
   version: 0.0.0-use.local
   resolution: "@venusprotocol/token-bridge@workspace:."
   dependencies:
