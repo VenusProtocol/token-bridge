@@ -91,8 +91,8 @@ const func: DeployFunction = async function (hre: HardhatRuntimeEnvironment) {
   );
 
   const proxyOwnerAddress = await toAddress(preconfiguredAddresses.NormalTimelock, hre);
-  const accessControlManager = await ethers.getContract("AccessControlManager");
-  const resilientOracle = await ethers.getContract("ResilientOracle");
+  const accessControlManager = {address: "0x243313C1cC198FF80756ed2ef14D9dcd94Ee762b"}; // await ethers.getContract("AccessControlManager");
+  const resilientOracle = {address: "0x150B667d42FB80409f162aB84065f0c8E9B3A7a0" }// await ethers.getContract("ResilientOracle");
 
   const XVS = await deploy("XVS", {
     from: deployer,
