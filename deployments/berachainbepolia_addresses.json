@@ -1,0 +1,10 @@
+{
+  "name": "berachainbepolia",
+  "chainId": "80069",
+  "addresses": {
+    "DefaultProxyAdmin": "0x09f0Cf4eD50ed01994900CE9ee1ae85BFECd5c66",
+    "XVS": "0x8699D418D8bae5CFdc566E4fce897B08bd9B03B0",
+    "XVSBridgeAdmin_Implementation": "0x920eeE8A5581e80Ca9C47CbF11B7A6cDB30204BD",
+    "XVSProxyOFTDest": "0x723b7CB226d86bd89638ec77936463453a46C656"
+  }
+}
