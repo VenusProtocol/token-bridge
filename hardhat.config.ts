@@ -75,10 +75,6 @@ extendConfig((config: HardhatConfig) => {
           "node_modules/@venusprotocol/governance-contracts/deployments/unichainmainnet",
           "node_modules/@venusprotocol/oracle/deployments/unichainmainnet",
         ],
-        berachainbepolia: [
-          "node_modules/@venusprotocol/governance-contracts/deployments/berachainbepolia",
-          "node_modules/@venusprotocol/oracle/deployments/berachainbepolia",
-        ],
       },
     };
   }
@@ -218,12 +214,6 @@ const config: HardhatUserConfig = {
       live: true,
       accounts: DEPLOYER_PRIVATE_KEY ? [`0x${DEPLOYER_PRIVATE_KEY}`] : [],
     },
-    berachainbepolia: {
-      url: process.env.ARCHIVE_NODE_berachainbepolia || "https://bepolia.rpc.berachain.com",
-      chainId: 80069,
-      live: true,
-      accounts: process.env.DEPLOYER_PRIVATE_KEY ? [`0x${process.env.DEPLOYER_PRIVATE_KEY}`] : [],
-    },
   },
   gasReporter: {
     enabled: process.env.REPORT_GAS !== undefined,
@@ -343,14 +333,6 @@ const config: HardhatUserConfig = {
           browserURL: "https://uniscan.xyz/",
         },
       },
-      {
-        network: "berachainbepolia",
-        chainId: 80069,
-        urls: {
-          apiURL: "https://api.routescan.io/v2/network/testnet/evm/80069/etherscan",
-          browserURL: "https://bepolia.beratrail.io",
-        },
-      },
     ],
     apiKey: {
       bscmainnet: process.env.ETHERSCAN_API_KEY || "ETHERSCAN_API_KEY",
@@ -367,7 +349,6 @@ const config: HardhatUserConfig = {
       basemainnet: process.env.ETHERSCAN_API_KEY || "ETHERSCAN_API_KEY",
       unichainsepolia: process.env.ETHERSCAN_API_KEY || "ETHERSCAN_API_KEY",
       unichainmainnet: process.env.ETHERSCAN_API_KEY || "ETHERSCAN_API_KEY",
-      berachainbepolia: process.env.ETHERSCAN_API_KEY || "ETHERSCAN_API_KEY",
     },
   },
   paths: {
