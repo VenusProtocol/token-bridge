@@ -2,6 +2,7 @@
   "name": "@venusprotocol/token-bridge",
   "version": "2.7.1-dev.2",
   "description": "Contracts to bridge tokens using LayerZero technology and applying some rules on top of it",
+  "repository": "git@github.com:VenusProtocol/token-bridge.git",
   "files": [
     "artifacts",
     "typechain",
