@@ -1,6 +1,6 @@
 {
   "name": "@venusprotocol/token-bridge",
-  "version": "2.7.1-dev.2",
+  "version": "2.8.0-dev.1",
   "description": "Contracts to bridge tokens using LayerZero technology and applying some rules on top of it",
   "repository": "git@github.com:VenusProtocol/token-bridge.git",
   "files": [
