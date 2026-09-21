@@ -674,43 +674,12 @@ export const bridgeConfig: BridgeConfig = {
   },
 };
 
+// Every supported network maps to the preconfiguredAddresses entry of the same name.
 export async function getPreConfiguredAddresses(networkName: string): Promise<PreconfiguredAddresses> {
-  switch (networkName) {
-    case "bsctestnet":
-      return preconfiguredAddresses.bsctestnet;
-    case "bscmainnet":
-      return preconfiguredAddresses.bscmainnet;
-    case "sepolia":
-      return preconfiguredAddresses.sepolia;
-    case "ethereum":
-      return preconfiguredAddresses.ethereum;
-    case "opbnbtestnet":
-      return preconfiguredAddresses.opbnbtestnet;
-    case "opbnbmainnet":
-      return preconfiguredAddresses.opbnbmainnet;
-    case "arbitrumsepolia":
-      return preconfiguredAddresses.arbitrumsepolia;
-    case "arbitrumone":
-      return preconfiguredAddresses.arbitrumone;
-    case "zksyncsepolia":
-      return preconfiguredAddresses.zksyncsepolia;
-    case "opsepolia":
-      return preconfiguredAddresses.opsepolia;
-    case "zksyncmainnet":
-      return preconfiguredAddresses.zksyncmainnet;
-    case "opmainnet":
-      return preconfiguredAddresses.opmainnet;
-    case "basesepolia":
-      return preconfiguredAddresses.basesepolia;
-    case "basemainnet":
-      return preconfiguredAddresses.basemainnet;
-    case "unichainsepolia":
-      return preconfiguredAddresses.unichainsepolia;
-    case "unichainmainnet":
-      return preconfiguredAddresses.unichainmainnet;
-    default:
-      throw new Error(`config for network ${networkName} is not available.`);
+  if (!Object.prototype.hasOwnProperty.call(preconfiguredAddresses, networkName)) {
+    throw new Error(`config for network ${networkName} is not available.`);
   }
+  return preconfiguredAddresses[networkName as keyof typeof preconfiguredAddresses];
 }
 
 function createMethodEntries(
